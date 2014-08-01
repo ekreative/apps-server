@@ -20,6 +20,10 @@ ekreative_new_app:
     path:     /folder/{id}/app/new
     defaults: { _controller: EkreativeAppsBundle:Apps:new }
 
+ekreative_download_app:
+    path:     /folder/{folder}/app/{id}/download
+    defaults: { _controller: EkreativeAppsBundle:Apps:download }
+
 ekreative_gcmtest:
     path:     /gcmtest
     defaults: { _controller: EkreativeAppsBundle:Gcm:index }
