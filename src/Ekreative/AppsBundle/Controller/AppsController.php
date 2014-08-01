@@ -104,8 +104,8 @@ class AppsController extends Controller {
             $response = new \Symfony\Component\HttpFoundation\Response();
             $filename = $this->appsFolder . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $id . '.apk';
             // Set headers
-            $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type($filename));
+            $response->headers->set('Cache-Control', 'no-cache');
+            $response->headers->set('Content-type', 'application/vnd.android.package-archive');
             $response->headers->set('Content-Disposition', 'attachment; filename="' . $app->getFile() . '";');
             $response->headers->set('Content-length', filesize($filename));
             // Send headers before outputting anything
