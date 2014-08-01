@@ -36,7 +36,7 @@ class DefaultController extends Controller {
 
         $form = $this->newFolderForm($folder);
         $folders = $this->getDoctrine()->getRepository('EkreativeAppsBundle:Folder')->findAll();
-        return $this->render('EkreativeAppsBundle:Default:index.html.twig', array(
+        return $this->render('EkreativeAppsBundle:Default:folders.html.twig', array(
                     'folders' => $folders,
                     'folderform' => $form->createView(),
                         )
