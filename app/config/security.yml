@@ -1,12 +1,22 @@
+# app/config/security.yml
 security:
+    firewalls:
+        secured_area:
+            pattern:   ^/
+            anonymous: ~
+            http_basic:
+                realm: "Secured Demo Area"
+
+    access_control:
+        - { path: ^/folders, roles: ROLE_ADMIN }
+        # Include the following line to also secure the /admin path itself
+        # - { path: ^/admin$, roles: ROLE_ADMIN }
+
     providers:
         in_memory:
-            memory: ~
+            memory:
+                users:
+                    admin: { password: super, roles: 'ROLE_ADMIN' }
 
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        default:
-            anonymous: ~
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext

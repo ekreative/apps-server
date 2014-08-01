@@ -1,0 +1,26 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+
+{% block body %}
+<div>
+{{ form_start(form , {'attr':{'class':'well form-search'}})  }}
+    <div class="pull-left">
+        <div>{{form_label(form.apikey)}}</div>
+        <div>{{form_widget(form.apikey)}}</div>
+        <div>{{form_label(form.devicetoken)}}</div>
+        <div>{{form_widget(form.devicetoken)}}</div>
+        <div>{{form_label(form.data)}}</div>
+        <div>{{form_widget(form.data)}}</div>
+        <div>{{form_widget(form.save,{'attr':{'class':'btn btn-success'}})}}</div>
+    </div>
+    <div style="padding-left: 167px;">
+        <pre>
+            {{ result|raw}}
+        </pre>
+    </div>
+<div style="clear: both" ></div>
+</div>
+
+
+{{ form_end(form)  }}
+{% endblock %}

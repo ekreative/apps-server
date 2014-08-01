@@ -29,6 +29,19 @@ class DefaultController extends Controller {
                         )
         );
     }
+    public function foldersAction() {
+
+        $folder = new \Ekreative\AppsBundle\Entity\Folder();
+        $folder->setDate(new \DateTime());
+
+        $form = $this->newFolderForm($folder);
+        $folders = $this->getDoctrine()->getRepository('EkreativeAppsBundle:Folder')->findAll();
+        return $this->render('EkreativeAppsBundle:Default:index.html.twig', array(
+                    'folders' => $folders,
+                    'folderform' => $form->createView(),
+                        )
+        );
+    }
 
     public function newfolderAction(Request $request) {
 
