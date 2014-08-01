@@ -1,0 +1,20 @@
+Ekreative\AppsBundle\Entity\Folder:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        name:
+            type: string
+            length: 255
+        date:
+            type: datetime
+    oneToMany:
+      app:
+        targetEntity: App
+        mappedBy: folder                 
+    lifecycleCallbacks: {  }

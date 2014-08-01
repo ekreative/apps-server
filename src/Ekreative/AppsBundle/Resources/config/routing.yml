@@ -1,0 +1,20 @@
+ekreative_apps_homepage:
+    path:     /folders
+    defaults: { _controller: EkreativeAppsBundle:Default:index }
+ekreative_new_folder:
+    path:     /newfolder
+    defaults: { _controller: EkreativeAppsBundle:Default:newfolder }
+ekreative_delete_folder:
+    path:     /deletefolder/{id}
+    defaults: { _controller: EkreativeAppsBundle:Default:deleleFolder }
+ekreative_folder:
+    path:     /folder/{id}
+    defaults: { _controller: EkreativeAppsBundle:Apps:index }
+ekreative_delete_app:
+    path:     /app/delele/{id}
+    defaults: { _controller: EkreativeAppsBundle:Apps:delele }
+ekreative_new_app:
+    path:     folder/{id}/app/new
+    defaults: { _controller: EkreativeAppsBundle:Apps:new }
+
+

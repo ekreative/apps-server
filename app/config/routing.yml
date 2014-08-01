@@ -1,0 +1,4 @@
+ekreative_apps:
+    resource: "@EkreativeAppsBundle/Resources/config/routing.yml"
+    prefix:   /
+

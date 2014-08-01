@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .content{
+                width: 830px;
+                margin: 0 auto;
+                margin-top: 100px;
+                margin-bottom: 100px;
+            }
+
+            .login-form{
+                width: 200px;
+            }
+            .appbox{
+                float: left;
+            }
+            
+            .appbox .lastmodiffed{
+                text-align: center;
+            }
+            .appbox .delete-place{
+                text-align: center;
+            }
+            
+            .appbox a{
+                text-overflow: ellipsis;
+                max-width: 205px;
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+            .forminline{
+                float: left;
+            
+            }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            {% block body %}{% endblock %}
+                <div style="clear: both;"></div>
+        </div>
+    </body>
+</html>

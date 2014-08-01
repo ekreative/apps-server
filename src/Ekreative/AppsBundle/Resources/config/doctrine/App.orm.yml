@@ -1,0 +1,40 @@
+Ekreative\AppsBundle\Entity\App:
+    type: entity
+    table: null
+    id:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+    fields:
+        file:
+            type: string
+            length: 255
+            nullable: true
+        version:
+            type: string
+            length: 255
+            nullable: true
+        comment:
+            type: string
+            length: 255
+            nullable: true
+        qrcode:
+            type: string
+            length: 500
+            nullable: true
+        date:
+            type: datetime
+            
+
+    manyToOne:        
+        folder:
+             targetEntity: Folder
+             inversedBy: app
+             joinColumn:
+                onDelete: CASCADE
+                name: app_id
+                referencedColumnName: id 
+    lifecycleCallbacks: 
+       postPersist: [ upload ]
