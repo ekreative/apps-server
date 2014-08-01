@@ -4,7 +4,28 @@
 {% block body %}
 <ul class="breadcrumb" style="margin-bottom: 5px;">
     <li><a href="{{path('ekreative_apps_homepage')}}">All apps</a></li>
+    <li><a  class="active" href="{{path('ekreative_folder',{'id':folder.id})}}">{{folder.name}}</a></li>
 </ul>
 
-hello
+{{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}
+<div class="forminline">{{form_widget(appform.uploadedFile)}}</div>
+<div class="forminline">{{form_widget(appform.version)}}</div>
+<div class="forminline">{{form_widget(appform.comment)}}</div>
+<div class="forminline">{{form_widget(appform.save,{'attr':{'class':'btn btn-success'}})}}</div>
+<div style="clear: both;"></div>
+{{form_end(appform)}}
+    {% for app in folder.app %}
+        <div class="appbox" >
+            <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
+            <img src="{{app.qrcode}}" />
+            <div><a href="apps/{{app.folder.id}}/{{app.id}}.apk" >{{app.file}}</a></div>
+            <div class="delete-place">
+                {{app.version}}
+                {{app.comment}}
+            </div>
+            <div class="delete-place">
+                <a class="btn btn-success" href="{{path('ekreative_delete_app',{'id':app.id})}}">delete</a>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
