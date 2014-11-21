@@ -1,0 +1,13 @@
+Ekreative\AppsBundle\Entity\AndroidApp:
+    type: entity
+    table: null
+
+    manyToOne:
+        folder:
+            targetEntity: Ekreative\AppsBundle\Entity\AndroidFolder
+            inversedBy: app
+            joinColumn:
+                onDelete: CASCADE
+                name: app_id
+                referencedColumnName: id
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\AndroidAppsRepository

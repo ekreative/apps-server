@@ -1,0 +1,9 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+
+{% block body %}
+<div style="text-align: center">
+    <h2>{{ app.getFolder().getName() }} v{{ app.getVersion() }}</h2>
+    <img src="{{app.qrcode}}" /></div>
+
+{% endblock %}

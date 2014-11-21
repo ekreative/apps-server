@@ -1,0 +1,22 @@
+Ekreative\AppsBundle\Entity\IosApp:
+    type: entity
+    table: null
+    fields:
+        token:
+            type: string
+            length: 255
+        bundleIdentifier:
+            type: string
+            length: 255
+    manyToOne:
+        folder:
+             targetEntity: Ekreative\AppsBundle\Entity\IosFolder
+             inversedBy: app
+             joinColumn:
+                onDelete: CASCADE
+                name: app_id
+                referencedColumnName: id
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\IosAppsRepository
+    lifecycleCallbacks:
+           postPersist: [ upload ]
+           postRemove: [ removeUpload ]

@@ -13,8 +13,16 @@ Ekreative\AppsBundle\Entity\Folder:
             length: 255
         date:
             type: datetime
-    oneToMany:
-      app:
-        targetEntity: App
-        mappedBy: folder                 
+
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: type
+        type: string
+        length: 255
+    discriminatorMap:
+        android: Ekreative\AppsBundle\Entity\AndroidFolder
+        ios: Ekreative\AppsBundle\Entity\IosFolder
+
+
     lifecycleCallbacks: {  }
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\FolderRepository

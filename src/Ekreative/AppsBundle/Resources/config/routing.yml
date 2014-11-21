@@ -1,28 +1,56 @@
 ekreative_apps_index:
     path:     /
     defaults: { _controller: EkreativeAppsBundle:Default:index }
-ekreative_apps_homepage:
-    path:     /folders
-    defaults: { _controller: EkreativeAppsBundle:Default:folders }
-ekreative_new_folder:
-    path:     /newfolder
-    defaults: { _controller: EkreativeAppsBundle:Default:newfolder }
-ekreative_delete_folder:
-    path:     /deletefolder/{id}
-    defaults: { _controller: EkreativeAppsBundle:Default:deleleFolder }
-ekreative_folder:
-    path:     /folder/{id}
-    defaults: { _controller: EkreativeAppsBundle:Apps:index }
-ekreative_delete_app:
-    path:     /app/delele/{id}
-    defaults: { _controller: EkreativeAppsBundle:Apps:delele }
-ekreative_new_app:
-    path:     /folder/{id}/app/new
-    defaults: { _controller: EkreativeAppsBundle:Apps:new }
+ekreative_android_apps_homepage:
+    path:     /androidfolders
+    defaults: { _controller: EkreativeAppsBundle:Android:folders }
+ekreative_new_android_folder:
+    path:     /androidnewfolder
+    defaults: { _controller: EkreativeAppsBundle:Android:newfolder }
+ekreative_delete_android_folder:
+    path:     /androiddeletefolder/{id}
+    defaults: { _controller: EkreativeAppsBundle:Android:deleleFolder }
+ekreative_android_folder:
+    path:     /androidfolder/{id}
+    defaults: { _controller: EkreativeAppsBundle:AndroidApps:index }
+ekreative_delete_android_app:
+    path:     /androidapp/delele/{id}
+    defaults: { _controller: EkreativeAppsBundle:AndroidApps:delele }
+ekreative_new_android_app:
+    path:     /androidfolder/{id}/app/new
+    defaults: { _controller: EkreativeAppsBundle:AndroidApps:new }
 
-ekreative_download_app:
-    path:     /folder/{folder}/app/{id}/download
-    defaults: { _controller: EkreativeAppsBundle:Apps:download }
+ekreative_download_android_app:
+    path:     /androidfolder/{folder}/app/{id}/download
+    defaults: { _controller: EkreativeAppsBundle:AndroidApps:download }
+
+ekreative_ios_apps_homepage:
+    path:     /iosfolders
+    defaults: { _controller: EkreativeAppsBundle:Ios:folders }
+ekreative_new_ios_folder:
+    path:     /iosnewfolder
+    defaults: { _controller: EkreativeAppsBundle:Ios:newfolder }
+ekreative_delete_ios_folder:
+    path:     /iosdeletefolder/{id}
+    defaults: { _controller: EkreativeAppsBundle:Ios:deleleFolder }
+
+ekreative_ios_folder:
+    path:     /iosfolder/{id}
+    defaults: { _controller: EkreativeAppsBundle:IosApps:index }
+ekreative_delete_ios_app:
+    path:     /iosapp/delele/{id}
+    defaults: { _controller: EkreativeAppsBundle:IosApps:delele }
+ekreative_new_ios_app:
+    path:     /iosfolder/{id}/app/new
+    defaults: { _controller: EkreativeAppsBundle:IosApps:new }
+
+ekreative_download_ios_app:
+    path:     /download/iosfolder/{folder}/app/{id}/{token}
+    defaults: { _controller: EkreativeAppsBundle:IosApps:download }
+
+ekreative_install_ios_app:
+    path:     /install/iosfolder/{folder}/app/{id}/{token}
+    defaults: { _controller: EkreativeAppsBundle:IosApps:install }
 
 ekreative_gcmtest:
     path:     /gcmtest

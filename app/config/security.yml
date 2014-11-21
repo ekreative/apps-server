@@ -8,7 +8,8 @@ security:
                 realm: "Secured Demo Area"
 
     access_control:
-        - { path: ^/folders, roles: ROLE_ADMIN }
+        - { path: ^/android*, roles: ROLE_ADMIN }
+        - { path: ^/ios*, roles: ROLE_ADMIN }
         # Include the following line to also secure the /admin path itself
         # - { path: ^/admin$, roles: ROLE_ADMIN }
 

@@ -127,31 +127,7 @@ class App {
         return $this->date;
     }
 
-    /**
-     * @var \Ekreative\AppsBundle\Entity\Folder
-     */
-    private $folder;
 
-    /**
-     * Set folder
-     *
-     * @param \Ekreative\AppsBundle\Entity\Folder $folder
-     * @return App
-     */
-    public function setFolder(\Ekreative\AppsBundle\Entity\Folder $folder = null) {
-        $this->folder = $folder;
-
-        return $this;
-    }
-
-    /**
-     * Get folder
-     *
-     * @return \Ekreative\AppsBundle\Entity\Folder 
-     */
-    public function getFolder() {
-        return $this->folder;
-    }
 
     var $qrcode;
 

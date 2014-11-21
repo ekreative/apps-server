@@ -17,3 +17,12 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+    aws_keys:
+        key: ~
+        secret: ~
+        region: 'eu-west-1'
+
+    s3_keys:
+        key: ~
+        secret: ~
+        region: 'eu-west-1'

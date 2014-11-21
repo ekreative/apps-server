@@ -5,3 +5,9 @@ services:
 #    ekreative_apps.example:
 #        class: %ekreative_apps.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
+    ekreative_apps.s3:
+            class: Aws\S3\S3Client
+            factory_class: Aws\S3\S3Client
+            factory_method: factory
+            arguments:
+                - %s3_keys%

@@ -1,0 +1,9 @@
+Ekreative\AppsBundle\Entity\IosFolder:
+    type: entity
+    table: null
+    oneToMany:
+      app:
+        targetEntity: Ekreative\AppsBundle\Entity\IosApp
+        mappedBy: folder
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\IosFolderRepository
+

@@ -2,10 +2,13 @@
 
 namespace Ekreative\AppsBundle\Controller;
 
+use Ekreative\AppsBundle\Entity\AndroidApp;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class AppsController extends Controller {
+class AndroidAppsController extends Controller {
 
     var $appsFolder = null;
 
@@ -20,37 +23,37 @@ class AppsController extends Controller {
 
 
 
-        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:Folder')->find($id);
+        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidFolder')->find($id);
         if ($folder) {
 
             $em = $this->getDoctrine()->getManager();
 
 
 
-            $app = new \Ekreative\AppsBundle\Entity\App();
+            $app = new AndroidApp();
             $app->setFolder($folder);
             $form = $this->newAppForm($app);
 
 
 
 
-            return $this->render('EkreativeAppsBundle:Apps:index.html.twig', array(
+            return $this->render('EkreativeAppsBundle:AndroidApps:index.html.twig', array(
                         'folder' => $folder,
                         'appform' => $form->createView(),
                             )
             );
         }
 
-        return new \Symfony\Component\HttpFoundation\RedirectResponse($this->generateUrl('ekreative_apps_homepage'));
+        throw new NotFoundHttpException("Page not found");
     }
 
     public function newAction(Request $request, $id) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:Folder')->find($id);
+        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidFolder')->find($id);
         $folderId = $folder->getId();
-        $app = new \Ekreative\AppsBundle\Entity\App();
+        $app = new AndroidApp();
         $app->setFolder($folder);
         $app->setDate(new \DateTime());
 
@@ -67,7 +70,7 @@ class AppsController extends Controller {
 
 
 
-        $url = $this->generateUrl('ekreative_download_app', array('folder' => $folderId, 'id' => $app->getId()), true);
+        $url = $this->generateUrl('ekreative_download_android_app', array('folder' => $folderId, 'id' => $app->getId()), true);
 
 //        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/apps/' . $folderId . '/' . $app->getId() . '.apk';
         $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($url) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
@@ -77,12 +80,12 @@ class AppsController extends Controller {
 
         $em->persist($app);
         $em->flush();
-        return new \Symfony\Component\HttpFoundation\RedirectResponse($this->generateUrl('ekreative_folder', array('id' => $folderId)));
+        return new RedirectResponse($this->generateUrl('ekreative_android_folder', array('id' => $folderId)));
     }
 
     public function deleleAction(Request $request, $id) {
 
-        $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:App')->find($id);
+        $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidApp')->find($id);
 
 
         if ($app) {
@@ -91,9 +94,9 @@ class AppsController extends Controller {
             $em->remove($app);
             $em->flush();
             unlink($this->appsFolder . DIRECTORY_SEPARATOR . $filderId . DIRECTORY_SEPARATOR . $id . '.apk');
-            return new \Symfony\Component\HttpFoundation\RedirectResponse($this->generateUrl('ekreative_folder', array('id' => $filderId)));
+            return new RedirectResponse($this->generateUrl('ekreative_android_folder', array('id' => $filderId)));
         }
-        return new \Symfony\Component\HttpFoundation\RedirectResponse($this->generateUrl('ekreative_folder', array('id' => $filderId)));
+        throw new NotFoundHttpException("Page not found");
     }
 
     public function downloadAction(Request $request, $folder, $id) {
@@ -112,7 +115,7 @@ class AppsController extends Controller {
             $response->sendHeaders();
             return $response->setContent(readfile($filename));
         }
-        return new \Symfony\Component\HttpFoundation\RedirectResponse($this->generateUrl('ekreative_folder', array('id' => $folder)));
+        throw new NotFoundHttpException("Page not found");
     }
 
     private function newAppForm($entity) {
@@ -120,7 +123,7 @@ class AppsController extends Controller {
                         ->add('uploadedFile', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
                         ->add('version', 'text', array('required' => false, 'attr' => array('placeholder' => 'version', 'class' => "form-control")))
                         ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
-                        ->setAction($this->generateUrl('ekreative_new_app', array('id' => $entity->getFolder()->getId())))
+                        ->setAction($this->generateUrl('ekreative_new_android_app', array('id' => $entity->getFolder()->getId())))
                         ->setMethod('POST')
                         ->add('save', 'submit')
                         ->getForm();

@@ -1,0 +1,9 @@
+Ekreative\AppsBundle\Entity\AndroidFolder:
+    type: entity
+    table: null
+    oneToMany:
+      app:
+        targetEntity: Ekreative\AppsBundle\Entity\AndroidApp
+        mappedBy: folder
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\AndroidFolderRepository
+

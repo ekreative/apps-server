@@ -75,46 +75,6 @@ class Folder {
         return $this->date;
     }
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $app;
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->app = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add app
-     *
-     * @param \Ekreative\AppsBundle\Entity\App $app
-     * @return Folder
-     */
-    public function addApp(\Ekreative\AppsBundle\Entity\App $app) {
-        $this->app[] = $app;
-
-        return $this;
-    }
-
-    /**
-     * Remove app
-     *
-     * @param \Ekreative\AppsBundle\Entity\App $app
-     */
-    public function removeApp(\Ekreative\AppsBundle\Entity\App $app) {
-        $this->app->removeElement($app);
-    }
-
-    /**
-     * Get app
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getApp() {
-        return $this->app;
-    }
 
 }

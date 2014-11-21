@@ -26,15 +26,17 @@ Ekreative\AppsBundle\Entity\App:
             nullable: true
         date:
             type: datetime
-            
 
-    manyToOne:        
-        folder:
-             targetEntity: Folder
-             inversedBy: app
-             joinColumn:
-                onDelete: CASCADE
-                name: app_id
-                referencedColumnName: id 
-    lifecycleCallbacks: 
+    inheritanceType: SINGLE_TABLE
+    discriminatorColumn:
+        name: type
+        type: string
+        length: 255
+    discriminatorMap:
+        android: Ekreative\AppsBundle\Entity\AndroidApp
+        ios: Ekreative\AppsBundle\Entity\IosApp
+
+
+    lifecycleCallbacks:
        postPersist: [ upload ]
+    repositoryClass: Ekreative\AppsBundle\Entity\Repository\AppsRepository
