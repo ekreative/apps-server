@@ -1,0 +1,100 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+
+
+{% block stylesheets %}
+
+.appbox{
+z-index: 0;
+max-width: 200px;
+float: left;
+margin-bottom: 20px;
+max-height: 303px;
+background-color: white;
+border:1px solid gray;
+padding: 10px;
+margin:10px;
+}
+
+
+.appbox .more{
+display: none;
+border: 1px solid transparent;
+background-color: white;
+z-index: 0;
+position: absolute;
+}
+.appbox:hover .more{
+display: block;
+z-index: 3;
+border: 1px solid #999999;
+}
+
+.appbox .lastmodiffed{
+font-weight: bold;
+text-align: center;
+}
+.appbox .comment-place{
+width: 200px;
+padding: 5px;
+}
+.appbox .delete-place{
+margin-top: 10px;
+text-align: center;
+margin-bottom: 10px;
+}
+
+.appbox a{
+text-overflow: ellipsis;
+max-width: 205px;
+display: inline-block;
+white-space: nowrap;
+overflow: hidden;
+}
+
+ .selected{
+    font-weight: 100;
+
+ }
+
+{% endblock %}
+
+{% block body %}
+<ul class="breadcrumb" style="margin-bottom: 5px;">
+    <li>
+        <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
+    </li>
+
+    <li>
+        <a {%if currentFolderType == 'android'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'android'})}}">Android</a>
+        <a {%if currentFolderType == 'ios'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'ios'})}}">Ios</a>
+    </li>
+    <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
+</ul>
+
+{{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}
+<div class="forminline">{{form_widget(appform.uploadedFile)}}</div>
+<div class="forminline">{{form_widget(appform.version)}}</div>
+<div class="forminline">{{form_widget(appform.comment)}}</div>
+<div class="forminline">{{form_widget(appform.save,{'attr':{'class':'btn btn-success'}})}}</div>
+<div style="clear: both;"></div>
+{{form_end(appform)}}
+    {% for app in folder.app %}
+<div class="appbox" >
+    <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
+    <div><a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download</a></div>
+    <div class="more">
+        <div class="comment-place">
+                    {{app.version}}
+                    {{app.comment}}
+            </div>
+            <div class="delete-place">
+                <div><img src="{{app.qrcode}}" /></div>
+                <div>
+                    <a class="btn btn-success" href="{{path('ekreative_android_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
+                </div>
+                </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

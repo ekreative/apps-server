@@ -1,0 +1,3 @@
+ekreative_folder_ios_index:
+    path:     /{id}
+    defaults: { _controller: EkreativeAppsBundle:Ios:index }

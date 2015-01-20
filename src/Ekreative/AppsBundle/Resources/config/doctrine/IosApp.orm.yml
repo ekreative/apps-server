@@ -18,5 +18,5 @@ Ekreative\AppsBundle\Entity\IosApp:
                 referencedColumnName: id
     repositoryClass: Ekreative\AppsBundle\Entity\Repository\IosAppsRepository
     lifecycleCallbacks:
-           postPersist: [ upload ]
-           postRemove: [ removeUpload ]
+           postPersist: []
+           postRemove: []

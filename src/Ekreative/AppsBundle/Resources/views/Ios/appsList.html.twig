@@ -1,10 +1,27 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 
 
+
+{% block stylesheets %}
+ .selected{
+    font-weight: 100;
+
+ }
+{% endblock %}
+
+
+
 {% block body %}
 <ul class="breadcrumb" style="margin-bottom: 5px;">
-    <li><a href="{{path('ekreative_ios_apps_homepage')}}">All apps</a></li>
-    <li><a  class="active" href="{{path('ekreative_ios_folder',{'id':folder.id})}}">{{folder.name}}</a></li>
+    <li>
+        <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
+    </li>
+    <li>
+        <a {%if currentFolderType == 'Ios'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Android</a>
+        <a {%if currentFolderType == 'Android'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Ios</a> /
+    </li>
+    <li><a href="{{path('ekreative_ios_apps_homepage')}}">All</a> / </li>
+    <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
 </ul>
 
 {{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}

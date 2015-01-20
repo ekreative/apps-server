@@ -1,13 +1,21 @@
 parameters:
-#    ekreative_apps.example.class: Ekreative\AppsBundle\Example
-
+    ekreative_apps.aws_key: ''
+    ekreative_apps.aws_secret: ''
+    ekreative_apps.aws_region: ''
+    ekreative_apps.amazon_s3.base_url: ''
+    
 services:
-#    ekreative_apps.example:
-#        class: %ekreative_apps.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
-    ekreative_apps.s3:
+    ekreative_apps.amazon_s3:
             class: Aws\S3\S3Client
             factory_class: Aws\S3\S3Client
             factory_method: factory
             arguments:
-                - %s3_keys%
+              -
+                key: %ekreative_apps.aws_key%
+                secret: %ekreative_apps.aws_secret%
+                region: %ekreative_apps.aws_region%
+        
+    ekreative_apps.file_uploader:
+            class: Ekreative\AppsBundle\Upload\FileUploader
+            arguments: [ @file_storage_filesystem ]
+        

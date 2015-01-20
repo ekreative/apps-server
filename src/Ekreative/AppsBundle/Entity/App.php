@@ -142,6 +142,12 @@ class App {
     
     private $uploadedFile;
     
+    
+    /**
+     * 
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    
     public function getUploadedFile() {
         return $this->uploadedFile;
     }
@@ -156,40 +162,5 @@ class App {
     public function updateFile() {
       $this->file = $this->getUploadedFile()->getClientOriginalName();
     }
-
-
-
-    public function upload() {
-        // the file property can be empty if the field is not required
-        if (null === $this->getUploadedFile()) {
-            return;
-        }
-
-        // use the original file name here but you should
-        // sanitize it at least to avoid any security issues
-        // move takes the target directory and then the
-        // target filename to move to
-        
-        $this->getUploadedFile()->move( $this->getUploadRootDir(), $this->getId().'.apk');
-        
-        $this->setFile($this->getUploadedFile()->getClientOriginalName());
-
-        // set the path property to the filename where you've saved the file
-        $this->path = $this->getUploadedFile()->getClientOriginalName();
-
-        // clean up the file property as you won't need it anymore
-        $this->file = null;
-    }
-
-    protected function getUploadRootDir() {
-        // the absolute directory path where uploaded
-        // documents should be saved
-        return __DIR__ . '/../../../../web/apps/' .$this->getFolder()->getId();
-    }
-
-    
-    
-    
-    
     
 }

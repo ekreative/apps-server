@@ -1,0 +1,3 @@
+ekreative_app_new:
+    path:     /{id}
+    defaults: { _controller: EkreativeAppsBundle:App:new }

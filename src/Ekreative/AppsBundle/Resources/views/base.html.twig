@@ -2,7 +2,7 @@
     <head>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
         <link rel="icon" href="favicon.ico" type="image/x-icon">
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{asset('bundles/ekreativeapps/css/bootstrap.css')}}" rel="stylesheet">
         <style>
             .content{
                 width: 1030px;
@@ -15,50 +15,7 @@
                 width: 200px;
             }
             
-            .appbox{
-                z-index: 0;
-                max-width: 200px;
-                float: left;
-                margin-bottom: 20px;
-                max-height: 303px;
-                background-color: white;
-            }
             
-            
-            .appbox .more{
-                display: none;
-                border: 1px solid transparent;
-                background-color: white;
-                z-index: 0;
-                position: absolute;
-            }
-            .appbox:hover .more{
-                display: block;
-                z-index: 3;
-                border: 1px solid #999999;
-            }
-            
-            .appbox .lastmodiffed{
-                font-weight: bold;
-                text-align: center;
-            }
-            .appbox .comment-place{
-                 width: 200px;
-                 padding: 5px;
-            }
-            .appbox .delete-place{
-                margin-top: 10px;
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            
-            .appbox a{
-                text-overflow: ellipsis;
-                max-width: 205px;
-                display: inline-block;
-                white-space: nowrap;
-                overflow: hidden;
-            }
             .forminline{
                 float: left;
             }
@@ -78,8 +35,13 @@
             .ios.appbox .lastmodiffed{
                 text-align: left;
             }
-            *:nth-child(3)
+            
+            
+            {% block stylesheets %}{% endblock %}
+            
         </style>
+        
+        
     </head>
     <body>
         <div class="content">

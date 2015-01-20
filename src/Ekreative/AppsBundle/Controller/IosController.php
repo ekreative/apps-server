@@ -6,80 +6,42 @@ use Ekreative\AppsBundle\Entity\IosFolder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Ekreative\AppsBundle\Entity\IosApp;
 
-class IosController extends Controller {
+class IosController extends BaseController {
 
-//    var $appsFolder = null;
-//
-//    public function __construct() {
-//        $this->appsFolder = str_replace('/src/Ekreative/AppsBundle/Controller', '', __DIR__) . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . 'apps';
-//        if (!is_dir($this->appsFolder)) {
-//            mkdir($this->appsFolder);
-//        }
-//    }
-
-//    public function indexAction() {
-//
-//        $folder = new \Ekreative\AppsBundle\Entity\Folder();
-//        $folder->setDate(new \DateTime());
-//
-//        $form = $this->newFolderForm($folder);
-//        $folders = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosFolder')->getFolders()->getQuery()->getResult();
-//        return $this->render('EkreativeAppsBundle:Ios:index.html.twig', array(
-//                    'folders' => $folders,
-//                    'folderform' => $form->createView(),
-//                        )
-//        );
-//    }
-    public function foldersAction() {
-
-        $folder = new IosFolder();
-        $folder->setDate(new \DateTime());
-
-        $form = $this->newFolderForm($folder);
-//        $folders = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosFolder')->getFolders()->getQuery()->getResult();
-        $folders = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosFolder')->findAll();
-        return $this->render('EkreativeAppsBundle:Ios:folders.html.twig', array(
-                    'folders' => $folders,
-                    'folderform' => $form->createView(),
-                        )
-        );
-    }
-
-    public function newfolderAction(Request $request) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        $folder = new IosFolder();
-        $folder->setDate(new \DateTime());
-        $form = $this->newFolderForm($folder);
-        $form->handleRequest($request);
-        $em->persist($folder);
-        $em->flush();
-//        mkdir($this->appsFolder . DIRECTORY_SEPARATOR . $folder->getId());
-        return new RedirectResponse($this->generateUrl('ekreative_ios_apps_homepage'));
-    }
-
-    public function deleleFolderAction(Request $request, $id) {
+    public function indexAction(Request $request, $id) {
 
         $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosFolder')->find($id);
-
         if ($folder) {
+
             $em = $this->getDoctrine()->getManager();
-            if (count($folder->getApp()) == 0) {
-                $em->remove($folder);
-                $em->flush();
-//                rmdir($this->appsFolder . DIRECTORY_SEPARATOR . $id);
-            }
+
+            $app = new IosApp();
+            $app->setFolder($folder);
+            $form = $this->newAppForm($app);
+            
+            $folderType = $this->getCurrentFolderType();
+
+            return $this->render('EkreativeAppsBundle:Ios:appsList.html.twig', array(
+                        'folder' => $folder,
+                        'appform' => $form->createView(),
+                        'currentFolderType' => BaseController::FOLDER_ANDROID,
+                        'serveLink' => $this->serveLink($folderType)
+                            )
+            );
         }
 
-        return new RedirectResponse($this->generateUrl('ekreative_ios_apps_homepage'));
+        throw new NotFoundHttpException("Page not found");
     }
 
-    private function newFolderForm($entity) {
+    private function newAppForm($entity) {
         return $this->createFormBuilder($entity)
-                        ->add('name', 'text')
-                        ->setAction($this->generateUrl('ekreative_new_ios_folder'))
+                        ->add('uploadedFile', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
+                        ->add('version', 'text', array('required' => false, 'attr' => array('placeholder' => 'version', 'class' => "form-control")))
+                        ->add('bundleIdentifier', 'text', array('required' => true, 'attr' => array('placeholder' => 'bundleIdentifier', 'class' => "form-control")))
+                        ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
+                        ->setAction($this->generateUrl('ekreative_app_new', array('id' => $entity->getFolder()->getId())))
                         ->setMethod('POST')
                         ->add('save', 'submit')
                         ->getForm();

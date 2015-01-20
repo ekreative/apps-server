@@ -28,6 +28,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    globals:
+        s3url: %amazon_s3_base_url%
 
 # Assetic Configuration
 assetic:
@@ -68,3 +70,23 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+knp_gaufrette:
+    adapters:
+        file_storage:
+            aws_s3:
+                service_id: 'ekreative_apps.amazon_s3'
+                bucket_name:  %amazon_s3_bucket_name%
+                options:
+                    acl: public-read
+    filesystems:
+        file_storage:
+            adapter:    file_storage
+            alias:      file_storage_filesystem 
+            
+ekreative_apps:
+    amazon_s3:
+        aws_key: %amazon_aws_key%
+        aws_secret_key: %amazon_aws_secret_key%
+        aws_region: %amazon_aws_region%
+        base_url:       %amazon_s3_base_url%

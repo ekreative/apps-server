@@ -1,6 +1,6 @@
 ekreative_apps_index:
     path:     /
-    defaults: { _controller: EkreativeAppsBundle:Default:index }
+    defaults: { _controller: EkreativeAppsBundle:Main:index }
 ekreative_android_apps_homepage:
     path:     /androidfolders
     defaults: { _controller: EkreativeAppsBundle:Android:folders }
@@ -52,8 +52,23 @@ ekreative_install_ios_app:
     path:     /install/iosfolder/{folder}/app/{id}/{token}
     defaults: { _controller: EkreativeAppsBundle:IosApps:install }
 
+ekreative_apps_folders:
+    resource: "@EkreativeAppsBundle/Resources/config/routing/folder.yml"
+    prefix:   /folder
+    
+ekreative_apps_android:
+    resource: "@EkreativeAppsBundle/Resources/config/routing/android.yml"
+    prefix:   /folder/android
+    
+ekreative_apps_ios:
+    resource: "@EkreativeAppsBundle/Resources/config/routing/ios.yml"
+    prefix:   /folder/ios
+
+ekreative_apps:
+    resource: "@EkreativeAppsBundle/Resources/config/routing/app.yml"
+    prefix:   /app
+
+
 ekreative_gcmtest:
     path:     /gcmtest
     defaults: { _controller: EkreativeAppsBundle:Gcm:index }
-
-

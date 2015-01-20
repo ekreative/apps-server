@@ -38,5 +38,5 @@ Ekreative\AppsBundle\Entity\App:
 
 
     lifecycleCallbacks:
-       postPersist: [ upload ]
+       postPersist: [  ]
     repositoryClass: Ekreative\AppsBundle\Entity\Repository\AppsRepository

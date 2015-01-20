@@ -1,28 +1,19 @@
 parameters:
-    database_driver:   pdo_mysql
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
-    database_user:     root
-    database_password: ~
-
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
-
-    locale:            en
-    secret:            ThisTokenIsNotSoSecretChangeIt
-
-    debug_toolbar:          true
-    debug_redirects:        false
-    use_assetic_controller: true
-    aws_keys:
-        key: ~
-        secret: ~
-        region: 'eu-west-1'
-
-    s3_keys:
-        key: ~
-        secret: ~
-        region: 'eu-west-1'
+    database_driver: pdo_sqlite
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: appsharenew1.db
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: ThisTokenIsNotSoSecretChangeIt
+    debug_toolbar: true
+    debug_redirects: false
+    amazon_aws_key: ~
+    amazon_aws_secret: ~
+    amazon_aws_region: ~
+    amazon_s3_base_url: ~

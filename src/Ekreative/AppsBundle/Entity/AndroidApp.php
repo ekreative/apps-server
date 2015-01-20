@@ -38,6 +38,22 @@ class AndroidApp extends App {
         return $this->folder;
     }
 
+    public function getFilename() {
 
+        
+        $name = [];
+        $name[] = ucfirst($this->getFolder()->getName());
+        $name[] = $this->getVersion();
+        $name[] = $this->getDate()->format('H:i:s d-m-Y');
+        
+        $name=array_filter($name);
+        
+        return implode(' ', $name);
+    }
+
+    public function getS3name() {
+        $folder = $this->getFolder()->getId();
+        return $folder . '/' . $this->getId() . '.apk';
+    }
 
 }

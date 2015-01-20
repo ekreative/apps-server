@@ -1,0 +1,9 @@
+ekreative_folder_android_index:
+    path:     /{id}
+    defaults: { _controller: EkreativeAppsBundle:Android:index }
+ekreative_android_app_new:
+    path:     /{folder}/new
+    defaults: { _controller: EkreativeAppsBundle:Android:new }
+ekreative_android_app_delete:
+    path:     /{id}/delete
+    defaults: { _controller: EkreativeAppsBundle:Android:delele }

@@ -1,0 +1,44 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+
+{% block stylesheets %}
+ .selected{
+    font-weight: 100;
+
+ }
+{% endblock %}
+
+
+
+{% block body %}
+<ul class="breadcrumb" style="margin-bottom: 5px;">
+    <li>
+        <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
+    </li>
+    <li>
+        <a {%if currentFolderType == 'Ios'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Android</a>
+        <a {%if currentFolderType == 'Android'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Ios</a>
+    </li>
+</ul>
+
+{{ form_start(folderform , {'attr':{'class':'well form-search'}})  }}
+{{form_widget(folderform.name)}}
+{{form_widget(folderform.save,{'attr':{'class':'btn btn-success'}})}}
+{{ form_end(folderform)  }}
+<table class="table table-bordered table-striped table-hover">
+    {% for folder in folders %}
+        <tr>
+            <td>
+                <a class="btn btn-success" href="{{path(serveLink,{'id':folder.id})}}">
+                    {{folder.name}}
+                </a>
+            </td>
+            <td>
+                {{folder.date.format('H:i:s d.m.Y')}}
+            </td>
+            <td><a class="btn btn-success" href="{{path('ekreative_delete_folder',{'id':folder.id})}}">delete</a></td>
+        </tr>
+    {% endfor %}
+
+    </table>
+{% endblock %}
