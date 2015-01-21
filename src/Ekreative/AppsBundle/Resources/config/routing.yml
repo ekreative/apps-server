@@ -1,56 +1,11 @@
 ekreative_apps_index:
     path:     /
     defaults: { _controller: EkreativeAppsBundle:Main:index }    
-ekreative_android_apps_homepage:
-    path:     /androidfolders
-    defaults: { _controller: EkreativeAppsBundle:Android:folders }
-ekreative_new_android_folder:
-    path:     /androidnewfolder
-    defaults: { _controller: EkreativeAppsBundle:Android:newfolder }
-ekreative_delete_android_folder:
-    path:     /androiddeletefolder/{id}
-    defaults: { _controller: EkreativeAppsBundle:Android:deleleFolder }
-ekreative_android_folder:
-    path:     /androidfolder/{id}
-    defaults: { _controller: EkreativeAppsBundle:AndroidApps:index }
-ekreative_delete_android_app:
-    path:     /androidapp/delele/{id}
-    defaults: { _controller: EkreativeAppsBundle:AndroidApps:delele }
-ekreative_new_android_app:
-    path:     /androidfolder/{id}/app/new
-    defaults: { _controller: EkreativeAppsBundle:AndroidApps:new }
+ 
 
-ekreative_download_android_app:
-    path:     /androidfolder/{folder}/app/{id}/download
-    defaults: { _controller: EkreativeAppsBundle:AndroidApps:download }
 
-ekreative_ios_apps_homepage:
-    path:     /iosfolders
-    defaults: { _controller: EkreativeAppsBundle:Ios:folders }
-ekreative_new_ios_folder:
-    path:     /iosnewfolder
-    defaults: { _controller: EkreativeAppsBundle:Ios:newfolder }
-ekreative_delete_ios_folder:
-    path:     /iosdeletefolder/{id}
-    defaults: { _controller: EkreativeAppsBundle:Ios:deleleFolder }
 
-ekreative_ios_folder:
-    path:     /iosfolder/{id}
-    defaults: { _controller: EkreativeAppsBundle:IosApps:index }
-ekreative_delete_ios_app:
-    path:     /iosapp/delele/{id}
-    defaults: { _controller: EkreativeAppsBundle:IosApps:delele }
-ekreative_new_ios_app:
-    path:     /iosfolder/{id}/app/new
-    defaults: { _controller: EkreativeAppsBundle:IosApps:new }
 
-ekreative_download_ios_app:
-    path:     /download/iosfolder/{folder}/app/{id}/{token}
-    defaults: { _controller: EkreativeAppsBundle:IosApps:download }
-
-ekreative_install_ios_app:
-    path:     /install/iosfolder/{folder}/app/{id}/{token}
-    defaults: { _controller: EkreativeAppsBundle:IosApps:install }
 
 ekreative_apps_folders:
     resource: "@EkreativeAppsBundle/Resources/config/routing/folder.yml"
@@ -72,3 +27,6 @@ ekreative_apps:
 ekreative_gcmtest:
     path:     /gcmtest
     defaults: { _controller: EkreativeAppsBundle:Gcm:index }
+ekreative_ios_app_install:
+    path:     /install/{token}
+    defaults: { _controller: EkreativeAppsBundle:Ios:install }

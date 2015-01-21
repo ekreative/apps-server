@@ -1,3 +1,4 @@
+# app/config/security.yml
 security:
     firewalls:
         secured_area:
@@ -5,7 +6,10 @@ security:
             anonymous: ~
             http_basic:
                 realm: "Secured Demo Area"
-
+        install:
+            pattern:  ^/folder/ios/install/*
+            security: false
+            
     access_control:
         - { path: ^/folder, roles: ROLE_ADMIN }
         # Include the following line to also secure the /admin path itself

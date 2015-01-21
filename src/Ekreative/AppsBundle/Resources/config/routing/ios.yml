@@ -7,9 +7,6 @@ ekreative_ios_app_new:
 ekreative_ios_app_delete:
     path:     /{id}/delete
     defaults: { _controller: EkreativeAppsBundle:Ios:delele }
-ekreative_ios_app_install:
-    path:     /install/{token}
-    defaults: { _controller: EkreativeAppsBundle:Ios:install }
 
 
 
