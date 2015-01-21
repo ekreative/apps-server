@@ -105,7 +105,12 @@ class IosApp extends App {
     
     public function getS3name() {
         $folder = $this->getFolder()->getId();
-        return $folder . '/' . $this->getId() . '.ipa';
+        return $folder . '/' . $this->getToken() . '.ipa';
+    }
+    
+    public function getS3Plistname() {
+        $folder = $this->getFolder()->getId();
+        return $folder . '/' .$this->getToken(). '.plist';
     }
 
 }

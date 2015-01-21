@@ -1,0 +1,18 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+
+
+{% block stylesheets %}
+ .selected{
+    font-weight: 100;
+
+ }
+{% endblock %}
+ 
+
+{% block body %}
+            <img src="{{app.qrcode}}" />
+            <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
+            <div class="lastmodiffed" >{{app.comment}}</div>            
+            <div><a class="btn" href="{{s3url}}/{{app.getS3Plistname}}" >Install</a></div>
+{% endblock %}

@@ -27,12 +27,6 @@ class FileUploader {
     }
 
     public function upload(UploadedFile $file, $filename, $headers = array()) {
-        // Check if the file's mime type is in the list of allowed mime types.
-        if (!in_array($file->getClientMimeType(), self::$allowedMimeTypes)) {
-            //throw new \InvalidArgumentException(sprintf('Files of type %s are not allowed.', $file->getClientMimeType()));
-        }
-
-        // Generate a unique filename based on the date and add file extension of the uploaded file
         
         $adapter = $this->filesystem->getAdapter();
 
@@ -53,4 +47,13 @@ class FileUploader {
         $adapter->delete($file);
     }
 
+    public function uploadString($content,$filename, $headers = array()) {
+        $adapter = $this->filesystem->getAdapter();
+        $adapter->setMetadata($filename, $headers);
+        $adapter->write($filename, $content);
+
+    }
+
+
+    
 }

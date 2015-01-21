@@ -1,3 +1,15 @@
 ekreative_folder_ios_index:
     path:     /{id}
     defaults: { _controller: EkreativeAppsBundle:Ios:index }
+ekreative_ios_app_new:
+    path:     /{folder}/new
+    defaults: { _controller: EkreativeAppsBundle:Ios:new }
+ekreative_ios_app_delete:
+    path:     /{id}/delete
+    defaults: { _controller: EkreativeAppsBundle:Ios:delele }
+ekreative_ios_app_install:
+    path:     /install/{token}
+    defaults: { _controller: EkreativeAppsBundle:Ios:install }
+
+
+

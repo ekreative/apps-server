@@ -60,15 +60,18 @@ overflow: hidden;
 {% endblock %}
 
 {% block body %}
+         {%if currentFolderType == 'Ios'%}
+<a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
+        {% else %} 
+<a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
+        {%endif%}
+
 <ul class="breadcrumb" style="margin-bottom: 5px;">
     <li>
         <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
     </li>
 
-    <li>
-        <a {%if currentFolderType == 'android'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'android'})}}">Android</a>
-        <a {%if currentFolderType == 'ios'%}class="selected"{%endif%} href="{{path('ekreative_folder_switch_to',{'to':'ios'})}}">Ios</a>
-    </li>
+    <li><a href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Android apps</a> / </li>
     <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
 </ul>
 
@@ -82,11 +85,11 @@ overflow: hidden;
     {% for app in folder.app %}
 <div class="appbox" >
     <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
+    <div>version: {{app.version}}</div>
+    <div>comment: {{app.comment}}</div>
     <div><a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download</a></div>
     <div class="more">
         <div class="comment-place">
-                    {{app.version}}
-                    {{app.comment}}
             </div>
             <div class="delete-place">
                 <div><img src="{{app.qrcode}}" /></div>
