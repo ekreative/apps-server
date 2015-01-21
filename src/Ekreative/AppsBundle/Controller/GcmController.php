@@ -23,10 +23,12 @@ class GcmController extends Controller {
             if (count($tokens) == 0) {
                 $tokens = array($gcm->getDevicetoken());
             }
+            
+            
             $result = $this->sendCGM($gcm->getData(), $tokens, $gcm->getApikey());
         }
         return $this->render('EkreativeAppsBundle:Gcm:index.html.twig', array(
-                    'result' => print_r(json_decode($result), true),
+                    'result' => print_r([ 'data'=> json_decode($gcm->getData()),'response'=>json_decode($result)], true),
                     'form' => $form->createView()));
     }
 

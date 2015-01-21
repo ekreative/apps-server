@@ -27,7 +27,7 @@ class App {
     /**
      * @var string
      */
-    private $comment;
+    private $comment = null;
 
     /**
      * @var \DateTime
@@ -106,6 +106,12 @@ class App {
         return $this->comment;
     }
 
+    public function setAlternativeComment($comment) {
+       if($this->getComment()===null){
+           $this->comment = $comment;
+       }
+    }
+    
     /**
      * Set date
      *

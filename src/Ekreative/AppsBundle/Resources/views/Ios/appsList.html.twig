@@ -10,9 +10,9 @@
 
 {% block body %}
         {%if currentFolderType == 'Ios'%}
-<a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
-        {% else %} 
 <a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
+        {% else %} 
+<a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
         {%endif%}
 
 <ul class="breadcrumb" style="margin-bottom: 5px;">
@@ -22,7 +22,7 @@
     <li><a href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Ios apps</a> / </li>
     <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
 </ul>
-
+<div class="upload-form">
 {{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}
 <div class="forminline">{{form_widget(appform.uploadedFile)}}</div>
 <div class="forminline">{{form_widget(appform.version)}}</div>
@@ -31,6 +31,7 @@
 <div class="forminline">{{form_widget(appform.save,{'attr':{'class':'btn btn-success'}})}}</div>
 <div style="clear: both;"></div>
 {{form_end(appform)}}
+</div>
 <div class="apps_wrapper">
     {% for app in folder.app %}
         <div class="ios appbox" >

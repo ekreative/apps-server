@@ -65,6 +65,9 @@ overflow: hidden;
         {% else %} 
 <a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
         {%endif%}
+<ul class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="{{path('ekreative_gcmtest')}}">Gcm test</a></li>
+</ul>
 
 <ul class="breadcrumb" style="margin-bottom: 5px;">
     <li>
@@ -74,7 +77,7 @@ overflow: hidden;
     <li><a href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Android apps</a> / </li>
     <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
 </ul>
-
+<div class="upload-form">
 {{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}
 <div class="forminline">{{form_widget(appform.uploadedFile)}}</div>
 <div class="forminline">{{form_widget(appform.version)}}</div>
@@ -82,6 +85,8 @@ overflow: hidden;
 <div class="forminline">{{form_widget(appform.save,{'attr':{'class':'btn btn-success'}})}}</div>
 <div style="clear: both;"></div>
 {{form_end(appform)}}
+</div>
+
     {% for app in folder.app %}
 <div class="appbox" >
     <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            

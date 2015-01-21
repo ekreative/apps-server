@@ -69,7 +69,7 @@ class IosController extends BaseController {
         $installUrl = $this->generateUrl('ekreative_ios_app_install', array('token' => $app->getToken()));
 
         $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($installUrl) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
-
+        $app->setAlternativeComment($app->getUploadedFile()->getClientOriginalName());
         $app->setQrcode($qrcode);
         $em->persist($app);
         $em->flush();

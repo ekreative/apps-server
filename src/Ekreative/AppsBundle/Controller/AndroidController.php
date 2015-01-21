@@ -43,7 +43,6 @@ class AndroidController extends BaseController {
         $app->setDate(new \DateTime());
 
         $s3 = $this->container->getParameter('amazon_s3_base_url');
-
         $form = $this->newAppForm($app);
 
         $form->handleRequest($request);
@@ -63,6 +62,7 @@ class AndroidController extends BaseController {
         
         $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($url) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
         $app->setQrcode($qrcode);
+        $app->setAlternativeComment($app->getUploadedFile()->getClientOriginalName());
         $em->persist($app);
         $em->flush();
         return new RedirectResponse($this->generateUrl('ekreative_folder_android_index', array('id' => $folder->getId())));

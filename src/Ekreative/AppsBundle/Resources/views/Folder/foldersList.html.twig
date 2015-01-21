@@ -11,6 +11,10 @@ font-weight: 100;
 
 
 {% block body %}
+<ul class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="{{path('ekreative_gcmtest')}}">Gcm test</a></li>
+</ul>
+
         {%if currentFolderType == 'Ios'%}
 <a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
         {% else %} 
@@ -29,10 +33,12 @@ font-weight: 100;
         </li>
     </ul>
 
+<div class="upload-form">
 {{ form_start(folderform , {'attr':{'class':'well form-search'}})  }}
-{{form_widget(folderform.name)}}
+{{form_widget(folderform.name, {'attr':{'placeholder':'App name'}})  }}
 {{form_widget(folderform.save,{'attr':{'class':'btn btn-success'}})}}
 {{ form_end(folderform)  }}
+</div>
     <table class="table table-bordered table-striped table-hover">
     {% for folder in folders %}
             <tr>

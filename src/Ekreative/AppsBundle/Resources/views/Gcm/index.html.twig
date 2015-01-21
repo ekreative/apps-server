@@ -23,6 +23,9 @@
 {% endblock %}
 
 {% block body %}
+<ul class="breadcrumb" style="margin-bottom: 5px;">
+    <li><a href="{{path('ekreative_folder_index')}}">Apps</a></li>
+</ul>
 <div>
 {{ form_start(form , {'attr':{'class':'well form-search'}})  }}
     <div class="pull-left">

@@ -3,16 +3,36 @@
 
 
 {% block stylesheets %}
- .selected{
-    font-weight: 100;
+.download-view{
+    padding:5px;
+    width:500px;
+    margin:0 auto;
+    border:1px solid gray;
+    border-radius:10px;
+}
 
- }
+
+.download-view img{
+    float:left;
+}
+.download-view .more{
+    padding:5px;
+}
+
 {% endblock %}
- 
+
 
 {% block body %}
-            <img src="{{app.qrcode}}" />
-            <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
-            <div class="lastmodiffed" >{{app.comment}}</div>            
-            <div><a class="btn" href="{{s3url}}/{{app.getS3Plistname}}" >Install</a></div>
+
+<div class="download-view" > 
+   <img src="{{app.qrcode}}" />
+   <div class="more">
+        <h1>{{app.folder.name}}</h1>
+        <div>Version {{app.version}}</div>
+        <div>Comment {{app.comment}}</div>
+        <div>{{app.date.format('H:i:s d.m.Y')}}</div>            
+        <div><a class="btn btn-success" href="{{s3url}}/{{app.getS3Plistname}}" >Install</a></div>
+    </div>
+   <div style="clear: both"></div>
+</div>
 {% endblock %}
