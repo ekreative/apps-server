@@ -54,7 +54,7 @@ class AndroidController extends BaseController {
         $uploader = $this->getFileUploader();
         
         $headers = array(
-            'Content-Type' => 'application/force-download',
+            'Content-Type' => 'application/vnd.android.package-archive',
             'Content-Disposition' => 'attachment;filename="' . $app->getFilename() . '"'
         );
 
