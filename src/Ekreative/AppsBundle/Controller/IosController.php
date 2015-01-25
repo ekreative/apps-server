@@ -55,7 +55,6 @@ class IosController extends BaseController {
         $uploader = $this->getFileUploader();
 
         $headers = array(
-            'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment;filename="' . $app->getFilename() . '"'
         );
 
