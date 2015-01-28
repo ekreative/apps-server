@@ -87,9 +87,9 @@ overflow: hidden;
 {{form_end(appform)}}
 </div>
 
-    {% for app in folder.app %}
+{% for app in folder.app %}
 
-{% set applink = s3url ~ app.getS3name %}
+{% set applink = s3url ~ '/' ~ app.getS3name %}
 <div class="appbox" >
     <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
     <div>version: {{app.version}}</div>
