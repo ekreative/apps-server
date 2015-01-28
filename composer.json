@@ -18,9 +18,10 @@
         "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "knplabs/knp-gaufrette-bundle": "0.2.*@dev",
+        "knplabs/knp-gaufrette-bundle": "*@dev",
         "knplabs/gaufrette": "0.2.*@dev",
-        "aws/aws-sdk-php": "~2.6"
+        "aws/aws-sdk-php": "~2.6",
+	"rukbat/bitly-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

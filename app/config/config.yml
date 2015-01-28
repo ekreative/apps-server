@@ -90,3 +90,10 @@ ekreative_apps:
         aws_secret_key: %amazon_aws_secret_key%
         aws_region: %amazon_aws_region%
         base_url:       %amazon_s3_base_url%
+        
+rukbat_bitly:
+    key: %rukbat_bitly_key%
+    login: %rukbat_bitly_login%
+    password: null
+    clientid: null
+    secret: null        

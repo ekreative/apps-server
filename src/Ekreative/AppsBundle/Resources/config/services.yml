@@ -5,6 +5,13 @@ parameters:
     ekreative_apps.amazon_s3.base_url: ''
     
 services:
+  
+    ekreative_apps.twig.bilty_extension:
+        class: Ekreative\AppsBundle\Twig\BitlyExtension
+        arguments: [@RukbatBitly]
+        tags:
+            - { name: twig.extension }  
+  
     ekreative_apps.amazon_s3:
             class: Aws\S3\S3Client
             factory_class: Aws\S3\S3Client

@@ -20,6 +20,12 @@ class AndroidController extends BaseController {
             $app->setFolder($folder);
             $form = $this->newAppForm($app);
             
+//            $bitly = $this->get('RukbatBitly');
+            
+  //          $data = $bitly->bitly_v3_shorten('http://velopatrol.in.ua');
+            
+    //        print_r($data);
+            
             $folderType = $this->getCurrentFolderType();
             return $this->render('EkreativeAppsBundle:Android:appsList.html.twig', array(
                         'folder' => $folder,

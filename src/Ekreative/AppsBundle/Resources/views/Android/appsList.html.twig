@@ -88,16 +88,18 @@ overflow: hidden;
 </div>
 
     {% for app in folder.app %}
+
+{% set applink = s3url ~ app.getS3name %}
 <div class="appbox" >
     <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
     <div>version: {{app.version}}</div>
     <div>comment: {{app.comment}}</div>
-    <div><a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download</a></div>
+    <div><a class="btn" href="{{applink|bilty}}" >Download</a></div>
     <div class="more">
         <div class="comment-place">
             </div>
             <div class="delete-place">
-                <div><img src="{{app.qrcode}}" /></div>
+                <div><img src="{{app.qrcode|bilty}}" /></div>
                 <div>
                     <a class="btn btn-success" href="{{path('ekreative_android_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
                 </div>
