@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class FileUploader {
 
-    private static $allowedMimeTypes = array('image/jpeg', 'image/png', 'image/gif', 'application/pdf', 'video/mp4', 'application/octet-stream');
     private $filesystem;
 
     public function __construct(Filesystem $filesystem) {

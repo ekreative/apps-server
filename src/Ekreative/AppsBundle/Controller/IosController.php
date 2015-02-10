@@ -65,7 +65,7 @@ class IosController extends BaseController {
         $uploader->uploadString($plist, $app->getS3Plistname(), ['contentType' => 'application/x-plist']);
 
 
-        $installUrl = $this->generateUrl('ekreative_ios_app_install', array('token' => $app->getToken()));
+        $installUrl = $this->generateUrl('ekreative_ios_app_install', array('token' => $app->getToken()),true);
 
         $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($installUrl) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
         $app->setAlternativeComment($app->getUploadedFile()->getClientOriginalName());
@@ -77,11 +77,12 @@ class IosController extends BaseController {
 
     public function installAction($token) {
 
-
+        $s3 = $this->container->getParameter('amazon_s3_base_url');
         $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosApp')->findOneBy(['token' => $token]);
         if ($app) {
 
             return $this->render('EkreativeAppsBundle:Ios:install.html.twig', array(
+                        'S3Plistname' => $s3.'/'.$app->getS3Plistname(),
                         'app' => $app)
             );
         }

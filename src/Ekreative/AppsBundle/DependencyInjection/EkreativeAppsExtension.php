@@ -23,7 +23,7 @@ class EkreativeAppsExtension extends Extension {
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
-                if (!isset($config['amazon_s3']['aws_key'])) {
+        if (!isset($config['amazon_s3']['aws_key'])) {
             throw new \InvalidArgumentException('The option "ekreative_apps.amazon_s3.aws_key" must be set.');
         }
         $container->setParameter('ekreative_apps.aws_key', $config['amazon_s3']['aws_key']);

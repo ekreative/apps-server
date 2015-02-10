@@ -86,9 +86,9 @@ knp_gaufrette:
             
 ekreative_apps:
     amazon_s3:
-        aws_key: %amazon_aws_key%
+        aws_key:        %amazon_aws_key%
         aws_secret_key: %amazon_aws_secret_key%
-        aws_region: %amazon_aws_region%
+        aws_region:     %amazon_aws_region%
         base_url:       %amazon_s3_base_url%
         
 rukbat_bitly:
