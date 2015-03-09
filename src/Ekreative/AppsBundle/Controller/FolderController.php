@@ -20,7 +20,7 @@ class FolderController extends BaseController {
         $folderType = $this->getCurrentFolderType();
         
         return $this->render('EkreativeAppsBundle:Folder:foldersList.html.twig', array(
-                    'folders' => $this->getRepository($folderType)->findAll(),
+                    'folders' => $this->getRepository($folderType)->findBy([],['name'=>'ASC']),
                     'folderform' => $this->newFolderForm($folderType)->createView(),
                     'currentFolderType' => $folderType,
                     'serveLink' => $this->serveLink($folderType)

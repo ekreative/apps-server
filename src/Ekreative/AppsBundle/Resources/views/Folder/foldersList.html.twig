@@ -3,9 +3,13 @@
 
 {% block stylesheets %}
 .selected{
-font-weight: 100;
-
+    font-weight: 100;
 }
+
+.applink{
+    text-transform: uppercase;
+}
+
 {% endblock %}
 
 
@@ -42,7 +46,7 @@ font-weight: 100;
     {% for folder in folders %}
             <tr>
                 <td>
-                    <a class="btn btn-success" href="{{path(serveLink,{'id':folder.id})}}">
+                    <a class="applink" href="{{path(serveLink,{'id':folder.id})}}">
                     {{folder.name}}
                         </a>
                     </td>
