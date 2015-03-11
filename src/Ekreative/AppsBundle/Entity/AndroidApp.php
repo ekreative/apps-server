@@ -48,7 +48,7 @@ class AndroidApp extends App {
         
         $name=array_filter($name);
         
-        return implode(' ', $name);
+        return implode('-', $name);
     }
 
     public function getS3name() {
