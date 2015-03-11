@@ -55,6 +55,7 @@ class IosController extends BaseController {
         $uploader = $this->getFileUploader();
 
         $headers = array(
+            'contentType' => 'application/octet-stream',
             'Content-Disposition' => 'attachment;filename="' . $app->getFilename() . '"'
         );
 
