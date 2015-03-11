@@ -55,8 +55,8 @@ class IosController extends BaseController {
         $uploader = $this->getFileUploader();
 
         $headers = array(
-            'contentType' => 'application/octet-stream',
-            'Content-Disposition' => 'attachment;filename="' . $app->getFilename() . '"'
+            'ContentType' => 'application/octet-stream',
+            'ContentDisposition' => 'attachment;filename="' . $app->getFilename() . '"'
         );
 
         $url = $s3 . '/' . $uploader->upload($app->getUploadedFile(), $app->getS3name(), $headers);

@@ -44,11 +44,11 @@ class AndroidApp extends App {
         $name = [];
         $name[] = ucfirst($this->getFolder()->getName());
         $name[] = $this->getVersion();
-        $name[] = $this->getDate()->format('H:i:s d-m-Y');
+        $name[] = $this->getDate()->format('H:i:s_d-m-Y');
         
         $name=array_filter($name);
         
-        return implode('-', $name);
+        return implode('_', $name).'.apk';
     }
 
     public function getS3name() {

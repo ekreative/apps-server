@@ -51,8 +51,8 @@ class AndroidController extends BaseController {
         $uploader = $this->getFileUploader();
         
         $headers = [
-            'Content-Disposition' => 'attachment;filename="' . $app->getFilename() . '"',
-            'contentType' => 'application/vnd.android.package-archive'
+            'ContentDisposition' => 'attachment;filename="' . $app->getFilename() . '"',
+            'ContentType' => 'application/vnd.android.package-archive'
         ];
 
         $url = $s3.'/'.$uploader->upload($app->getUploadedFile(),$app->getS3name(), $headers );

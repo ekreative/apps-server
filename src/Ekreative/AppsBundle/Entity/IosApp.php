@@ -99,7 +99,7 @@ class IosApp extends App {
         $identifier = $this->getBundleIdentifier();
         $version = $this->getVersion();
         $folder = $this->getFolder()->getName();
-        return $folder . '-' . $version . '-' . $identifier;
+        return $folder . '-' . $version . '-' . $identifier.'.ipa';
     }
     
     
