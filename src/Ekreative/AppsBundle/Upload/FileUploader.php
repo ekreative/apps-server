@@ -29,10 +29,10 @@ class FileUploader {
         
         $adapter = $this->filesystem->getAdapter();
 
-        $headers['contentType'] = $file->getClientMimeType();
+     //   $headers['contentType'] = $file->getClientMimeType();
 
         $adapter->setMetadata($filename, $headers);
-        
+
         $adapter->write($filename, file_get_contents($file->getPathname()));
         @unlink($file->getPathname());
 
