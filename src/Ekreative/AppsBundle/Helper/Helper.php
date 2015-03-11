@@ -10,7 +10,7 @@ class Helper
     {
 
 
-        $imp = new DOMImplementation('');
+        $imp = new \DOMImplementation();
         $dtd = $imp->createDocumentType("plist","-//Apple//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd");
         $dom = $imp->createDocument("", "", $dtd);
 
