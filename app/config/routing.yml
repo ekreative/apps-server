@@ -2,3 +2,7 @@ ekreative_apps:
     resource: "@EkreativeAppsBundle/Resources/config/routing.yml"
     prefix:   /
 
+ekreative_trademen_admin:
+    resource: "@EkreativeAppsBundle/Controller/"
+    type:     annotation
+    prefix:   /

@@ -52,4 +52,27 @@ class AndroidFolder extends Folder {
     public function getApp() {
         return $this->app;
     }
+
+
+
+
+    private $users;
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param mixed $users
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+    }
+
+
 }

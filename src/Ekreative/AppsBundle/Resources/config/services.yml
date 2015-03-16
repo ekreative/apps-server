@@ -25,4 +25,4 @@ services:
     ekreative_apps.file_uploader:
             class: Ekreative\AppsBundle\Upload\FileUploader
             arguments: [ @file_storage_filesystem ]
-        
+

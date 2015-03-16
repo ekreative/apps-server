@@ -1,0 +1,41 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+{% block body -%}
+
+    <ul class="breadcrumb" style="margin-bottom: 5px;">
+        <li>
+            <a   href="{{path('ekreative_apps_index')}}">Home</a> |  <a   href="{{path('ekreative_folder_index')}}">Apps</a>
+        </li>
+    </ul>
+
+
+    <a class="pull-right btn btn-primary" href="{{ path('admin_user_new') }}">
+        Create a new entry
+    </a>
+    <h1>Users list</h1>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Added</th>
+                <th>Lastlogin</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td><a href="{{ path('admin_user_edit', { 'id': entity.id }) }}">{{ entity.username }}</a></td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.lastLogin %}{{ entity.lastLogin|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}

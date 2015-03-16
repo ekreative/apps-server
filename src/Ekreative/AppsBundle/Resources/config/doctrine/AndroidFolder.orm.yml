@@ -7,3 +7,7 @@ Ekreative\AppsBundle\Entity\AndroidFolder:
         mappedBy: folder
     repositoryClass: Ekreative\AppsBundle\Entity\Repository\AndroidFolderRepository
 
+    manyToMany:
+      users:
+        targetEntity: Ekreative\AppsBundle\Entity\User
+        mappedBy: androidApps

@@ -9,38 +9,45 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class App {
 
+    private $qrcode;
     /**
      * @var integer
      */
     private $id;
-
     /**
      * @var string
      */
     private $file;
-
     /**
      * @var string
      */
     private $version;
-
     /**
      * @var string
      */
     private $comment = null;
-
     /**
      * @var \DateTime
      */
     private $date;
+    private $uploadedFile;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Get file
+     *
+     * @return string
+     */
+    public function getFile() {
+        return $this->file;
     }
 
     /**
@@ -56,12 +63,12 @@ class App {
     }
 
     /**
-     * Get file
+     * Get version
      *
-     * @return string 
+     * @return string
      */
-    public function getFile() {
-        return $this->file;
+    public function getVersion() {
+        return $this->version;
     }
 
     /**
@@ -76,13 +83,19 @@ class App {
         return $this;
     }
 
+    public function setAlternativeComment($comment) {
+       if($this->getComment()===null){
+           $this->comment = $comment;
+       }
+    }
+    
     /**
-     * Get version
+     * Get comment
      *
-     * @return string 
+     * @return string
      */
-    public function getVersion() {
-        return $this->version;
+    public function getComment() {
+        return $this->comment;
     }
 
     /**
@@ -98,20 +111,14 @@ class App {
     }
 
     /**
-     * Get comment
+     * Get date
      *
-     * @return string 
+     * @return \DateTime
      */
-    public function getComment() {
-        return $this->comment;
+    public function getDate() {
+        return $this->date;
     }
 
-    public function setAlternativeComment($comment) {
-       if($this->getComment()===null){
-           $this->comment = $comment;
-       }
-    }
-    
     /**
      * Set date
      *
@@ -124,19 +131,6 @@ class App {
         return $this;
     }
 
-    /**
-     * Get date
-     *
-     * @return \DateTime 
-     */
-    public function getDate() {
-        return $this->date;
-    }
-
-
-
-    var $qrcode;
-
     public function getQrcode() {
         return $this->qrcode;
     }
@@ -144,16 +138,16 @@ class App {
     public function setQrcode($qrcode) {
         $this->qrcode = $qrcode;
     }
+    
+    public function updateFile() {
+      $this->file = $this->getUploadedFile()->getClientOriginalName();
+    }
 
-    
-    private $uploadedFile;
-    
-    
     /**
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile
      */
-    
+
     public function getUploadedFile() {
         return $this->uploadedFile;
     }
@@ -161,12 +155,6 @@ class App {
     public function setUploadedFile(\Symfony\Component\HttpFoundation\File\UploadedFile  $uploadedFile) {
         $this->uploadedFile = $uploadedFile;
 
-    }
-
-    
-    
-    public function updateFile() {
-      $this->file = $this->getUploadedFile()->getClientOriginalName();
     }
     
 }

@@ -54,5 +54,6 @@ class Helper
         $titleElement->appendChild($dom->createTextNode($title . '-v.' . $version));
         return $dom->saveXML();
 
+
     }
 }

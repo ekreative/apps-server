@@ -1,0 +1,15 @@
+{% extends "EkreativeAppsBundle::base.html.twig" %}
+
+{% block body -%}
+    <a  class="pull-right btn btn-primary" href="{{ path('admin_user') }}">
+        Back to the list
+    </a>
+
+    <h1>User edit</h1>
+    <div class="pull-right">
+        {{ form(delete_form) }}
+    </div>
+
+    {{ form(edit_form) }}
+
+{% endblock %}

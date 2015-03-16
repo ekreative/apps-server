@@ -1,25 +1,46 @@
 # app/config/security.yml
 security:
-    firewalls:
-        secured_area:
-            pattern:   ^/
-            anonymous: ~
-            http_basic:
-                realm: "Secured Demo Area"
-        install:
-            pattern:  ^/folder/ios/install/*
-            security: false
-            
-    access_control:
-        - { path: ^/folder, roles: ROLE_ADMIN }
-        # Include the following line to also secure the /admin path itself
-        # - { path: ^/admin$, roles: ROLE_ADMIN }
+    encoders:
+        Ekreative\AppsBundle\Entity\User:
+            algorithm: bcrypt
+        Symfony\Component\Security\Core\User\User: plaintext
+
+
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
+        ROLE_ADMIN:       [ROLE_USER]
 
     providers:
+        users:
+            entity: { class: EkreativeAppsBundle:User, property: username }
         in_memory:
             memory:
                 users:
-                    admin: { password: super, roles: 'ROLE_ADMIN' }
+                    admin: { password: super, roles: 'ROLE_SUPER_ADMIN' }
 
-    encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
+
+    firewalls:
+        superadmin:
+            pattern: ^/admin/
+            http_basic:
+               provider: in_memory
+               realm: "Secured Area"
+        secured_area:
+            pattern:   ^/folder/
+            anonymous: ~
+            http_basic:
+                provider: users
+                realm: "Secured Area"
+        install:
+            pattern:  ^/folder/ios/install/*
+            security: false
+
+
+
+    access_control:
+        - { path: ^/folder, roles: ROLE_USER }
+        - { path: ^/admin/, roles: ROLE_SUPER_ADMIN }
+        # Include the following line to also secure the /admin path itself
+        # - { path: ^/admin$, roles: ROLE_ADMIN }
+
+
