@@ -13,7 +13,7 @@ use Ekreative\AppsBundle\Form\UserType;
 /**
  * User controller.
  *
- * @Route("/admin/")
+ * @Route("/admin")
  */
 class UserController extends Controller
 {
