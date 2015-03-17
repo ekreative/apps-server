@@ -16,7 +16,7 @@ security:
         in_memory:
             memory:
                 users:
-                    admin: { password: super, roles: 'ROLE_SUPER_ADMIN' }
+                    ekreativ: { password: D2FKFlDg, roles: 'ROLE_SUPER_ADMIN' }
 
 
     firewalls:
