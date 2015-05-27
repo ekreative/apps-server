@@ -1,0 +1,80 @@
+.container{
+    margin-top: 20px;
+}
+.login-form{
+    width: 200px;
+}
+
+.top10{
+    margin-top: 10px;
+}
+.appbox{
+    position: relative;
+    height: 205px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    width: 218px;
+    padding: 10px;
+    margin: 5px;
+    float: left;
+}
+
+.appbox .text {
+    word-wrap: break-word;
+}
+.appbox .buttons{
+    bottom: 10px;
+    position: absolute;
+}
+.appbox .btn{
+    margin-top:10px;
+}
+.upload-form input{
+    margin-right: 4px;
+    height: 30px;
+}
+.download-view{
+    padding:5px;
+    margin:0 auto;
+    border:1px solid gray;
+    border-radius:10px;
+}
+
+.download-view img{
+    float:left;
+}
+.download-view .more{
+    padding:5px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.selected{
+    font-weight: 100;
+}
+
+.applink{
+    text-transform: uppercase;
+    color:black;
+}
+
+.fullwidth{
+    width: 690px;
+}
+
+
+#form_devicetoken{
+    margin-bottom:10px;
+}
+
+
+.right-panel{
+    padding-left: 704px;
+}
+
+.dataform{
+    height: 189px;
+    width: 288px;
+}

@@ -1,20 +1,4 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
-
-
-{% block stylesheets %}
-    .selected{
-    font-weight: 100;
-    }
-
-    .applink{
-    text-transform: uppercase;
-    color:black;
-    }
-
-{% endblock %}
-
-
-
 {% block body %}
 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
