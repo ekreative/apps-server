@@ -48,5 +48,19 @@ DirectoryIndex app.php
         # and the generated links can still be used.
         RedirectMatch 302 ^/$ /app.php/
         # RedirectTemp cannot be used instead
-    </IfModule>
+    </IfModule> </IfModule> <IfModule mod_headers.c>
+# Cache images for a long time
+        <FilesMatch "\.(ico|jpe?g|png|gif|swf)$">
+            Header always set Cache-Control "public, s-maxage=31556900, max-age=31556900"
+        </FilesMatch>
+        <FilesMatch "\.(eot|otf|tt[cf]|woff2?)$">
+            Header always set Access-Control-Allow-Origin "*"
+        </FilesMatch>
+# Cache js/css for 30 mins
+        <FilesMatch "\.(css|js|eot|svg|ttf|woff|otf)$">
+            Header always set Cache-Control "public, s-maxage=1800, max-age=1800"
+        </FilesMatch>
+# Somethings like Joomla set this things
+        Header always unset Pragma
+        Header always unset Expires
 </IfModule>
