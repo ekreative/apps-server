@@ -1,6 +1,5 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 {% block body %}
-    <div class="container">
         <div class="row">
             <div class="span6 text-center">
                 <img src="{{ app.qrcode }}"/>
@@ -12,5 +11,4 @@
                 <p>{{ app.date.format('H:i:s d.m.Y') }}</p>
                 <p><a class="btn btn-success" href="itms-services:///?action=download-manifest&url={{ S3Plistname  | url_encode }}">Install</a></div>
         </div>
-    </div>
 {% endblock %}

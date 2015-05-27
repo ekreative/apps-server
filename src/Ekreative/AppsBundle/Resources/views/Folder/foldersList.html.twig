@@ -2,14 +2,14 @@
 
 
 {% block stylesheets %}
-.selected{
+    .selected{
     font-weight: 100;
-}
+    }
 
-.applink{
+    .applink{
     text-transform: uppercase;
     color:black;
-}
+    }
 
 {% endblock %}
 
@@ -19,50 +19,50 @@
 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <ul class="breadcrumb" style="margin-bottom: 5px;">
-            <li><a href="{{path('admin_user')}}">Users</a></li>
+            <li><a href="{{ path('admin_user') }}">Users</a></li>
         </ul>
-    {%endif%}
+    {% endif %}
     <ul class="breadcrumb" style="margin-bottom: 5px;">
-        <li><a href="{{path('ekreative_gcmtest')}}">Gcm test</a></li>
+        <li><a href="{{ path('ekreative_gcmtest') }}">Gcm test</a></li>
     </ul>
-        {%if currentFolderType == 'Ios'%}
-<a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
-        {% else %} 
-<a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
-        {%endif%}
-<ul class="breadcrumb" style="margin-bottom: 5px;">
-    <li>
-        <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
-    </li>
-    <li>
-        {%if currentFolderType == 'Ios'%}
-            <a href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Ios apps</a>
-        {% else %} 
-            <a href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Android apps</a>
-        {%endif%}
+    {% if currentFolderType == 'Ios' %}
+        <a class="pull-right btn" href="{{ path('ekreative_folder_switch_to',{'to':'Android'}) }}">Go to Android apps</a>
+    {% else %}
+        <a class="pull-right btn" href="{{ path('ekreative_folder_switch_to',{'to':'Ios'}) }}">Go to Ios apps</a>
+    {% endif %}
+    <ul class="breadcrumb" style="margin-bottom: 5px;">
+        <li>
+            <a href="{{ path('ekreative_apps_index') }}">Home</a>
+        </li>
+        <li>
+            {% if currentFolderType == 'Ios' %}
+                <a href="{{ path('ekreative_folder_switch_to',{'to':'Ios'}) }}">Ios apps</a>
+            {% else %}
+                <a href="{{ path('ekreative_folder_switch_to',{'to':'Android'}) }}">Android apps</a>
+            {% endif %}
         </li>
     </ul>
 
-<div class="upload-form">
-{{ form_start(folderform , {'attr':{'class':'well form-search'}})  }}
-{{form_widget(folderform.name, {'attr':{'placeholder':'Project name'}})  }}
-{{form_widget(folderform.save,{'attr':{'class':'btn btn-success'}})}}
-{{ form_end(folderform)  }}
-</div>
+    <div class="upload-form">
+        {{ form_start(folderform , {'attr':{'class':'well form-search'}}) }}
+        {{ form_widget(folderform.name, {'attr':{'placeholder':'Project name'}}) }}
+        {{ form_widget(folderform.save,{'attr':{'class':'btn btn-success'}}) }}
+        {{ form_end(folderform) }}
+    </div>
     <table class="table table-bordered table-striped table-hover">
-    {% for folder in folders %}
+        {% for folder in folders %}
             <tr>
                 <td>
-                    <a class="applink" href="{{path(serveLink,{'id':folder.id})}}">
-                    {{folder.name}}
-                        </a>
-                    </td>
-                    <td>
-                {{folder.date.format('H:i:s d.m.Y')}}
-                        </td>
-                        <td><a class="btn btn-success" href="{{path('ekreative_delete_folder',{'id':folder.id})}}">delete</a></td>
-                    </tr>
-    {% endfor %}
+                    <a class="applink" href="{{ path(serveLink,{'id':folder.id}) }}">
+                        {{ folder.name }}
+                    </a>
+                </td>
+                <td>
+                    {{ folder.date.format('H:i:s d.m.Y') }}
+                </td>
+                <td><a class="btn btn-success" href="{{ path('ekreative_delete_folder',{'id':folder.id}) }}">delete</a></td>
+            </tr>
+        {% endfor %}
 
-                </table>
+    </table>
 {% endblock %}

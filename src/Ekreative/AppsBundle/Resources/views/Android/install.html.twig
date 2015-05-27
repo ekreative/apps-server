@@ -1,17 +1,19 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 {% block body %}
 
-    <div class="container">
     <div class="row">
     <div class="span6 text-center">
-           <img src="{{app.qrcode}}" />
+        <img src="{{ app.qrcode }}"/>
     </div>
-        <div class="span6">
-        <h2>{{app.folder.name}}</h2>
-        <p>Version {{app.version}}</p>
-        <p>Comment {{app.comment}}</p>
-        <p>{{app.date.format('H:i:s d.m.Y')}}</p>
-        <p><a class="btn btn-success" href="{{ url }}" >Install</a></p>
-        </div>
+    <div class="span6">
+        <h2>{{ app.folder.name }}</h2>
+
+        <p>Version {{ app.version }}</p>
+
+        <p>Comment {{ app.comment }}</p>
+
+        <p>{{ app.date.format('H:i:s d.m.Y') }}</p>
+
+        <p><a class="btn btn-success" href="{{ url }}">Install</a></p>
     </div>
 {% endblock %}

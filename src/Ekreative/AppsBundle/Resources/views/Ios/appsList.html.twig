@@ -1,43 +1,42 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 
 {% block body %}
-        {%if currentFolderType == 'Ios'%}
-<a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
-        {% else %} 
-<a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
-        {%endif%}
+    {% if currentFolderType == 'Ios' %}
+        <a class="pull-right btn" href="{{ path('ekreative_folder_switch_to',{'to':'Ios'}) }}">Go to Ios apps</a>
+    {% else %}
+        <a class="pull-right btn" href="{{ path('ekreative_folder_switch_to',{'to':'Android'}) }}">Go to Android apps</a>
+    {% endif %}
 
-<ul class="breadcrumb" style="margin-bottom: 5px;">
-    <li>
-        <a   href="{{path('ekreative_apps_index')}}">Home</a> / 
-    </li>
-    <li><a href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Ios apps</a> / </li>
-    <li><a  class="active" href="{{path(serveLink,{'id':folder.id})}}">{{folder.name}}</a></li>
-</ul>
-<div class="upload-form">
-{{form_start(appform , {'attr':{'class':'well  form-horizontal'}})  }}
-<div class="forminline">{{form_widget(appform.uploadedFile)}}</div>
-<div class="forminline">{{form_widget(appform.version)}}</div>
-<div class="forminline">{{form_widget(appform.bundleIdentifier)}}</div>
-<div class="forminline">{{form_widget(appform.comment)}}</div>
-<div class="forminline">{{form_widget(appform.save,{'attr':{'class':'btn btn-success'}})}}</div>
-<div style="clear: both;"></div>
-{{form_end(appform)}}
-</div>
-<div class="apps_wrapper">
-    {% for app in folder.app %}
-        <div class="appbox" >
-            <div class="text" >{{app.date.format('H:i:s d.m.Y')}}</div>
-            <div class="text" >{{app.version}} {{app.bundleIdentifier}}</div>
-            <div class="text" >{{app.comment}}</div>
-            <div class="buttons" >
-                <div>
-                    <a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download IPA</a>
-                    <a class="btn" target="_blank"href="{{path('ekreative_ios_app_install', {'token':app.token}) }}" >Install</a>
-                </div>
-                <a class="btn btn-danger" href="{{path('ekreative_ios_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
-            </div>
+    <ul class="breadcrumb" style="margin-bottom: 5px;">
+        <li><a href="{{ path('ekreative_apps_index') }}">Home</a></li>
+        <li><a href="{{ path('ekreative_folder_switch_to',{'to':'Ios'}) }}">Ios apps</a></li>
+        <li><a class="active" href="{{ path(serveLink,{'id':folder.id}) }}">{{ folder.name }}</a></li>
+    </ul>
+    <div class="upload-form">
+        {{ form_start(appform , {'attr':{'class':'well  form-horizontal'}}) }}
+        <div class="row">
+            <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.uploadedFile) }}</div>
+            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.version) }}</div>
+            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.bundleIdentifier) }}</div>
+            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
+            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
         </div>
-    {% endfor %}
+        {{ form_end(appform) }}
+    </div>
+    <div class="apps_wrapper">
+        {% for app in folder.app %}
+            <div class="appbox">
+                <div class="text">{{ app.date.format('H:i:s d.m.Y') }}</div>
+                <div class="text">{{ app.version }} {{ app.bundleIdentifier }}</div>
+                <div class="text">{{ app.comment }}</div>
+                <div class="buttons">
+                    <div>
+                        <a class="btn btn-success" href="{{ s3url }}/{{ app.getS3name }}">Download IPA</a>
+                        <a class="btn btn-success" target="_blank" href="{{ path('ekreative_ios_app_install', {'token':app.token}) }}">Install</a>
+                    </div>
+                    <a class="btn btn-danger" href="{{ path('ekreative_ios_app_delete',{'id':app.id}) }}" onclick="return confirm('are you sure?')">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

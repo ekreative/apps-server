@@ -4,13 +4,12 @@
         <link rel="icon" href="favicon.ico" type="image/x-icon">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="{{asset('bundles/ekreativeapps/css/bootstrap.css')}}" rel="stylesheet">
-        <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+        {#<link href="{{asset('bundles/ekreativeapps/css/bootstrap.css')}}" rel="stylesheet">#}
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css" rel="stylesheet">
         <style>
-            .content{
-                margin: 0 auto;
-                margin-top: 50px;
-                margin-bottom: 100px;
+            .container{
+                margin-top: 20px;
             }
             .login-form{
                 width: 200px;
@@ -21,10 +20,10 @@
             }
             .appbox{
                 position: relative;
-                height: 160px;
+                height: 187px;
                 border-radius: 10px;
                 border: 1px solid gray;
-                width: 225px;
+                width: 218px;
                 padding: 10px;
                 margin: 5px;
                 float: left;
@@ -50,9 +49,6 @@
                 border:1px solid gray;
                 border-radius:10px;
             }
-            .parts{
-                float: left;
-            }
 
             .download-view img{
                 float:left;
@@ -73,10 +69,10 @@
         
     </head>
     <body>
-        <div class="content">
-            {% block body %}{% endblock %}
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
                 <div style="clear: both;"></div>
-        </div>
             <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
