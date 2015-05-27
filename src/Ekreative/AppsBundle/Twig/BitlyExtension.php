@@ -4,7 +4,8 @@ namespace Ekreative\AppsBundle\Twig;
 
 class BitlyExtension extends \Twig_Extension {
 
-    
+
+    private $enabled = false;
     private $rukbatBitly;
     /**
      * Constructor method
@@ -13,6 +14,7 @@ class BitlyExtension extends \Twig_Extension {
      */
     public function __construct($rukbatBitly) {
         $this->rukbatBitly = $rukbatBitly;
+
     }
 
     public function getFilters() {
@@ -22,8 +24,14 @@ class BitlyExtension extends \Twig_Extension {
     }
 
     public function bilty($link) {
-        $data = $this->rukbatBitly->bitly_v3_shorten($link);
-        return $data['url'];
+
+        if($this->enabled){
+            $data = $this->rukbatBitly->bitly_v3_shorten($link);
+            return $data['url'];
+        }
+
+        return $link;
+
     }
 
     public function getName() {

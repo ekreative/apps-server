@@ -1,13 +1,5 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 
-
-
-{% block stylesheets %}
-
-{% endblock %}
-
-
-
 {% block body %}
         {%if currentFolderType == 'Ios'%}
 <a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
@@ -34,14 +26,17 @@
 </div>
 <div class="apps_wrapper">
     {% for app in folder.app %}
-        <div class="ios appbox" >
-            <div class="lastmodiffed" >Date: {{app.date.format('H:i:s d.m.Y')}}</div>            
-            <div class="lastmodiffed" >Identifier: {{app.bundleIdentifier}}</div>            
-            <div class="lastmodiffed" >Version: {{app.version}}</div>            
-            <div class="lastmodiffed" >Comment: {{app.comment}}</div>            
-
-            <div><a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download IPA</a> <a class="btn" target="_blank"href="{{path('ekreative_ios_app_install', {'token':app.token}) }}" >Install URL</a></div>
-            <a class="btn  btn-danger" href="{{path('ekreative_ios_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
+        <div class="appbox" >
+            <div class="text" >{{app.date.format('H:i:s d.m.Y')}}</div>
+            <div class="text" >{{app.version}} {{app.bundleIdentifier}}</div>
+            <div class="text" >{{app.comment}}</div>
+            <div class="buttons" >
+                <div>
+                    <a class="btn" href="{{s3url}}/{{app.getS3name}}" >Download IPA</a>
+                    <a class="btn" target="_blank"href="{{path('ekreative_ios_app_install', {'token':app.token}) }}" >Install</a>
+                </div>
+                <a class="btn btn-danger" href="{{path('ekreative_ios_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
+            </div>
         </div>
     {% endfor %}
     </div>

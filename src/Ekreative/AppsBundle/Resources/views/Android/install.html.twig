@@ -1,14 +1,14 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 {% block body %}
 
-<div class="download-view" > 
+<div class="download-view" >
    <img src="{{app.qrcode}}" />
    <div class="more">
         <h1>{{app.folder.name}}</h1>
         <div>Version {{app.version}}</div>
         <div>Comment {{app.comment}}</div>
-        <div>{{app.date.format('H:i:s d.m.Y')}}</div>            
-        <div><a class="btn btn-success" href="itms-services:///?action=download-manifest&url={{ S3Plistname  | url_encode  }}" >Install</a></div>
+        <div>{{app.date.format('H:i:s d.m.Y')}}</div>
+        <div><a class="btn btn-success" href="{{ url }}" >Install</a></div>
     </div>
    <div style="clear: both"></div>
 </div>

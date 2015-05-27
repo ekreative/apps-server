@@ -3,10 +3,6 @@ ekreative_apps_index:
     defaults: { _controller: EkreativeAppsBundle:Main:index }    
  
 
-
-
-
-
 ekreative_apps_folders:
     resource: "@EkreativeAppsBundle/Resources/config/routing/folder.yml"
     prefix:   /folder
@@ -28,5 +24,8 @@ ekreative_gcmtest:
     path:     /gcmtest
     defaults: { _controller: EkreativeAppsBundle:Gcm:index }
 ekreative_ios_app_install:
-    path:     /install/{token}
+    path:     /install/ios/{token}
     defaults: { _controller: EkreativeAppsBundle:Ios:install }
+ekreative_android_app_install:
+    path:     /install/android/{id}
+    defaults: { _controller: EkreativeAppsBundle:Android:install }

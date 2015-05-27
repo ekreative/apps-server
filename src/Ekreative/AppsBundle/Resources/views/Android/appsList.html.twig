@@ -1,73 +1,11 @@
 {% extends "EkreativeAppsBundle::base.html.twig" %}
 
-
-
-{% block stylesheets %}
-
-.appbox{
-z-index: 0;
-max-width: 200px;
-float: left;
-margin-bottom: 20px;
-max-height: 303px;
-background-color: white;
-border:1px solid gray;
-padding: 10px;
-margin:10px;
-}
-
-
-.appbox .more{
-display: none;
-border: 1px solid transparent;
-background-color: white;
-z-index: 0;
-position: absolute;
-}
-.appbox:hover .more{
-display: block;
-z-index: 3;
-border: 1px solid #999999;
-}
-
-.appbox .lastmodiffed{
-font-weight: bold;
-text-align: center;
-}
-.appbox .comment-place{
-width: 200px;
-padding: 5px;
-}
-.appbox .delete-place{
-margin-top: 10px;
-text-align: center;
-margin-bottom: 10px;
-}
-
-.appbox a{
-text-overflow: ellipsis;
-max-width: 205px;
-display: inline-block;
-white-space: nowrap;
-overflow: hidden;
-}
-
- .selected{
-    font-weight: 100;
-
- }
-
-{% endblock %}
-
 {% block body %}
          {%if currentFolderType == 'Ios'%}
 <a class="pull-right btn" href="{{path('ekreative_folder_switch_to',{'to':'Android'})}}">Go to Android apps</a>
         {% else %} 
 <a class="pull-right btn"  href="{{path('ekreative_folder_switch_to',{'to':'Ios'})}}">Go to Ios apps</a>
         {%endif%}
-<ul class="breadcrumb" style="margin-bottom: 5px;">
-    <li><a href="{{path('ekreative_gcmtest')}}">Gcm test</a></li>
-</ul>
 
 <ul class="breadcrumb" style="margin-bottom: 5px;">
     <li>
@@ -87,23 +25,22 @@ overflow: hidden;
 {{form_end(appform)}}
 </div>
 
+
+
 {% for app in folder.app %}
 
 {% set applink = s3url ~ '/' ~ app.getS3name %}
-<div class="appbox" >
-    <div class="lastmodiffed" >{{app.date.format('H:i:s d.m.Y')}}</div>            
-    <div>version: {{app.version}}</div>
-    <div>comment: {{app.comment}}</div>
-    <div><a class="btn" href="{{applink|bilty}}" >Download</a></div>
-    <div class="more">
-        <div class="comment-place">
+    <div class="appbox" >
+        <div>{{app.date.format('H:i:s d.m.Y')}}</div>
+        <div>{{app.version}}</div>
+        <div>{{app.comment}}</div>
+
+        <div class="buttons">
+            <div>
+                <a class="btn" href="{{applink|bilty}}" >Download APK</a>
+                <a class="btn" target="_blank"href="{{path('ekreative_android_app_install', {'id':app.id}) }}" >Install</a>
             </div>
-            <div class="delete-place">
-                <div><img src="{{app.qrcode|bilty}}" /></div>
-                <div>
-                    <a class="btn btn-success" href="{{path('ekreative_android_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
-                </div>
-                </div>
+            <a class="btn btn-danger" href="{{path('ekreative_android_app_delete',{'id':app.id})}}"  onclick="return confirm('are you sure?')" >Delete</a>
         </div>
     </div>
     {% endfor %}

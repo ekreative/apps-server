@@ -2,46 +2,40 @@
 
 namespace Ekreative\AppsBundle\Controller;
 
-use Ekreative\AppsBundle\Entity\AndroidFolder;
+use Ekreative\AppsBundle\Entity\AndroidApp;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Ekreative\AppsBundle\Entity\AndroidApp;
 
-class AndroidController extends BaseController {
+class AndroidController extends BaseController
+{
 
-    public function indexAction(Request $request, $id) {
+    public function indexAction(Request $request, AndroidFolder $folder)
+    {
 
-        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidFolder')->find($id);
-        if ($folder) {
+        $app = new AndroidApp();
+        $app->setFolder($folder);
+        $form       = $this->newAppForm($app);
+        $folderType = $this->getCurrentFolderType();
 
-            $em = $this->getDoctrine()->getManager();
-
-            $app = new AndroidApp();
-            $app->setFolder($folder);
-            $form = $this->newAppForm($app);
-            $folderType = $this->getCurrentFolderType();
-            return $this->render('EkreativeAppsBundle:Android:appsList.html.twig', array(
-                        'folder' => $folder,
-                        'appform' => $form->createView(),
-                        'currentFolderType' => BaseController::FOLDER_ANDROID,
-                        'serveLink' => $this->serveLink($folderType)
-                )
-            );
-        }
-
-        throw new NotFoundHttpException("Page not found");
+        return $this->render('EkreativeAppsBundle:Android:appsList.html.twig', array(
+                'folder'            => $folder,
+                'appform'           => $form->createView(),
+                'currentFolderType' => BaseController::FOLDER_ANDROID,
+                'serveLink'         => $this->serveLink($folderType)
+            )
+        );
     }
 
-    public function newAction(Request $request, $folder) {
+    public function newAction(Request $request, AndroidFolder $folder)
+    {
 
         $em = $this->getDoctrine()->getManager();
 
-        $folder = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidFolder')->find($folder);
         $app = new AndroidApp();
         $app->setFolder($folder);
         $app->setDate(new \DateTime());
 
-        $s3 = $this->container->getParameter('amazon_s3_base_url');
+        $s3   = $this->container->getParameter('amazon_s3_base_url');
         $form = $this->newAppForm($app);
 
         $form->handleRequest($request);
@@ -49,68 +43,61 @@ class AndroidController extends BaseController {
         $em->flush();
 
         $uploader = $this->getFileUploader();
-        
+
         $headers = [
             'ContentDisposition' => 'attachment;filename="' . $app->getFilename() . '"',
-            'ContentType' => 'application/vnd.android.package-archive'
+            'ContentType'        => 'application/vnd.android.package-archive'
         ];
 
-        $url = $s3.'/'.$uploader->upload($app->getUploadedFile(),$app->getS3name(), $headers );
-        
+        $url = $s3 . '/' . $uploader->upload($app->getUploadedFile(), $app->getS3name(), $headers);
+
         $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($url) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
         $app->setQrcode($qrcode);
         $app->setAlternativeComment($app->getUploadedFile()->getClientOriginalName());
         $em->persist($app);
         $em->flush();
+
         return new RedirectResponse($this->generateUrl('ekreative_folder_android_index', array('id' => $folder->getId())));
     }
 
-    public function deleleAction(Request $request, $id) {
+    public function deleleAction(Request $request, AndroidApp $app)
+    {
 
-        $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:AndroidApp')->find($id);
+        $em       = $this->getDoctrine()->getManager();
+        $folderId = $app->getFolder()->getId();
 
-        if ($app) {
-            $folderId = $app->getFolder()->getId();
-            $em = $this->getDoctrine()->getManager();
-            
-            $uploader = $this->getFileUploader();
-            $uploader->delete($app->getS3name());
-            
-            $em->remove($app);
-            $em->flush();
-            return new RedirectResponse($this->generateUrl('ekreative_folder_android_index', array('id' => $folderId)));
-        }
-        throw new NotFoundHttpException("Page not found");
+        $uploader = $this->getFileUploader();
+        $uploader->delete($app->getS3name());
+
+        $em->remove($app);
+        $em->flush();
+
+        return new RedirectResponse($this->generateUrl('ekreative_folder_android_index', array('id' => $folderId)));
     }
 
-    public function downloadAction(Request $request, $folder, $id) {
+    public function installAction(AndroidApp $app)
+    {
 
-        $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:App')->find($id);
+        $s3 = $this->container->getParameter('amazon_s3_base_url');
 
-        if ($app) {
-            $response = new \Symfony\Component\HttpFoundation\Response();
-            $filename = $this->appsFolder . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $id . '.apk';
-            // Set headers
-            $response->headers->set('Cache-Control', 'no-cache');
-            $response->headers->set('Content-type', 'application/vnd.android.package-archive');
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . $app->getFile() . '";');
-            $response->headers->set('Content-length', filesize($filename));
-            // Send headers before outputting anything
-            $response->sendHeaders();
-            return $response->setContent(readfile($filename));
-        }
-        throw new NotFoundHttpException("Page not found");
+        return $this->render('EkreativeAppsBundle:Android:install.html.twig', array(
+                'url' => $s3 . '/' . $app->getS3name(),
+                'app' => $app
+            )
+        );
     }
 
-    private function newAppForm($entity) {
+
+    private function newAppForm($entity)
+    {
         return $this->createFormBuilder($entity)
-                        ->add('uploadedFile', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
-                        ->add('version', 'text', array('required' => false, 'attr' => array('placeholder' => 'version', 'class' => "form-control")))
-                        ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
-                        ->setAction($this->generateUrl('ekreative_android_app_new', array('folder' => $entity->getFolder()->getId())))
-                        ->setMethod('POST')
-                        ->add('save', 'submit')
-                        ->getForm();
+                    ->add('uploadedFile', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
+                    ->add('version', 'text', array('required' => false, 'attr' => array('placeholder' => 'version', 'class' => "form-control")))
+                    ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
+                    ->setAction($this->generateUrl('ekreative_android_app_new', array('folder' => $entity->getFolder()->getId())))
+                    ->setMethod('POST')
+                    ->add('save', 'submit', ['label' => 'Upload'])
+                    ->getForm();
     }
 
 }
