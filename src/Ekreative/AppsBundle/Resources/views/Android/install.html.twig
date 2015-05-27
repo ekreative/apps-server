@@ -2,10 +2,10 @@
 {% block body %}
 
     <div class="row">
-    <div class="span6 text-center">
+    <div class="col-md-6 text-center .col-md-offset-3">
         <img src="{{ app.qrcode }}"/>
     </div>
-    <div class="span6">
+    <div class="col-md-6 .col-md-offset-3">
         <h2>{{ app.folder.name }}</h2>
 
         <p>Version {{ app.version }}</p>
