@@ -31,9 +31,9 @@
 
 {% set applink = s3url ~ '/' ~ app.getS3name %}
     <div class="appbox" >
-        <div>{{app.date.format('H:i:s d.m.Y')}}</div>
-        <div>{{app.version}}</div>
-        <div>{{app.comment}}</div>
+        <div class="text" >{{app.date.format('H:i:s d.m.Y')}}</div>
+        <div class="text" >{{app.version}}</div>
+        <div class="text" >{{app.comment}}</div>
 
         <div class="buttons">
             <div>
