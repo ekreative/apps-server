@@ -77,6 +77,9 @@ class IosController extends BaseController
         $app = $this->getDoctrine()->getRepository('EkreativeAppsBundle:IosApp')->findOneBy(['token' => $token]);
         if ($app) {
 
+            $installUrl = $this->generateUrl('ekreative_ios_app_install', array('token' => $app->getToken()), true);
+            $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($installUrl) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
+            $app->setQrcode($qrcode);
             return $this->render('EkreativeAppsBundle:Ios:install.html.twig', array(
                     'S3Plistname' => $s3 . '/' . $app->getS3Plistname(),
                     'app'         => $app
@@ -112,5 +115,9 @@ class IosController extends BaseController
                     ->add('save', 'submit', ['label' => 'Upload'])
                     ->getForm();
     }
+
+
+
+
 
 }

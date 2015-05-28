@@ -82,6 +82,12 @@ class AndroidController extends BaseController
 
         $s3 = $this->container->getParameter('amazon_s3_base_url');
 
+
+        $installUrl = $this->generateUrl('ekreative_android_app_install', array('id' => $app->getId()), true);
+        $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($installUrl) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
+        $app->setQrcode($qrcode);
+
+
         return $this->render('EkreativeAppsBundle:Android:install.html.twig', array(
                 'url' => $s3 . '/' . $app->getS3name(),
                 'app' => $app
