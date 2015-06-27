@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Ekreative\RedmineLoginBundle\Form\LoginType;
 use Symfony\Component\Security\Core\Security;
 
+
 class ProjectsController extends Controller
 {
     /**
