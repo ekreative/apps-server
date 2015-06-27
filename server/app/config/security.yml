@@ -19,6 +19,11 @@ security:
         unsec:
             pattern: ^/login$
             security: false
+        unstallUrl:
+            pattern: ^/install
+            security: false
+
+
 
         secured_area:
             pattern: ^/
