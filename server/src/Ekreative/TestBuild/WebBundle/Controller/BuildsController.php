@@ -38,7 +38,9 @@ class BuildsController extends Controller
 
        $url =  'itms-services:///?action=download-manifest&url='.urlencode($app->getPlistUrl());
 
-        return ['app' => $app,'plistUrl'=>$url];
+        $qrcode = $this->generateUrl('build_install', ['token' => $token]);
+
+        return ['app' => $app,'plistUrl'=>$url, 'qrcode' =>$qrcode ];
     }
 
     /**
