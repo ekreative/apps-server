@@ -35,7 +35,10 @@ class BuildsController extends Controller
     {
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
 
-        return ['app' => $app];
+
+       $url =  'itms-services:///?action=download-manifest&url='.urlencode($app->getPlistUrl());
+
+        return ['app' => $app,'plistUrl'=>$url];
     }
 
     /**

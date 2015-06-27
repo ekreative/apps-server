@@ -13,7 +13,7 @@
     <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
 
     {% if app.type =='ios' %}
-        <div><a class="btn btn-primary" href="{{ app.plistUrl }}">Install</a></div>
+        <div><a class="btn btn-primary" href="{{ plistUrl }}">Install</a></div>
     {% elseif app.type =='android' %}
         <div><a class="btn btn-primary" href="{{ app.buildUrl }}">Install</a></div>
     {% endif %}
