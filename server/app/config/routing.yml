@@ -1,0 +1,17 @@
+ekreative_test_build_web:
+    resource: "@EkreativeTestBuildWebBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+ekreative_test_build_api:
+    resource: "@EkreativeTestBuildApiBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /apidoc
+
+ekreative_redmine_login:
+    resource: "@EkreativeRedmineLoginBundle/Resources/config/routing.yml"

@@ -1,0 +1,39 @@
+security:
+
+    providers:
+        webservice:
+            id: ekreative_redmine_login.provider
+
+        in_memory:
+            memory: ~
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
+        apidoc:
+            pattern:  ^/apidoc
+            security: false
+
+        unsec:
+            pattern: ^/login$
+            security: false
+
+        secured_area:
+            pattern: ^/
+            anonymous:
+            simple_form:
+                authenticator: ekreative_redmine_login.authenticator
+                check_path:    login_check
+                login_path:    login
+                username_parameter: login[username]
+                password_parameter: login[password]
+            simple_preauth:
+                authenticator: ekreative_redmine_login.api_authenticator
+            logout:
+                path: /logout
+
+    access_control:
+            - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+            - { path: ^/, roles: ROLE_REDMINE }

@@ -1,0 +1,27 @@
+{% extends "EkreativeTestBuildWebBundle::base.html.twig" %}
+
+
+{% block body %}
+    <table class="table">
+        <tr>
+            <td>#</td>
+            <td>Project name</td>
+            <td>Date created</td>
+            <td>Date updated</td>
+            <td></td>
+        </tr>
+
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.name }}</td>
+                <td>{{ project.created_on|date("d/m/Y") }}</td>
+                <td>{{ project.updated_on|date("d/m/Y") }}</td>
+                <td>
+                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'ios'}) }}">IOS</a>
+                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'android'}) }}">Android</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

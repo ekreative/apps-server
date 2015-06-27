@@ -1,0 +1,22 @@
+parameters:
+    ekreative_test_build_core.aws_key: ''
+    ekreative_test_build_core.aws_secret: ''
+    ekreative_test_build_core.aws_region: ''
+    ekreative_test_build_core.amazon_s3.base_url: ''
+    ekreative_test_build_core.amazon_s3.bucket: ''
+
+services:
+    ekreative_test_build_core.amazon_s3:
+            class: Aws\S3\S3Client
+            factory_class: Aws\S3\S3Client
+            factory_method: factory
+            arguments:
+              -
+                key: %ekreative_test_build_core.aws_key%
+                secret: %ekreative_test_build_core.aws_secret%
+                region: %ekreative_test_build_core.aws_region%
+
+    ekreative_test_build_core.file_uploader:
+            class: Ekreative\TestBuild\CoreBundle\AWS\S3
+            arguments: [ @ekreative_test_build_core.amazon_s3, %ekreative_test_build_core.amazon_s3.base_url% , %ekreative_test_build_core.amazon_s3.bucket% ]
+
