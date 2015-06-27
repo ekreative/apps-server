@@ -24,6 +24,7 @@
             <td>icon</td>
             <td>name</td>
             <td>version</td>
+            <td>bundle id</td>
             <td>created</td>
             <td></td>
         </tr>
@@ -34,9 +35,15 @@
                 <td><img width="57" height="57" src="{{ project.iconUrl }}"></td>
                 <td>{{ project.name }}</td>
                 <td>{{ project.version }}</td>
+                <td>{{ project.bundleId }}</td>
                 <td>{{ project.created|date("d/m/Y") }}</td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank" >Install</a>
+
+                    <form  method="post" action="{{ path('build_delete',{'token':project.token,'project':project.projectId,'type':project.type}) }}" >
+                        <button class="btn btn-primary"  type="submit">Delete</button>
+                    </form>
+
                 </td>
             </tr>
         {% endfor %}

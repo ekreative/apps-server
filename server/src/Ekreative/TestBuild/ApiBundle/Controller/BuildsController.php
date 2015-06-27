@@ -149,11 +149,11 @@ class BuildsController extends JsonController
                                  $build->getFilename());
 
             file_put_contents($tempFile, $plist);
-            $app->setPlistUrl($s3Service->upload($tempFile, $app->getFilename(), $headers));
+            $app->setPlistUrl($s3Service->upload($tempFile, $app->getPlistName(), $headers));
             unlink($tempFile);
         }
 
-        $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($app->getBuildUrl()) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
+        $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install',['token' => $app->getToken()])) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
         $em->persist($app);
         $em->flush();
         return new JsonResponse($app);

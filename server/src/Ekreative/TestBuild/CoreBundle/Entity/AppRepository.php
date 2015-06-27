@@ -13,18 +13,37 @@ use Doctrine\ORM\EntityRepository;
 class AppRepository extends EntityRepository
 {
 
+    /**
+     * @param $id
+     * @param $type
+     *
+     * @return App[]
+     */
     public function getAppsForProject($id, $type)
     {
         return $this->findBy(['projectId' => $id, 'type' => $type],['id'=>'DESC']);
 
     }
 
+    /**
+     * @param $token
+     *
+     * @return App
+     */
     public function getAppByToken($token)
     {
         return $this->findOneBy(['token' => $token]);
     }
 
 
+    /**
+     * @param $ipa
+     * @param $bundleIdentifier
+     * @param $version
+     * @param $title
+     *
+     * @return string
+     */
     public function getPlistString($ipa, $bundleIdentifier, $version, $title)
     {
 

@@ -478,10 +478,6 @@ class App implements \JsonSerializable
     }
 
 
-    public function getPlistName()
-    {
-        return $this->getFolderWithToken() . '.plist';
-    }
 
     /**
      * @var string
@@ -521,11 +517,16 @@ class App implements \JsonSerializable
 
         if ($this->isType(App::TYPE_ANDROID)) {
             $name[] = '.apk';
-        } else if ($this->isType(App::TYPE_ANDROID)) {
+        } else if ($this->isType(App::TYPE_IOS)) {
             $name[] = '.ipa';
         }
 
         return implode('_', $name);
+    }
+
+    public function getPlistName()
+    {
+        return $this->getFolderWithToken().'.plist';
     }
 
 
