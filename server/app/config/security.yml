@@ -13,7 +13,7 @@ security:
             security: false
 
         apidoc:
-            pattern:  ^/apidoc
+            pattern:  ^/api/doc
             security: false
 
         unsec:

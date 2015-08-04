@@ -18,21 +18,18 @@ class ProjectsController extends Controller
 {
 
     /**
-     * @Route(".json")
-     *      * @Method("GET")
+     * @Route("/{page}",defaults={"page" = "1"})
+     * @Method("GET")
      * @ApiDoc(
-     *   description="Generate a sample of using the extension-api to generate this item",
-     *   section="Source",
-     *   filters={
-     *     {"name"="ids", "dataType"="integer", "description"="If set, sets the ids on elements"}
-     *   }
+     *   description="List of projects",
+     *   section="Projects"
      * )
 
      */
-    public function indexAction()
+    public function indexAction($page)
     {
 
-        $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json')->getBody();
+        $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json?page='.$page)->getBody();
         $projects = json_decode($data, true);
         return new JsonResponse($projects['projects']);
     }

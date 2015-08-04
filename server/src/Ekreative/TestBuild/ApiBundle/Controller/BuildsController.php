@@ -20,40 +20,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class BuildsController extends JsonController
 {
 
-    /**
-     * @Route("/{id}.json")
-     * @Method("GET")
-     * @ApiDoc(
-     *   description="info about build",
-     *   section="Source",
-     * )
-     */
-    public function indexAction($id)
-    {
 
-        $builds = [
-            'type'        => 'android',
-            'url'         => 'https://s3-eu-west-1.amazonaws.com/ek-appshare/23/444.apk',
-            'plist'       => 'https://s3-eu-west-1.amazonaws.com/ek-appshare/108/8f55a8ced5083157fde163ceb2a623b2.plist',
-            'version'     => '1.0.0',
-            'build'       => 'bla bla bla',
-            'qrcode'      => 'http://lorempixel.com/200/200/city/',
-            'bundleid'    => 'com.ekreative.testbuild',
-            'createdName' => '%username%',
-            'createdId'   => '%userd%',
-            'projectid'   => 10,
-            'iconurl'     => 'http://lorempixel.com/57/57/cats/'
-        ];
-
-        return new JsonResponse($builds);
-    }
 
     /**
      * @Route("/{project}/{type}")
      * @Method("GET")
      * @ApiDoc(
-     *   description="info about build",
-     *   section="Source",
+     *   description="Apps builds for project",
+     *   section="Builds"
      * )
      */
     public function buildsAction($project,$type)
@@ -69,8 +43,13 @@ class BuildsController extends JsonController
      * @Route("/upload/{project}/{type}", name="jenkins_url")
      * @Method("POST")
      * @ApiDoc(
-     *   description="post new build from jenkins",
-     *   section="Post",
+     *   description="Post new build from jenkins",
+     *   section="Builds",
+     *   parameters={
+     *      {"name"="name", "dataType"="string", "required"=true, "description"="Name of app"},
+     *      {"name"="app",  "dataType"="file", "required"=true, "description"="Build of the app"},
+     *      {"name"="icon", "dataType"="file", "required"=true, "description"="app icon"}
+     *  }
      * )
      */
     public function uploadAction($project, $type)
