@@ -1,22 +1,30 @@
 {% extends "EkreativeTestBuildWebBundle::base.html.twig" %}
 
 
+{% block title %}
+    {{ title }}
+{% endblock %}
 {% block body %}
+
+    <h1>{{ title }}</h1>
+
     <a class="btn btn-primary margin-bottom-15" href="{{ path('projects') }}">Back</a>
 
-    <div class="upload-form">
-        {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
-        <div class="row">
-            <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
-            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.version) }}</div>
-            {% if type=='ios' %}
-            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.bundleId) }}</div>
-            {% endif %}
-            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
-            <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
+    {% if appform is defined %}
+        <div class="upload-form">
+            {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
+            <div class="row">
+                <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
+                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.version) }}</div>
+                {% if type=='ios' %}
+                    <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.bundleId) }}</div>
+                {% endif %}
+                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
+                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
+            </div>
+            {{ form_end(appform) }}
         </div>
-        {{ form_end(appform) }}
-    </div>
+    {% endif %}
 
     <table class="table">
         <tr>
@@ -27,24 +35,29 @@
             <td>bundle id</td>
             <td>created</td>
             <td></td>
+            {% if delete %}
+                <td></td>
+            {% endif %}
         </tr>
-
         {% for project in apps %}
             <tr>
-                <td>{{ project.id}}</td>
+                <td>{{ project.id }}</td>
                 <td><img width="57" height="57" src="{{ project.iconUrl }}"></td>
                 <td>{{ project.name }}</td>
                 <td>{{ project.version }}</td>
                 <td>{{ project.bundleId }}</td>
                 <td>{{ project.created|date("d/m/Y") }}</td>
                 <td>
-                    <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank" >Install</a>
-
-                    <form  method="post" action="{{ path('build_delete',{'token':project.token,'project':project.projectId,'type':project.type}) }}" >
-                        <button class="btn btn-primary"  type="submit">Delete</button>
-                    </form>
+                    <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank">Install</a>
 
                 </td>
+                {% if delete %}
+                    <td>
+                        <form method="post" action="{{ path('build_delete',{'token':project.token,'project':project.projectId,'type':project.type}) }}">
+                            <button class="btn btn-primary" type="submit">Delete</button>
+                        </form>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

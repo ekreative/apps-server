@@ -3,10 +3,12 @@
 namespace Ekreative\TestBuild\WebBundle\Controller;
 
 use Ekreative\TestBuild\CoreBundle\Entity\App;
+use Ekreative\TestBuild\CoreBundle\Roles\EkreativeUserRoles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class BuildsController extends Controller
@@ -15,16 +17,60 @@ class BuildsController extends Controller
      * @Route("project/{project}/{type}/",name="project_builds")
      * @Template()
      */
-    public function indexAction($project, $type)
+    public function indexAction(Request $request, $project, $type)
     {
-        $apps = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
 
-        $app = new App();
-        $app->setType($type);
-        $app->setProjectId($project);
-        $form = $this->newAppForm($app);
+        $currentUser = $this->getUser();
+        $session = $request->getSession();
+        $projects = $session->get('projects');
 
-        return ['apps' => $apps, 'appform' => $form->createView(), 'type' => $type];
+
+        $data = $this->get('ekreative_redmine_login.client_provider')->get($currentUser)->get('projects/'.$project.'/memberships.json')->getBody();
+        $members = json_decode($data, true);
+
+        $upload = false;
+        $delete = false;
+
+
+        $result = [];
+        $result['title'] = 'Builds';
+
+        if(is_array($projects)){
+            foreach($projects as $projectArr){
+                if($projectArr['id']==$project){
+                    $result['title']=$projectArr['name'];
+                }
+            }
+        }
+
+        foreach(array_key_exists('memberships',$members)?$members['memberships']:[] as $member ){
+            $user = array_key_exists('user',$member) ? $member['user']:['id'=>null];
+            if( $user['id']==$currentUser->getId()){
+                foreach($member['roles'] as $role){
+                    if($role['name']==EkreativeUserRoles::ROLE_MANAGER){
+                        $delete = true;
+                    }
+                    if($role['name']==EkreativeUserRoles::ROLE_DEVELOPER){
+                        $delete = true;
+                        $upload = true;
+                    }
+               }
+            }
+        }
+
+        if($upload){
+            $app = new App();
+            $app->setType($type);
+            $app->setProjectId($project);
+            $form = $this->newAppForm($app);
+            $result['appform']  =  $form->createView();
+        }
+
+        $result['type']  =  $type;
+        $result['delete']  = $delete;
+        $result['apps']  =  $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
+
+        return $result;
     }
 
     /**
@@ -48,9 +94,8 @@ class BuildsController extends Controller
      * @Template()
      * @Method("POST")
      */
-    public function deleteAction($project, $type, $token)
+    public function deleteAon($project, $type, $token)
     {
-
 
         $s3Service = $this->get('ekreative_test_build_core.file_uploader');
 

@@ -2,12 +2,23 @@
 
 
 {% block body %}
-    <table class="table">
+
+
+    {% if prev %}
+    <a class="btn-sm btn-primary pull-left" href="{{ path('projects',{'page':prev}) }}">Previus Page</a>
+    {% endif %}
+
+    {% if projects|length == 25 %}
+    <a class="btn-sm btn-primary pull-right" href="{{ path('projects',{'page':next}) }}">Next Page</a>
+    {% endif %}
+
+    <table class="table margin-top-15">
         <tr>
             <td>#</td>
             <td>Project name</td>
             <td>Date created</td>
             <td>Date updated</td>
+            <td></td>
             <td></td>
         </tr>
 
@@ -19,6 +30,8 @@
                 <td>{{ project.updated_on|date("d/m/Y") }}</td>
                 <td>
                     <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'ios'}) }}">IOS</a>
+                </td>
+                <td>
                     <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'android'}) }}">Android</a>
                 </td>
             </tr>

@@ -16,15 +16,24 @@ use Symfony\Component\Security\Core\Security;
 class ProjectsController extends Controller
 {
     /**
-     * @Route("/",name="projects")
+     * @Route("/{page}",name="projects",defaults={"page" = "1"})
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($page, Request $request)
     {
 
-        $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json')->getBody();
+        $session = $request->getSession();
+
+        $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json?page='.$page)->getBody();
         $projects = json_decode($data, true);
-        return array('projects'=>$projects['projects']);
+
+        $session->set('projects',$projects['projects'] );
+
+        return [
+            'projects'=>$projects['projects'],
+            'next'=>$page + 1,
+            'prev'=>$page - 1
+        ];
     }
 
 
