@@ -20,7 +20,6 @@
             <td>Date created</td>
             <td>Date updated</td>
             <td></td>
-            <td></td>
         </tr>
 
         {% for project in projects %}
@@ -34,12 +33,6 @@
                 </td>
                 <td>
                     <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'android'}) }}">Android</a>
-                </td>
-                <td>
-                    {% if project['apps'] is defined %}
-                        {{ dump(project['apps']) }}
-                    {% endif %}
-
                 </td>
             </tr>
         {% endfor %}
