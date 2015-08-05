@@ -57,27 +57,97 @@ class App implements \JsonSerializable
      */
     private $bundleId;
 
+
+    ////android
+
     /**
      * @var string
      *
-     * @ORM\Column(name="minSdkLevel", type="string", length=255)
+     * @ORM\Column(name="minSdkLevel", type="string", length=255, nullable=true)
      */
     private $minSdkLevel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="permssions", type="string")
+     * @ORM\Column(name="permssions", type="string", nullable=true)
      */
     private $permssions;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="debuggable", type="integer")
+     * @ORM\Column(name="debuggable", type="integer", nullable=true)
      */
     private $debuggable;
 
+
+    //// ios
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleName", type="string", nullable=true)
+     */
+    private $bundleName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleVersion", type="string", nullable=true)
+     */
+    private $bundleVersion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="minimumOSVersion", type="string", nullable=true)
+     */
+    private $minimumOSVersion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="platformVersion", type="string", nullable=true)
+     */
+    private $platformVersion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleIdentifier", type="string", nullable=true)
+     */
+    private $bundleIdentifier;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleDisplayName", type="string", nullable=true)
+     */
+    private $bundleDisplayName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleShortVersionString", type="string", nullable=true)
+     */
+    private $bundleShortVersionString;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bundleSupportedPlatforms", type="string", nullable=true)
+     */
+    private $bundleSupportedPlatforms;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="supportedInterfaceOrientations", type="string", nullable=true)
+     */
+    private $supportedInterfaceOrientations;
+
+    ////other
 
     /**
      * @var string
@@ -122,7 +192,7 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="iconUrl", type="string", length=255)
+     * @ORM\Column(name="iconUrl", type="string", length=255, nullable=true)
      */
     private $iconUrl;
 
@@ -692,6 +762,151 @@ class App implements \JsonSerializable
     {
         $this->debuggable = $debuggable;
     }
+
+    /**
+     * @return int
+     */
+    public function getBundleName()
+    {
+        return $this->bundleName;
+    }
+
+    /**
+     * @param int $bundleName
+     */
+    public function setBundleName($bundleName)
+    {
+        $this->bundleName = $bundleName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBundleVersion()
+    {
+        return $this->bundleVersion;
+    }
+
+    /**
+     * @param int $bundleVersion
+     */
+    public function setBundleVersion($bundleVersion)
+    {
+        $this->bundleVersion = $bundleVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinimumOSVersion()
+    {
+        return $this->minimumOSVersion;
+    }
+
+    /**
+     * @param int $minimumOSVersion
+     */
+    public function setMinimumOSVersion($minimumOSVersion)
+    {
+        $this->minimumOSVersion = $minimumOSVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPlatformVersion()
+    {
+        return $this->platformVersion;
+    }
+
+    /**
+     * @param int $platformVersion
+     */
+    public function setPlatformVersion($platformVersion)
+    {
+        $this->platformVersion = $platformVersion;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBundleIdentifier()
+    {
+        return $this->bundleIdentifier;
+    }
+
+    /**
+     * @param int $bundleIdentifier
+     */
+    public function setBundleIdentifier($bundleIdentifier)
+    {
+        $this->bundleIdentifier = $bundleIdentifier;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBundleDisplayName()
+    {
+        return $this->bundleDisplayName;
+    }
+
+    /**
+     * @param int $bundleDisplayName
+     */
+    public function setBundleDisplayName($bundleDisplayName)
+    {
+        $this->bundleDisplayName = $bundleDisplayName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBundleShortVersionString()
+    {
+        return $this->bundleShortVersionString;
+    }
+
+    /**
+     * @param int $bundleShortVersionString
+     */
+    public function setBundleShortVersionString($bundleShortVersionString)
+    {
+        $this->bundleShortVersionString = $bundleShortVersionString;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBundleSupportedPlatforms()
+    {
+        return $this->bundleSupportedPlatforms;
+    }
+
+    /**
+     * @param int $bundleSupportedPlatforms
+     */
+    public function setBundleSupportedPlatforms($bundleSupportedPlatforms)
+    {
+        $this->bundleSupportedPlatforms = $bundleSupportedPlatforms;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSupportedInterfaceOrientations()
+    {
+        return $this->supportedInterfaceOrientations;
+    }
+
+    /**
+     * @param int $supportedInterfaceOrientations
+     */
+    public function setSupportedInterfaceOrientations($supportedInterfaceOrientations)
+    {
+        $this->supportedInterfaceOrientations = $supportedInterfaceOrientations;
+    }
+
 
 
 }

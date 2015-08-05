@@ -20,3 +20,7 @@ services:
             class: Ekreative\TestBuild\CoreBundle\AWS\S3
             arguments: [ @ekreative_test_build_core.amazon_s3, %ekreative_test_build_core.amazon_s3.base_url% , %ekreative_test_build_core.amazon_s3.bucket% ]
 
+    ekreative_test_build_core.ipa_reader:
+            class: Ekreative\TestBuild\CoreBundle\Services\IpaReader
+            arguments:
+              entityManager: "/tmp/"

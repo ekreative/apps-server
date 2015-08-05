@@ -34,6 +34,7 @@
             <td>Version</td>
             <td>Bundle id</td>
             <td>Created</td>
+            <td>Build</td>
             <td></td>
             {% if delete %}
                 <td></td>
@@ -48,6 +49,7 @@
                 <td>{{ project.version }}</td>
                 <td>{{ project.bundleId }}</td>
                 <td>{{ project.created|date("d/m/Y") }}</td>
+                <td> <a class="btn btn-primary" href="{{ project.buildUrl }}" target="_blank">Download</a></td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank">Install</a>
                 </td>

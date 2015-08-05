@@ -24,7 +24,8 @@
         "mcfedr/json-form": "^3.0",
         "ekreative/redmine_login": "^2.0",
         "stof/doctrine-extensions-bundle": "^1.1",
-        "tufanbarisyildirim/php-apk-parser": "dev-master"
+        "tufanbarisyildirim/php-apk-parser": "dev-master",
+        "rodneyrehm/plist": "^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

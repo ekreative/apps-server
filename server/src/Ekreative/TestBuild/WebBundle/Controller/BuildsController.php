@@ -5,6 +5,7 @@ namespace Ekreative\TestBuild\WebBundle\Controller;
 use ApkParser\Parser;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Ekreative\TestBuild\CoreBundle\Roles\EkreativeUserRoles;
+use Ekreative\TestBuild\CoreBundle\Services\IpaReader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class BuildsController extends Controller
 {
     /**
-     * @Route("/builds/{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
+     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
      * @Template()
      */
     public function indexAction(Request $request, $project, $type)
@@ -183,6 +184,30 @@ class BuildsController extends Controller
         $app->setDebuggable(false);
         if ($app->isType(App::TYPE_IOS)) {
             $app->setBundleId($form['bundleId']);
+
+            /**
+             * @var IpaReader $ipaReader
+             */
+            $ipaReader = $this->get('ekreative_test_build_core.ipa_reader');
+
+            $ipaReader->read($build->getRealPath());
+            $app->setBundleName($ipaReader->getBundleName());
+            $app->setVersion($ipaReader->getBundleVersion());
+            $app->setMinimumOSVersion($ipaReader->getMinimumOSVersion());
+            $app->setPlatformVersion($ipaReader->getPlatformVersion());
+            $app->setBundleDisplayName($ipaReader->getBundleDisplayName());
+            $app->setBuildNumber($ipaReader->getBundleShortVersionString());
+            $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
+            $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
+
+            $app->setBundleId($ipaReader->getBundleIdentifier());
+
+            $app->setIconUrl($s3Service->upload($ipaReader->getIcon(), $app->getIconFileName()));
+
+
+
+            $ipaReader->clean();
+
         } else {
 
             try{
