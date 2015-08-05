@@ -37,8 +37,8 @@
             <td></td>
             {% if delete %}
                 <td></td>
+                <td>Release</td>
             {% endif %}
-            <td>Release</td>
         </tr>
         {% for project in apps %}
             <tr>
@@ -57,14 +57,14 @@
                             <button class="btn btn-primary" type="submit">Delete</button>
                         </form>
                     </td>
+                    <td>
+                        {% if project.release %}
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >YES</a>
+                        {% else %}
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >NO</a>
+                        {% endif %}
+                    </td>
                 {% endif %}
-                <td>
-                    {% if project.release %}
-                        <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >YES</a>
-                    {% else %}
-                        <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >NO</a>
-                    {% endif %}
-                </td>
             </tr>
         {% endfor %}
     </table>

@@ -16,12 +16,12 @@ security:
             pattern:  ^/api/doc
             security: false
 
-        unsec:
+        login:
             pattern: ^/login$
             security: false
 
         unstallUrl:
-            pattern: ^/install
+            pattern: ^/builds/install/
             security: false
 
         secured_area:

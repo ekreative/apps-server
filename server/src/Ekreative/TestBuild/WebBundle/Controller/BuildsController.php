@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class BuildsController extends Controller
 {
     /**
-     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
+     * @Route("/builds/{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
      * @Template()
      */
     public function indexAction(Request $request, $project, $type)
