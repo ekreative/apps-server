@@ -2,6 +2,7 @@
 
 namespace Ekreative\TestBuild\WebBundle\Controller;
 
+use ApkParser\Parser;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Ekreative\TestBuild\CoreBundle\Roles\EkreativeUserRoles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -154,6 +155,8 @@ class BuildsController extends Controller
     public function uploadAction($project, $type)
     {
         $request = $this->getRequest();
+        $s3Service = $this->get('ekreative_test_build_core.file_uploader');
+
 
         /**
          * @var RedmineUser $user
@@ -172,24 +175,65 @@ class BuildsController extends Controller
 
         $files = $request->files->get('form');
 
-        $app->setVersion($form['version']);
         $app->setComment($form['comment']);
+        $app->setBuild($files['build']);
 
+        $build = $app->getBuild();
+        $app->setRelease(false);
+        $app->setDebuggable(false);
         if ($app->isType(App::TYPE_IOS)) {
             $app->setBundleId($form['bundleId']);
         } else {
-            $app->setBundleId('dasd');
+
+            try{
+                $apk = new Parser($build->getRealPath());
+                $manifest = $apk->getManifest();
+
+                try{
+                    $app->setBundleId($manifest->getPackageName());
+                }catch (\Exception $e){
+
+                }
+                try{
+                    $app->setVersion($manifest->getVersionName());
+                }catch (\Exception $e){
+
+                }
+
+                try{
+                    $app->setBuildNumber($manifest->getVersionCode());
+                }catch (\Exception $e){
+
+                }
+                try{
+                    $app->setMinSdkLevel($manifest->getMinSdkLevel());
+                }catch (\Exception $e){
+
+                }
+                try{
+                    $app->setDebuggable($manifest->isDebuggable());
+                }catch (\Exception $e){
+
+                }
+                $app->setPermssions(implode(', ',array_keys($manifest->getPermissions())));
+
+                $resourceId = $apk->getManifest()->getApplication()->getIcon();
+                $resources = $apk->getResources($resourceId);
+                $tmpfname = tempnam("/tmp", $manifest->getPackageName());
+                file_put_contents($tmpfname,stream_get_contents($apk->getStream(end($resources))));
+                $app->setIconUrl($s3Service->upload($tmpfname, $app->getIconFileName()));
+                unlink($tmpfname);
+
+            }catch (\Exception $e){
+
+            }
+
         }
-
-
-        $app->setBuild($files['build']);
 
 
         $app->setCreatedName($user->getFirstName() . '  ' . $user->getLastName());
         $app->setCreatedId($user->getId());
 
-        $icon  = $app->getIcon();
-        $build = $app->getBuild();
 
         $app->setName($build->getClientOriginalName());
         $em->persist($app);
@@ -207,12 +251,7 @@ class BuildsController extends Controller
             ];
         }
 
-        $s3Service = $this->get('ekreative_test_build_core.file_uploader');
 
-        if ($icon) {
-            $app->setIconUrl($s3Service->upload($icon->getRealPath(), $app->getIconFileName()));
-            unlink($icon->getRealPath());
-        }
 
         $app->setBuildUrl($s3Service->upload($build->getRealPath(), $app->getFilename(), $headers));
         unlink($build->getRealPath());

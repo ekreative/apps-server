@@ -23,7 +23,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "mcfedr/json-form": "^3.0",
         "ekreative/redmine_login": "^2.0",
-        "stof/doctrine-extensions-bundle": "^1.1"
+        "stof/doctrine-extensions-bundle": "^1.1",
+        "tufanbarisyildirim/php-apk-parser": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"

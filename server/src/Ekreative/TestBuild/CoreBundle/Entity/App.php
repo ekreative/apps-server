@@ -35,19 +35,6 @@ class App implements \JsonSerializable
      */
     private $name;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="type", type="string", length=255)
-     */
-    private $type;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="buildUrl", type="string", length=255)
-     */
-    private $buildUrl;
 
     /**
      * @var string
@@ -66,17 +53,51 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="qrcodeUrl", type="string", length=255)
-     */
-    private $qrcodeUrl;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="bundleId", type="string", length=255)
      */
     private $bundleId;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="minSdkLevel", type="string", length=255)
+     */
+    private $minSdkLevel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="permssions", type="string")
+     */
+    private $permssions;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="debuggable", type="integer")
+     */
+    private $debuggable;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="buildUrl", type="string", length=255)
+     */
+    private $buildUrl;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="qrcodeUrl", type="string", length=255)
+     */
+    private $qrcodeUrl;
     /**
      * @var string
      *
@@ -489,7 +510,7 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="plistUrl", type="string", length=255)
+     * @ORM\Column(name="plistUrl", type="string", length=255, nullable=true)
      */
 
     private $plistUrl;
@@ -623,5 +644,54 @@ class App implements \JsonSerializable
     {
         $this->release = $release;
     }
+
+    /**
+     * @return string
+     */
+    public function getPermssions()
+    {
+        return $this->permssions;
+    }
+
+    /**
+     * @param string $permssions
+     */
+    public function setPermssions($permssions)
+    {
+        $this->permssions = $permssions;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMinSdkLevel()
+    {
+        return $this->minSdkLevel;
+    }
+
+    /**
+     * @param string $minSdkLevel
+     */
+    public function setMinSdkLevel($minSdkLevel)
+    {
+        $this->minSdkLevel = $minSdkLevel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebuggable()
+    {
+        return $this->debuggable;
+    }
+
+    /**
+     * @param string $debuggable
+     */
+    public function setDebuggable($debuggable)
+    {
+        $this->debuggable = $debuggable;
+    }
+
 
 }
