@@ -12,11 +12,6 @@
         body {
             background-color: #F1F1F1;
         }
-
-        body .container {
-            background-color: white;
-        }
-
         .logo {
             background-image: url("/images/logo.png");
             height: 65px;
@@ -24,7 +19,8 @@
             margin: 0 auto;
             margin-top: 50px;
             margin-bottom: 50px;
-
+            background-repeat: no-repeat;
+            background-position: center center;
         }
 
         .top-line {
@@ -36,7 +32,6 @@
             font-weight: 300;
 
         }
-
         .app-name {
             font-weight: 300;
             font-size: 36px;
@@ -44,6 +39,9 @@
             width: 200px;
             padding-bottom: 20px;
             margin: 0 auto;
+        }
+        .margin-bottom-40{
+            margin-bottom: 40px;
         }
 
 
@@ -54,7 +52,7 @@
 <div class="top-line"></div>
 <div class="logo"></div>
 <div class="container-padding">
-    <div class="content-center">
+    <div class="content-center margin-bottom-40">
         <div><img src="{{ qrcode }}"></div>
         <div class="app-name">{{ app.name }}</div>
         <div class="margin-top-15">{{ app.type }} {{ app.version }}</div>
