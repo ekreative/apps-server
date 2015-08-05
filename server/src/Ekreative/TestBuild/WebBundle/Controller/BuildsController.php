@@ -10,11 +10,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/builds/")
+ */
 
 class BuildsController extends Controller
 {
     /**
-     * @Route("project/{project}/{type}/",name="project_builds")
+     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
      * @Template()
      */
     public function indexAction(Request $request, $project, $type)
@@ -24,13 +27,11 @@ class BuildsController extends Controller
         $session = $request->getSession();
         $projects = $session->get('projects');
 
-
         $data = $this->get('ekreative_redmine_login.client_provider')->get($currentUser)->get('projects/'.$project.'/memberships.json')->getBody();
         $members = json_decode($data, true);
 
         $upload = false;
         $delete = false;
-
 
         $result = [];
         $result['title'] = 'Builds';
@@ -79,14 +80,44 @@ class BuildsController extends Controller
      */
     public function installAction($token)
     {
+
+        /**
+         *  @var App $app
+         */
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
 
 
-       $url =  'itms-services:///?action=download-manifest&url='.urlencode($app->getPlistUrl());
+        if($app->isType(App::TYPE_ANDROID)){
+            $url =  $app->getBuildUrl();
+        }elseif($app->isType(App::TYPE_IOS)){
+            $url =  'itms-services:///?action=download-manifest&url='.urlencode($app->getPlistUrl());
 
-        $qrcode = $this->generateUrl('build_install', ['token' => $token]);
+        }
 
-        return ['app' => $app,'plistUrl'=>$url, 'qrcode' =>$qrcode ];
+
+
+        $qrcode = 'http://chart.apis.google.com/chart?chl='.urlencode($this->generateUrl('build_install', ['token' => $token],true)).'&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
+
+
+        return ['app' => $app,'url'=>$url, 'qrcode' =>$qrcode ];
+    }
+
+    /**
+     * @Route("release/{app}",name="build_inverse_release")
+     * @Template()
+     */
+    public function releaseAction(App $app)
+    {
+
+        $app->inverseRelease();
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($app);
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl('project_builds', ['type' => $app->getType(), 'project' => $app->getProjectId()])
+        );
     }
 
     /**
@@ -94,7 +125,7 @@ class BuildsController extends Controller
      * @Template()
      * @Method("POST")
      */
-    public function deleteAon($project, $type, $token)
+    public function deleteAction($project, $type, $token)
     {
 
         $s3Service = $this->get('ekreative_test_build_core.file_uploader');

@@ -9,16 +9,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-/**
- * @Route("/api/projects")
- * @Template()
- */
 
 class ProjectsController extends Controller
 {
 
     /**
-     * @Route("/{page}",defaults={"page" = "1"})
+     * @Route("{page}",defaults={"page" = "1"})
      * @Method("GET")
      * @ApiDoc(
      *   description="List of projects",

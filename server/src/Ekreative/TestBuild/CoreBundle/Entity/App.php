@@ -105,6 +105,13 @@ class App implements \JsonSerializable
      */
     private $iconUrl;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="released", type="boolean")
+     */
+    private $release;
+
 
     private $icon;
 
@@ -576,7 +583,8 @@ class App implements \JsonSerializable
             'createdId'   => $this->getCreatedId(),
             'projectid'   => $this->getProjectId(),
             'iconurl'     => $this->getIconUrl(),
-            'date'=>        $this->getCreated()->format('U')
+            'date'        => $this->getCreated()->format('U'),
+            'release'     => $this->getRelease()
         ];
     }
 
@@ -598,6 +606,22 @@ class App implements \JsonSerializable
         $this->comment = $comment;
     }
 
+    public function getRelease()
+    {
+        return $this->release;
+    }
 
+    public function inverseRelease()
+    {
+        return $this->release = !$this->release;
+    }
+
+    /**
+     * @param string $release
+     */
+    public function setRelease($release)
+    {
+        $this->release = $release;
+    }
 
 }

@@ -26,6 +26,38 @@ class AppRepository extends EntityRepository
     }
 
     /**
+     * @param $id
+     * @param $type
+     *
+     * @return App[]
+     */
+    public function getLatestAppProject($projectIds, $releaded = false)
+    {
+
+
+        $qb = $this->createQueryBuilder('app');
+        $qb->select('app');
+
+        if(count($projectIds)){
+            $and_cond = $qb->expr()->andx();
+            $and_cond->add($qb->expr()->in('app.projectId', $projectIds));
+            $qb->andWhere($and_cond);
+        }
+        if($releaded) {
+            $qb->andWhere('app.released = :released')->setParameter('released', true);
+
+        }
+        $qb->andWhere('app.type = :type')->setParameter('type', 'android');
+
+        $qb->addGroupBy('app.projectId');
+        $qb->orderBy('app.id','DESC');
+        $apps = $qb->getQuery()->getResult();
+
+        return $apps;
+
+    }
+
+    /**
      * @param $token
      *
      * @return App
@@ -46,7 +78,6 @@ class AppRepository extends EntityRepository
      */
     public function getPlistString($ipa, $bundleIdentifier, $version, $title)
     {
-
 
         $imp = new \DOMImplementation();
         $dtd = $imp->createDocumentType("plist", "-//Apple//DTD PLIST 1.0//EN", "http://www.apple.com/DTDs/PropertyList-1.0.dtd");

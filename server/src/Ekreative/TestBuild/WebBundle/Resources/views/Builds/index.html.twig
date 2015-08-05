@@ -29,15 +29,16 @@
     <table class="table">
         <tr>
             <td>#</td>
-            <td>icon</td>
-            <td>name</td>
-            <td>version</td>
-            <td>bundle id</td>
-            <td>created</td>
+            <td></td>
+            <td>Name</td>
+            <td>Version</td>
+            <td>Bundle id</td>
+            <td>Created</td>
             <td></td>
             {% if delete %}
                 <td></td>
             {% endif %}
+            <td>Release</td>
         </tr>
         {% for project in apps %}
             <tr>
@@ -49,7 +50,6 @@
                 <td>{{ project.created|date("d/m/Y") }}</td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank">Install</a>
-
                 </td>
                 {% if delete %}
                     <td>
@@ -58,6 +58,13 @@
                         </form>
                     </td>
                 {% endif %}
+                <td>
+                    {% if project.release %}
+                        <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >YES</a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >NO</a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </table>

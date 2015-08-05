@@ -2,6 +2,7 @@
 
 namespace Ekreative\TestBuild\WebBundle\Controller;
 
+use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -16,23 +17,47 @@ use Symfony\Component\Security\Core\Security;
 class ProjectsController extends Controller
 {
     /**
-     * @Route("/{page}",name="projects",defaults={"page" = "1"})
+     * @Route("{page}",name="projects", defaults={"page" = "1"}, requirements={"page": "\d+"})
      * @Template()
      */
     public function indexAction($page, Request $request)
     {
 
+
         $session = $request->getSession();
-
         $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json?page='.$page)->getBody();
-        $projects = json_decode($data, true);
+        $projectsData = json_decode($data, true);
 
-        $session->set('projects',$projects['projects'] );
+
+        $projectsData['projects'];
+
+
+        $session->set('projects',$projectsData['projects'] );
+        $pages = round($projectsData['total_count']/$projectsData['limit']);
+
+//        $projectIds = [];
+//        $projects = [];
+//        foreach($projectsData['projects'] as $project){
+//            $projectIds[] = $project['id'];
+//            $projects[$project['id']]=$project;
+//        }
+//
+//
+//
+//        /**
+//         * @var App[] $apps
+//         */
+//
+//        $apps = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getLatestAppProject($projectIds);
+//        foreach($apps as $app){
+//            $projects[$app->getProjectId()]['apps'][]=$app;
+//        }
+
 
         return [
-            'projects'=>$projects['projects'],
-            'next'=>$page + 1,
-            'prev'=>$page - 1
+            'pages'=>$pages,
+            'page'=>$page,
+            'projects'=>$projectsData['projects']
         ];
     }
 

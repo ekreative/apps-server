@@ -6,7 +6,7 @@ ekreative_test_build_web:
 ekreative_test_build_api:
     resource: "@EkreativeTestBuildApiBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /api
 
 
 NelmioApiDocBundle:

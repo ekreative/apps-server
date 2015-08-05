@@ -3,14 +3,15 @@
 
 {% block body %}
 
-
-    {% if prev %}
-    <a class="btn-sm btn-primary pull-left" href="{{ path('projects',{'page':prev}) }}">Previus Page</a>
-    {% endif %}
-
-    {% if projects|length == 25 %}
-    <a class="btn-sm btn-primary pull-right" href="{{ path('projects',{'page':next}) }}">Next Page</a>
-    {% endif %}
+    <div>
+        <nav class="text-center">
+            <ul class="pagination">
+                {% for i in 1..pages %}
+                    <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
 
     <table class="table margin-top-15">
         <tr>
@@ -34,7 +35,23 @@
                 <td>
                     <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'android'}) }}">Android</a>
                 </td>
+                <td>
+                    {% if project['apps'] is defined %}
+                        {{ dump(project['apps']) }}
+                    {% endif %}
+
+                </td>
             </tr>
         {% endfor %}
     </table>
+    <div>
+        <nav class="text-center">
+            <ul class="pagination">
+                {% for i in 1..pages %}
+                    <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+
 {% endblock %}

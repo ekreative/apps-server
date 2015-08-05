@@ -8,15 +8,10 @@
 
     <div><img src="{{ qrcode }}"></div>
     <div class="app-name">{{ app.name }}</div>
-    <div class="margin-top-15">{{ app.version }}</div>
+    <div class="margin-top-15">{{ app.type }} {{ app.version }}</div>
     <div>{{ app.comment }}</div>
     <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
-
-    {% if app.type =='ios' %}
-        <div><a class="btn btn-primary" href="{{ plistUrl }}">Install</a></div>
-    {% elseif app.type =='android' %}
-        <div><a class="btn btn-primary" href="{{ app.buildUrl }}">Install</a></div>
-    {% endif %}
+    <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>
 </div>
 
 

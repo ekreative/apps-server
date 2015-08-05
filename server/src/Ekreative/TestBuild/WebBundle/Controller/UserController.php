@@ -20,10 +20,7 @@ class UserController extends Controller
      */
     public function indexAction()
     {
-
-        // $this->getUser();
-
-        return array('user' => $this->getUser());
+        return ['user' => $this->getUser()];
     }
 
 }

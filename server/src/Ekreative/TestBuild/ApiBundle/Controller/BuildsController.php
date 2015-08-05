@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @Route("/api/builds")
+ * @Route("/builds")
  * @Template()
  */
 class BuildsController extends JsonController
