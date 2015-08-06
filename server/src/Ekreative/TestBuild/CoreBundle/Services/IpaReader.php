@@ -209,12 +209,19 @@ class IpaReader
     public function unpackImage($path){
 
 
+        if(PHP_OS=='Darwin'){
+            $pngdefry = 'pngdefry-osx';
+        }else{
+        //}else if(PHP_OS=='Linux'){
+            $pngdefry = 'pngdefry-linux';
+        }
+
         $pipes = [];
 
         $suffix = microtime(true);
 
         $fileinfo = pathinfo($path);
-        $process = proc_open( __DIR__ .'/pngdefry -s '.$suffix.' -o '.$this->tmpDir.' '.$path , [], $pipes);
+        $process = proc_open( __DIR__ .'/'.$pngdefry.' -s '.$suffix.' -o '.$this->tmpDir.' '.$path , [], $pipes);
 
         if (is_resource($process)) {
             proc_close($process);
