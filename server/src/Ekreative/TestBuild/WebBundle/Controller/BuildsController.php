@@ -182,6 +182,10 @@ class BuildsController extends Controller
         $build = $app->getBuild();
         $app->setRelease(false);
         $app->setDebuggable(false);
+        $iconHeaders = [
+            'ContentDisposition' => 'filename="appicon.png"',
+            'ContentType'        => 'image/png'
+        ];
         if ($app->isType(App::TYPE_IOS)) {
             $app->setBundleId($form['bundleId']);
 
@@ -202,8 +206,8 @@ class BuildsController extends Controller
 
             $app->setBundleId($ipaReader->getBundleIdentifier());
 
-            $app->setIconUrl($s3Service->upload($ipaReader->getIcon(), $app->getIconFileName()));
-
+            $iconUrl = $s3Service->upload($ipaReader->getIcon(), $app->getIconFileName(),$iconHeaders);
+            $app->setIconUrl($iconUrl);
 
 
             $ipaReader->clean();
@@ -246,7 +250,7 @@ class BuildsController extends Controller
                 $resources = $apk->getResources($resourceId);
                 $tmpfname = tempnam("/tmp", $manifest->getPackageName());
                 file_put_contents($tmpfname,stream_get_contents($apk->getStream(end($resources))));
-                $app->setIconUrl($s3Service->upload($tmpfname, $app->getIconFileName()));
+                $app->setIconUrl($s3Service->upload($tmpfname, $app->getIconFileName()),$iconHeaders);
                 unlink($tmpfname);
 
             }catch (\Exception $e){

@@ -55,7 +55,6 @@ class IpaReader
 
     public function getIcon()
     {
-
         return $this->icon;
     }
 
@@ -132,7 +131,7 @@ class IpaReader
             if (strpos($filename, '76x76@2x') > 0) {
                 $icon = $filename;
             }
-            if (strpos($filename, 'Info.plist') > 0) {
+            if ((strpos($filename, 'Info.plist') > 0) && substr_count($filename,'/')==2) {
                 $plist = $filename;
             }
         }
