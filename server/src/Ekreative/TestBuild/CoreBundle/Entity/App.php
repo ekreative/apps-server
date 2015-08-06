@@ -150,6 +150,13 @@ class App implements \JsonSerializable
     ////other
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="size", type="integer")
+     */
+    private $size;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
@@ -291,7 +298,41 @@ class App implements \JsonSerializable
      */
     public function setBuild(UploadedFile $build)
     {
+
+        if(file_exists($build->getRealPath())){
+            $this->setSize(filesize($build->getRealPath()));
+        }
+
         $this->build = $build;
+    }
+
+
+    public function getPublicAppSize(){
+
+       return $this->formatBytes($this->getSize());
+
+    }
+
+    private function formatBytes($b) {
+        if ($b < 1024) {
+            return $b . ' B';
+        } elseif ($b < 1048576) {
+            return round($b / 1024, 2) . ' KB';
+        } elseif ($b < 1073741824) {
+            return round($b / 1048576, 2) . ' MB';
+        } elseif ($b < 1099511627776) {
+            return round($b / 1073741824, 2) . ' GB';
+        } elseif ($b < 1125899906842624) {
+            return round($b / 1099511627776, 2) . ' TB';
+        } elseif ($b < 1152921504606846976) {
+            return round($b / 1125899906842624, 2) . ' PB';
+        } elseif ($b < 1180591620717411303424) {
+            return round($b / 1152921504606846976, 2) . ' EB';
+        } elseif ($b < 1208925819614629174706176) {
+            return round($b / 1180591620717411303424, 2) . ' ZB';
+        } else {
+            return round($b / 1208925819614629174706176, 2) . ' YB';
+        }
     }
 
 
@@ -906,6 +947,23 @@ class App implements \JsonSerializable
     {
         $this->supportedInterfaceOrientations = $supportedInterfaceOrientations;
     }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize($size)
+    {
+        $this->size = $size;
+    }
+
 
 
 

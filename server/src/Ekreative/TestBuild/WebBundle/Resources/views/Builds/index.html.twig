@@ -29,6 +29,7 @@
             <td>Name</td>
             <td>Version</td>
             <td>Bundle id</td>
+            <td>Size</td>
             <td>Created</td>
             <td>Build</td>
             <td></td>
@@ -44,7 +45,9 @@
                 <td>{{ project.name }}</td>
                 <td>{{ project.version }}</td>
                 <td>{{ project.bundleId }}</td>
+                <td>{{ project.getPublicAppSize() }}</td>
                 <td>{{ project.created|date("d/m/Y") }}</td>
+
                 <td> <a class="btn btn-primary" href="{{ project.buildUrl }}" target="_blank">Download</a></td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank">Install</a>
