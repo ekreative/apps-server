@@ -38,31 +38,31 @@
                 <td>Release</td>
             {% endif %}
         </tr>
-        {% for project in apps %}
+        {% for app in apps %}
             <tr>
-                <td>{{ project.id }}</td>
-                <td><img width="57" height="57" src="{{ project.iconUrl }}"></td>
-                <td>{{ project.name }}</td>
-                <td>{{ project.version }}</td>
-                <td>{{ project.bundleId }}</td>
-                <td>{{ project.getPublicAppSize() }}</td>
-                <td>{{ project.created|date("d/m/Y") }}</td>
+                <td>{{ app.id }}</td>
+                <td><img width="57" height="57" src="{{ app.iconUrl }}"></td>
+                <td>{{ app.name }}</td>
+                <td>{{ app.version }} ({{ app.buildNumber }})</td>
+                <td>{{ app.bundleId }}</td>
+                <td>{{ app.getPublicAppSize() }}</td>
+                <td>{{ app.created|date("d/m/Y") }}</td>
 
-                <td> <a class="btn btn-primary" href="{{ project.buildUrl }}" target="_blank">Download</a></td>
+                <td> <a class="btn btn-primary" href="{{ app.buildUrl }}" target="_blank">Download</a></td>
                 <td>
-                    <a class="btn btn-primary" href="{{ path('build_install',{'token':project.token}) }}" target="_blank">Install</a>
+                    <a class="btn btn-primary" href="{{ path('build_install',{'token':app.token}) }}" target="_blank">Install</a>
                 </td>
                 {% if delete %}
                     <td>
-                        <form method="post" action="{{ path('build_delete',{'token':project.token,'project':project.projectId,'type':project.type}) }}">
+                        <form method="post" action="{{ path('build_delete',{'token':app.token,'project':app.projectId,'type':app.type}) }}">
                             <button class="btn btn-primary" type="submit">Delete</button>
                         </form>
                     </td>
                     <td>
-                        {% if project.release %}
-                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >YES</a>
+                        {% if app.release %}
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}" >YES</a>
                         {% else %}
-                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':project.id}) }}" >NO</a>
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}" >NO</a>
                         {% endif %}
                     </td>
                 {% endif %}
