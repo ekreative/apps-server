@@ -55,7 +55,7 @@
     <div class="content-center margin-bottom-40">
         <div><img src="{{ qrcode }}"></div>
         <div class="app-name">{{ app.name }}</div>
-        <div class="margin-top-15">{{ app.type }} {{ app.version }}</div>
+        <div class="margin-top-15">{{ app.type }} {{ app.version }} ({{ app.buildNumber }})</div>
         <div>{{ app.comment }}</div>
         <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
         <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>

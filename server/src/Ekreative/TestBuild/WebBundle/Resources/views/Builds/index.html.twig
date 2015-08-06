@@ -15,10 +15,6 @@
             {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
-                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.version) }}</div>
-                {% if type=='ios' %}
-                    <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.bundleId) }}</div>
-                {% endif %}
                 <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
                 <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
             </div>

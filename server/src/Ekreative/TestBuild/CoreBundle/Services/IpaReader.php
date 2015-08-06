@@ -16,7 +16,6 @@ use CFPropertyList\CFPropertyList;
 class IpaReader
 {
 
-    private $ipa;
     private $to;
     private $tmpDir;
     private $info = [];
@@ -207,6 +206,23 @@ class IpaReader
     }
 
 
+    public function unpackImage($path){
+
+
+        $pipes = [];
+
+        $suffix = microtime(true);
+
+        $fileinfo = pathinfo($path);
+        $process = proc_open( __DIR__ .'/pngdefry -s '.$suffix.' -o '.$this->tmpDir.' '.$path , [], $pipes);
+
+        if (is_resource($process)) {
+            proc_close($process);
+        }
+
+        return $this->tmpDir.'/'.$fileinfo['filename'].$suffix.'.'.$fileinfo['extension'];
+
+    }
 
 
 }

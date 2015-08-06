@@ -48,7 +48,6 @@ class BuildsController extends JsonController
      *   parameters={
      *      {"name"="name", "dataType"="string", "required"=true, "description"="Name of app"},
      *      {"name"="app",  "dataType"="file", "required"=true, "description"="Build of the app"},
-     *      {"name"="icon", "dataType"="file", "required"=true, "description"="app icon"}
      *  }
      * )
      */
@@ -58,83 +57,12 @@ class BuildsController extends JsonController
 
         $request = $this->getRequest();
 
-        /**
-         * @var RedmineUser $user
-         */
+        $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
+        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('name'), $project, $type);
 
-        $user = $this->getUser();
-        $em   = $this->getDoctrine()->getManager();
-
-        $app = new App();
-        $app->setCreated(new \DateTime());
-
-        $app->setProjectId($project);
-        $app->setType($type);
-
-        $appName = $request->request->get('name');
-        $app->setVersion($request->request->get('version'));
+        return $this->redirect($this->generateUrl('project_builds', ['type' => $app->getType(), 'project' => $app->getProjectId()]));
 
 
-        $app->setBuild($request->files->get('app'));
-        $app->setIcon($request->files->get('icon'));
-        $app->setBundleId('appBundle');
-
-        $app->setCreatedName($user->getFirstName().'  '.$user->getLastName());
-        $app->setCreatedId($user->getId());
-
-        $icon  = $app->getIcon();
-        $build = $app->getBuild();
-
-        $app->setName($build->getClientOriginalName());
-
-        if($appName){
-            $app->setName($appName);
-        }
-
-        $em->persist($app);
-
-
-        if ($app->isType(App::TYPE_IOS)) {
-            $headers = array(
-                'ContentType'        => 'application/octet-stream',
-                'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"'
-            );
-        } else if ($app->isType(App::TYPE_ANDROID)) {
-            $headers = [
-                'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"',
-                'ContentType'        => 'application/vnd.android.package-archive'
-            ];
-        }
-
-        $s3Service = $this->get('ekreative_test_build_core.file_uploader');
-
-        if ($icon) {
-            $app->setIconUrl($s3Service->upload($icon->getRealPath(), $app->getIconFileName()));
-            unlink($icon->getRealPath());
-        }
-
-        $app->setBuildUrl($s3Service->upload($build->getRealPath(), $app->getFilename(), $headers));
-        unlink($build->getRealPath());
-
-
-        if ($app->isType(App::TYPE_IOS)) {
-            $tempFile = tempnam("/tmp", "plist");
-            $plist    = $this->getDoctrine()
-                             ->getRepository('EkreativeTestBuildCoreBundle:App')
-                             ->getPlistString(
-                                 $app->getBuildUrl(),
-                                 $app->getBundleId(),
-                                 $app->getVersion(),
-                                 $build->getFilename());
-
-            file_put_contents($tempFile, $plist);
-            $app->setPlistUrl($s3Service->upload($tempFile, $app->getPlistName(), $headers));
-            unlink($tempFile);
-        }
-
-        $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install',['token' => $app->getToken()])) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
-        $em->persist($app);
-        $em->flush();
         return new JsonResponse($app);
     }
 
