@@ -149,6 +149,7 @@ class BuildsController extends Controller
 
     /**
      * @Route("upload/{project}/{type}",name="upload")
+     * @Method("POST")
      */
     public function uploadAction($project, $type)
     {
