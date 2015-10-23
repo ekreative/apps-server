@@ -2,16 +2,32 @@
 
 
 {% block body %}
-
     <div>
         <nav class="text-center">
             <ul class="pagination">
                 {% for i in 1..pages %}
                     <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
-                {% endfor %}
+                    {% endfor %}
             </ul>
         </nav>
     </div>
+
+    {{ form_start(searshForm) }}
+    <div class="row">
+        <div class="col-lg-6">
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group">
+                {{ form_widget(searshForm.qery)}}
+                <span class="input-group-btn">
+                    {{ form_widget(searshForm.submit)}}
+                    {{ form_widget(searshForm.reset)}}
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div>
+    {{ form_end(searshForm) }}
 
     <table class="table margin-top-15">
         <tr>
@@ -43,7 +59,7 @@
             <ul class="pagination">
                 {% for i in 1..pages %}
                     <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
-                {% endfor %}
+                    {% endfor %}
             </ul>
         </nav>
     </div>

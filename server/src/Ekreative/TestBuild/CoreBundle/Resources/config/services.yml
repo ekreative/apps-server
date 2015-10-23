@@ -6,6 +6,7 @@ parameters:
     ekreative_test_build_core.amazon_s3.bucket: ''
 
 services:
+
     ekreative_test_build_core.amazon_s3:
             class: Aws\S3\S3Client
             factory_class: Aws\S3\S3Client

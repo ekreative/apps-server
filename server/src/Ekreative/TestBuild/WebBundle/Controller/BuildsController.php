@@ -49,6 +49,7 @@ class BuildsController extends Controller
                 foreach ($member['roles'] as $role) {
                     if ($role['name'] == EkreativeUserRoles::ROLE_MANAGER) {
                         $delete = true;
+                        $upload = true;
                     }
                     if ($role['name'] == EkreativeUserRoles::ROLE_DEVELOPER) {
                         $delete = true;
