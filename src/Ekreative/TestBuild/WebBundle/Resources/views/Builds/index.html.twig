@@ -39,7 +39,12 @@
             <tr>
                 <td>{{ app.id }}</td>
                 <td><img width="57" height="57" src="{{ app.iconUrl }}"></td>
-                <td>{{ app.comment ?: app.name }}</td>
+                <td>
+                    {% if app.ci %}
+                        <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server" data-toggle="tooltip"></span>
+                    {% endif %}
+                    {{ app.comment ?: app.name }}
+                </td>
                 <td>{{ app.version }} ({{ app.buildNumber }})</td>
                 <td>{{ app.bundleId }}</td>
                 <td>{{ app.getPublicAppSize() }}</td>

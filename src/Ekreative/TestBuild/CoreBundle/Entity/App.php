@@ -235,6 +235,13 @@ class App implements \JsonSerializable
      */
     private $comment;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $ci;
+
     function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
@@ -965,5 +972,21 @@ class App implements \JsonSerializable
         $this->size = $size;
     }
 
+    /**
+     * @return boolean
+     */
+    public function isCi()
+    {
+        return $this->ci;
+    }
 
+    /**
+     * @param boolean $ci
+     * @return App
+     */
+    public function setCi($ci)
+    {
+        $this->ci = $ci;
+        return $this;
+    }
 }

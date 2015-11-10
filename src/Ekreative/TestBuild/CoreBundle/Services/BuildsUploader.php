@@ -37,7 +37,7 @@ class BuildsUploader
         $this->router    = $router;
     }
 
-    public function upload(UploadedFile $file, $comment, $project, $type)
+    public function upload(UploadedFile $file, $comment, $project, $type, $ci = false)
     {
 
         $s3Service = $this->s3;
@@ -50,6 +50,7 @@ class BuildsUploader
 
         $app->setProjectId($project);
         $app->setType($type);
+        $app->setCi($ci);
 
         $build = $app->getBuild();
         $app->setRelease(false);

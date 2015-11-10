@@ -46,8 +46,9 @@ class BuildsController extends JsonController
      *   description="Post new build from jenkins",
      *   section="Builds",
      *   parameters={
-     *      {"name"="name", "dataType"="string", "required"=true, "description"="Name of app"},
+     *      {"name"="comment", "dataType"="string", "required"=true, "description"="Comment for the build"},
      *      {"name"="app",  "dataType"="file", "required"=true, "description"="Build of the app"},
+     *     {"name"="ci",  "dataType"="bool", "required"=false, "description"="if 'true' then the build is marked as a ci build"},
      *  }
      * )
      */
@@ -58,7 +59,7 @@ class BuildsController extends JsonController
         $request = $this->getRequest();
 
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
-        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('name'), $project, $type);
+        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('comment'), $project, $type, $request->request->get('ci') == 'true');
 
         return new JsonResponse($app);
     }
