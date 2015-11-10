@@ -7,11 +7,13 @@ var gulp = require('gulp'),
     uglifycss = require('gulp-uglifycss'),
     imagemin = require('gulp-imagemin'),
     babel = require('gulp-babel'),
-    filter = require('gulp-filter');
+    filter = require('gulp-filter'),
+    jshint = require('gulp-jshint'),
+    jshintStylish = require('jshint-stylish');
 
 gulp.task('default', ['build']);
 
-gulp.task('build', ['fonts', 'styles', 'scripts:bundle', 'scripts:pages', 'images']);
+gulp.task('build', ['fonts', 'styles', 'scripts:bundle', 'scripts:pages', 'scripts:hint', 'images']);
 
 gulp.task('clean', function (cb) {
     del(['web/css/*', 'web/js/*', 'web/fonts/*'], cb);
@@ -53,9 +55,15 @@ gulp.task('scripts:pages', function() {
         .pipe(gulp.dest('web/js'));
 });
 
+gulp.task('scripts:hint', function () {
+    return gulp.src('web-src/js/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter(jshintStylish));
+});
+
 gulp.task('fonts', function () {
     return gulp.src(['node_modules/bootstrap/dist/fonts/*'])
-        .pipe(gulp.dest('web/fonts'))
+        .pipe(gulp.dest('web/fonts'));
 });
 
 gulp.task('images', function () {
