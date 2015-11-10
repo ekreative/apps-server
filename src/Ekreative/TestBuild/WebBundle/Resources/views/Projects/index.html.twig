@@ -2,15 +2,17 @@
 
 
 {% block body %}
+    {% block pages %}
     <div>
         <nav class="text-center">
             <ul class="pagination">
                 {% for i in 1..pages %}
-                    <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
+                    <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i, 'q': q}) }}">{{ i }}</a></li>
                     {% endfor %}
             </ul>
         </nav>
     </div>
+    {% endblock %}
 
     {{ form_start(searshForm) }}
     <div class="row">
@@ -19,10 +21,9 @@
 
         <div class="col-lg-6">
             <div class="input-group">
-                {{ form_widget(searshForm.qery)}}
+                {{ form_widget(searshForm.q)}}
                 <span class="input-group-btn">
-                    {{ form_widget(searshForm.submit)}}
-                    {{ form_widget(searshForm.reset)}}
+                    <button type="submit" class="btn btn-default btn">Find!</button>
                 </span>
             </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
@@ -46,22 +47,15 @@
                 <td>{{ project.created_on|date("d/m/Y") }}</td>
                 <td>{{ project.updated_on|date("d/m/Y") }}</td>
                 <td>
-                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'ios'}) }}">IOS</a>
+                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.identifier,'type':'ios'}) }}">IOS</a>
                 </td>
                 <td>
-                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.id,'type':'android'}) }}">Android</a>
+                    <a class="btn-sm btn-primary" href="{{ path('project_builds',{'project':project.identifier,'type':'android'}) }}">Android</a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-    <div>
-        <nav class="text-center">
-            <ul class="pagination">
-                {% for i in 1..pages %}
-                    <li {% if i==page %} class="active"{% endif %}><a href="{{ path('projects',{'page':i}) }}">{{ i }}</a></li>
-                    {% endfor %}
-            </ul>
-        </nav>
-    </div>
+
+    {{ block('pages') }}
 
 {% endblock %}

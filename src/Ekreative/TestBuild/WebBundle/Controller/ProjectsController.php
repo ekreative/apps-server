@@ -22,10 +22,9 @@ class ProjectsController extends Controller {
     public function indexAction($page, Request $request) {
 
 
-        $session = $request->getSession();
         $query = [];
 
-        $name = $session->get('searchQery');
+        $name = $request->query->get('q');
         if ($name) {
             $query[] = 'name=' . $name;
         }
@@ -35,15 +34,15 @@ class ProjectsController extends Controller {
         $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json?' . implode('&', $query))->getBody();
         $projectsData = json_decode($data, true);
 
-        $session->set('projects', $projectsData['projects']);
         $pages = ceil($projectsData['total_count'] / $projectsData['limit']);
 
 
         return [
-            'searshForm' => $this->getSearshForm()->createView(),
+            'searshForm' => $this->getSearshForm($request)->createView(),
             'pages' => $pages,
             'page' => $page,
-            'projects' => $projectsData['projects']
+            'projects' => $projectsData['projects'],
+            'q' => $name
         ];
     }
 
@@ -81,45 +80,20 @@ class ProjectsController extends Controller {
      * @Route("/login_check", name="login_check")
      */
     public function loginCheckAction() {
-        
+
     }
 
-    /**
-     * @Route("/updateSearch", name="web_projects_updatesearch")
-     */
-    public function updateSearchAction(Request $request) {
+    private function getSearshForm(Request $request) {
 
+        return $this->get('form.factory')->createNamedBuilder(null, 'form', [
+            'q' => $request->query->get('q')
+        ], [
+            'csrf_protection' => false
+        ])
+                        ->add('q', 'text',['required'=> false,'attr'=>['placeholder'=>'Search...']])
+                        ->setMethod('get')
+                        ->setAction($this->generateUrl('projects'))
 
-        $form = $this->getSearshForm();
-        $session = $this->getRequest()->getSession();
-
-
-        if ($request->getMethod() == "POST") {
-            $form->submit($request);
-            if ($form->isValid()) {
-                $postData = current($request->request->all());
-
-                if ($form->get('reset')->isClicked()) {
-                    $session->set('searchQery', null);
-                } else {
-                    $session->set('searchQery', $postData['qery']);
-                }
-
-                return $this->redirect($this->generateUrl('projects'));
-            }
-        }
-    }
-
-    private function getSearshForm() {
-
-        $session = $this->getRequest()->getSession();
-        $defaultData = array('qery' => $session->get('searchQery'));
-        return $this->createFormBuilder($defaultData)
-                        ->add('qery', 'text',['attr'=>['placeholder'=>'Search...']])
-                        ->add('submit', 'submit', ['attr' => ['class' => 'btn btn-default'],'label'=>'Find!'])
-                        ->add('reset' , 'submit', ['attr' => ['class' => 'btn btn-default']])
-                        ->setMethod('post')
-                        ->setAction($this->generateUrl('web_projects_updatesearch'))
                         ->getForm();
     }
 

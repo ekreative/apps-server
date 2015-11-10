@@ -16,17 +16,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class BuildsController extends Controller
 {
     /**
-     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "\d+"})
+     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "^((?!install).)*$", "type"="^ios|android$"})
      * @Template()
      */
     public function indexAction(Request $request, $project, $type)
     {
-
         $currentUser = $this->getUser();
-        $session     = $request->getSession();
-        $projects    = $session->get('projects');
+        $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
-        $data    = $this->get('ekreative_redmine_login.client_provider')->get($currentUser)->get('projects/' . $project . '/memberships.json')->getBody();
+        $data    = $client->get('projects/' . $project . '/memberships.json')->getBody();
         $members = json_decode($data, true);
 
         $upload = false;
@@ -35,15 +33,11 @@ class BuildsController extends Controller
         $result          = [];
         $result['title'] = 'Builds';
 
-        if (is_array($projects)) {
-            foreach ($projects as $projectArr) {
-                if ($projectArr['id'] == $project) {
-                    $result['title'] = $projectArr['name'];
-                }
-            }
-        }
 
         foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
+            $result['title'] = $member['project']['name'];
+            $project = $member['project']['id'];
+
             $user = array_key_exists('user', $member) ? $member['user'] : ['id' => null];
             if ($user['id'] == $currentUser->getId()) {
                 foreach ($member['roles'] as $role) {
