@@ -9,7 +9,12 @@
     <div><img src="{{ qrcode }}"></div>
     <div class="app-name">{{ app.name }}</div>
     <div class="margin-top-15">{{ app.type }} {{ app.version }} ({{ app.buildNumber }})</div>
-    <div>{{ app.comment }}</div>
+    <div>
+        {% if app.ci %}
+            <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server" data-toggle="tooltip"></span>
+        {% endif %}
+        {{ app.comment }}
+    </div>
     <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
     <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>
 </div>
