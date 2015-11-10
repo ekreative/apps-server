@@ -2,7 +2,6 @@
 
 namespace Ekreative\TestBuild\CoreBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -229,6 +228,13 @@ class App implements \JsonSerializable
 
     private $created;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text")
+     */
+    private $comment;
+
     function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
@@ -299,7 +305,7 @@ class App implements \JsonSerializable
     public function setBuild(UploadedFile $build)
     {
 
-        if(file_exists($build->getRealPath())){
+        if (file_exists($build->getRealPath())) {
             $this->setSize(filesize($build->getRealPath()));
         }
 
@@ -307,13 +313,15 @@ class App implements \JsonSerializable
     }
 
 
-    public function getPublicAppSize(){
+    public function getPublicAppSize()
+    {
 
-       return $this->formatBytes($this->getSize());
+        return $this->formatBytes($this->getSize());
 
     }
 
-    private function formatBytes($b) {
+    private function formatBytes($b)
+    {
         if ($b < 1024) {
             return $b . ' B';
         } elseif ($b < 1048576) {
@@ -617,7 +625,6 @@ class App implements \JsonSerializable
     }
 
 
-
     /**
      * @var string
      *
@@ -643,7 +650,6 @@ class App implements \JsonSerializable
     }
 
 
-
     private function getFolderWithToken()
     {
         return '/' . $this->getProjectId() . '/' . $this->getToken();
@@ -656,8 +662,10 @@ class App implements \JsonSerializable
 
         if ($this->isType(App::TYPE_ANDROID)) {
             $name[] = '.apk';
-        } else if ($this->isType(App::TYPE_IOS)) {
-            $name[] = '.ipa';
+        } else {
+            if ($this->isType(App::TYPE_IOS)) {
+                $name[] = '.ipa';
+            }
         }
 
         return implode('_', $name);
@@ -665,19 +673,21 @@ class App implements \JsonSerializable
 
     public function getPlistName()
     {
-        return $this->getFolderWithToken().'.plist';
+        return $this->getFolderWithToken() . '.plist';
     }
 
 
     public function getDownloadNameFilename()
     {
-        $name   = [$this->getVersion()];
+        $name = [$this->getVersion()];
         $name[] = $this->getCreated()->format('H:i:s_d-m-Y');
         if ($this->isType(App::TYPE_ANDROID)) {
             $name[] = '.apk';
 
-        } else if ($this->isType(App::TYPE_ANDROID)) {
-            $name[] = '.ipa';
+        } else {
+            if ($this->isType(App::TYPE_ANDROID)) {
+                $name[] = '.ipa';
+            }
         }
 
         return implode('_', array_filter($name));
@@ -686,41 +696,32 @@ class App implements \JsonSerializable
 
     public function getIconFileName()
     {
-        return $this->getFolderWithToken().'_icon';
+        return $this->getFolderWithToken() . '_icon';
     }
 
 
-    /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
-        return[
-            'id'=>$this->getId(),
-            'name'=>$this->getName(),
-            'buildUrl'=>$this->getName(),
-            'type'        => $this->getType(),
-            'url'         => $this->getBuildUrl(),
-            'plist'       => $this->getPlistUrl(),
-            'version'     => $this->getVersion(),
-            'build'       => $this->getBuildNumber(),
-            'qrcode'      => $this->getQrcodeUrl(),
-            'comment'     => $this->getComment(),
-            'bundleid'    => $this->getBundleId(),
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'buildUrl' => $this->getName(),
+            'type' => $this->getType(),
+            'url' => $this->getBuildUrl(),
+            'plist' => $this->getPlistUrl(),
+            'version' => $this->getVersion(),
+            'build' => $this->getBuildNumber(),
+            'qrcode' => $this->getQrcodeUrl(),
+            'comment' => $this->getComment(),
+            'bundleid' => $this->getBundleId(),
             'createdName' => $this->getCreatedName(),
-            'createdId'   => $this->getCreatedId(),
-            'projectid'   => $this->getProjectId(),
-            'iconurl'     => $this->getIconUrl(),
-            'date'        => $this->getCreated()->format('U'),
-            'release'     => $this->getRelease()
+            'createdId' => $this->getCreatedId(),
+            'projectid' => $this->getProjectId(),
+            'iconurl' => $this->getIconUrl(),
+            'date' => $this->getCreated()->format('U'),
+            'release' => $this->getRelease()
         ];
     }
-
-    private $comment;
 
     /**
      * @return mixed
@@ -963,8 +964,6 @@ class App implements \JsonSerializable
     {
         $this->size = $size;
     }
-
-
 
 
 }

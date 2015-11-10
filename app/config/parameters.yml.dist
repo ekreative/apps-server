@@ -19,8 +19,8 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
     redmine: ~
 
-    amazon_aws_key: ~
-    amazon_aws_secret_key: ~
-    amazon_aws_region: ~
-    amazon_s3_base_url: ~
-    amazon_s3_bucket_name: ~
+    amazon_aws_key: some_key
+    amazon_aws_secret_key: some_secret
+    amazon_aws_region: eu-west-1
+    amazon_s3_base_url: http://bucket/
+    amazon_s3_bucket_name: bucket

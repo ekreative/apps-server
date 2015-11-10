@@ -1,14 +1,11 @@
-{% extends "EkreativeTestBuildWebBundle::base.html.twig" %}
-
+{% extends "::base.html.twig" %}
 
 {% block title %}
     {{ title }}
 {% endblock %}
+
 {% block body %}
-
     <h1>{{ title }}</h1>
-
-    <a class="btn btn-primary margin-bottom-15" href="{{ path('projects') }}">Back</a>
 
     {% if appform is defined %}
         <div class="upload-form">
@@ -26,8 +23,8 @@
         <tr>
             <td>#</td>
             <td></td>
-            <td>Name</td>
-            <td>Version</td>
+            <td>Comment</td>
+            <td>Version (Build #)</td>
             <td>Bundle id</td>
             <td>Size</td>
             <td>Created</td>
@@ -42,13 +39,12 @@
             <tr>
                 <td>{{ app.id }}</td>
                 <td><img width="57" height="57" src="{{ app.iconUrl }}"></td>
-                <td>{{ app.name }}</td>
+                <td>{{ app.comment ?: app.name }}</td>
                 <td>{{ app.version }} ({{ app.buildNumber }})</td>
                 <td>{{ app.bundleId }}</td>
                 <td>{{ app.getPublicAppSize() }}</td>
-                <td>{{ app.created|date("d/m/Y") }}</td>
+                <td>{{ app.created|date("d/m/Y H:i") }}</td>
 
-                <td> <a class="btn btn-primary" href="{{ app.buildUrl }}" target="_blank">Download</a></td>
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':app.token}) }}" target="_blank">Install</a>
                 </td>
