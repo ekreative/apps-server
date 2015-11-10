@@ -1,52 +1,75 @@
 var gulp = require('gulp'),
-    concatJs = require('gulp-concat'),
-    minifyJs = require('gulp-uglify'),
-    less = require('gulp-less'),
-    clean = require('gulp-clean');
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    less = require('gulp-less-sourcemap'),
+    del = require('del'),
+    sourcemaps = require('gulp-sourcemaps'),
+    uglifycss = require('gulp-uglifycss'),
+    imagemin = require('gulp-imagemin'),
+    babel = require('gulp-babel'),
+    filter = require('gulp-filter');
 
-gulp.task('less', function() {
+gulp.task('default', ['build']);
+
+gulp.task('build', ['fonts', 'styles', 'scripts:bundle', 'scripts:pages', 'images']);
+
+gulp.task('clean', function (cb) {
+    del(['web/css/*', 'web/js/*', 'web/fonts/*'], cb);
+});
+
+gulp.task('styles', function() {
     return gulp.src(['web-src/less/*'])
-        .pipe(less({compress: true}))
-        .pipe(gulp.dest('web/css/'));
+        .pipe(less())
+        .pipe(uglifycss())
+        .pipe(gulp.dest('web/css'));
 });
 
-gulp.task('app-js', function() {
+gulp.task('scripts:bundle', function() {
+    var myJsFilter = filter(function(file) {
+        return /web\-src/.test(file.path);
+    }, {restore: true});
+
     return gulp.src([
-        'bower_components/jquery/dist/jquery.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js'
-    ])
-        .pipe(concatJs('app.js'))
-        .pipe(minifyJs())
-        .pipe(gulp.dest('web/js/'));
+            'node_modules/jquery/dist/jquery.js',
+            'node_modules/bootstrap/dist/js/bootstrap.js',
+            'web-src/js/*.js'
+        ])
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(myJsFilter)
+        .pipe(babel())
+        .pipe(myJsFilter.restore)
+        .pipe(concat('bundle.js'))
+        .pipe(uglify())
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('web/js'));
 });
 
-gulp.task('pages-js', function() {
-    return gulp.src([
-        'web-src/js/**/*.js'
-    ])
-        .pipe(minifyJs())
-        .pipe(gulp.dest('web/js/'));
+gulp.task('scripts:pages', function() {
+    return gulp.src(['web-src/js/*/**/*.js'])
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(babel())
+        .pipe(uglify())
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('web/js'));
 });
 
 gulp.task('fonts', function () {
-    return gulp.src(['bower_components/bootstrap/fonts/*'])
-        .pipe(gulp.dest('web/fonts/'))
+    return gulp.src(['node_modules/bootstrap/dist/fonts/*'])
+        .pipe(gulp.dest('web/fonts'))
 });
 
-gulp.task('clean', function () {
-    return gulp.src(['web/css/*', 'web/js/*', 'web/fonts/*'])
-        .pipe(clean());
+gulp.task('images', function () {
+    return gulp.src('web-src/images/**/*')
+        .pipe(imagemin({
+            progressive: true,
+            interlaced: true
+        }))
+        .pipe(gulp.dest('web/images'));
 });
 
-gulp.task('default', ['clean'], function () {
-    var tasks = ['fonts', 'less', 'app-js', 'pages-js'];
-
-    tasks.forEach(function (val) {
-        gulp.start(val);
-    });
-});
-
-gulp.task('watch', function () {
-    var css = gulp.watch('web-src/less/*.less', ['less']),
-        js = gulp.watch('web-src/js/**/*.js', ['pages-js']);
+gulp.task('watch', ['build'], function () {
+    gulp.watch('web-src/less/*.less', ['styles']);
+    gulp.watch('web-src/js/*/**/*.js', ['scripts:pages']);
+    gulp.watch('web-src/js/*.js', ['scripts:bundle']);
+    gulp.watch('web-src/images/**/*', ['images']);
 });
