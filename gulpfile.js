@@ -77,7 +77,7 @@ gulp.task('images', function () {
 
 gulp.task('watch', ['build'], function () {
     gulp.watch('web-src/less/*.less', ['styles']);
-    gulp.watch('web-src/js/*/**/*.js', ['scripts:pages']);
-    gulp.watch('web-src/js/*.js', ['scripts:bundle']);
+    gulp.watch('web-src/js/*/**/*.js', ['scripts:pages', 'scripts:hint']);
+    gulp.watch('web-src/js/*.js', ['scripts:bundle', 'scripts:hint']);
     gulp.watch('web-src/images/**/*', ['images']);
 });
