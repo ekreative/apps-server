@@ -16,59 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class BuildsController extends Controller
 {
     /**
-     * @Route("{project}/{type}/",name="project_builds", requirements={"project": "^((?!install).)*$", "type"="^ios|android$"})
-     * @Template()
-     */
-    public function indexAction(Request $request, $project, $type)
-    {
-        $currentUser = $this->getUser();
-        $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
-
-        $data    = $client->get('projects/' . $project . '/memberships.json')->getBody();
-        $members = json_decode($data, true);
-
-        $upload = false;
-        $delete = false;
-
-        $result          = [];
-        $result['title'] = 'Builds';
-
-
-        foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
-            $result['title'] = $member['project']['name'];
-            $project = $member['project']['id'];
-
-            $user = array_key_exists('user', $member) ? $member['user'] : ['id' => null];
-            if ($user['id'] == $currentUser->getId()) {
-                foreach ($member['roles'] as $role) {
-                    if ($role['name'] == EkreativeUserRoles::ROLE_MANAGER) {
-                        $delete = true;
-                        $upload = true;
-                    }
-                    if ($role['name'] == EkreativeUserRoles::ROLE_DEVELOPER) {
-                        $delete = true;
-                        $upload = true;
-                    }
-                }
-            }
-        }
-
-        if ($upload) {
-            $app = new App();
-            $app->setType($type);
-            $app->setProjectId($project);
-            $form              = $this->newAppForm($app);
-            $result['appform'] = $form->createView();
-        }
-
-        $result['type']   = $type;
-        $result['delete'] = $delete;
-        $result['apps']   = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
-
-        return $result;
-    }
-
-    /**
      * @Route("install/{token}",name="build_install")
      * @Template()
      */
@@ -172,5 +119,59 @@ class BuildsController extends Controller
         return $form->getForm();
     }
 
+    /**
+     * This has been moved to the end because the route conflicts with the others
+     *
+     * @Route("{project}/{type}/",name="project_builds", requirements={"type"="^ios|android$"})
+     * @Template()
+     */
+    public function indexAction(Request $request, $project, $type)
+    {
+        $currentUser = $this->getUser();
+        $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
+
+        $data    = $client->get('projects/' . $project . '/memberships.json')->getBody();
+        $members = json_decode($data, true);
+
+        $upload = false;
+        $delete = false;
+
+        $result          = [];
+        $result['title'] = 'Builds';
+
+
+        foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
+            $result['title'] = $member['project']['name'];
+            $project = $member['project']['id'];
+
+            $user = array_key_exists('user', $member) ? $member['user'] : ['id' => null];
+            if ($user['id'] == $currentUser->getId()) {
+                foreach ($member['roles'] as $role) {
+                    if ($role['name'] == EkreativeUserRoles::ROLE_MANAGER) {
+                        $delete = true;
+                        $upload = true;
+                    }
+                    if ($role['name'] == EkreativeUserRoles::ROLE_DEVELOPER) {
+                        $delete = true;
+                        $upload = true;
+                    }
+                }
+            }
+        }
+
+        if ($upload) {
+            $app = new App();
+            $app->setType($type);
+            $app->setProjectId($project);
+            $form              = $this->newAppForm($app);
+            $result['appform'] = $form->createView();
+        }
+
+        $result['type']   = $type;
+        $result['delete'] = $delete;
+        $result['apps']   = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
+
+        return $result;
+    }
 
 }
