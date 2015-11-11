@@ -16,7 +16,7 @@
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "nelmio/api-doc-bundle": "~2.7",
-        "aws/aws-sdk-php": "2.7.17",
+        "aws/aws-sdk-php": "^3.10.0",
         "guzzlehttp/guzzle": "^6.0",
         "sensio/distribution-bundle": "~4.0",
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",

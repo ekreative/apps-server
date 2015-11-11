@@ -8,11 +8,6 @@
 
 namespace Ekreative\TestBuild\CoreBundle\AWS;
 
-
-use Appshed\SlideBundle\Entity\ImageInterface;
-use Appshed\SlideBundle\Entity\Slide;
-use Appshed\SlideBundle\Lib\Globals;
-use Aws\S3\Enum\CannedAcl;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
 
@@ -39,7 +34,7 @@ class S3
                 'Bucket' => $this->bucketName,
                 'Key' => $filename,
                 'Body' => fopen($path, 'r'),
-                'ACL' => CannedAcl::PUBLIC_READ
+                'ACL' => 'public-read'
             ];
 
 
