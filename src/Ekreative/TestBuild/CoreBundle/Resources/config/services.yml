@@ -28,5 +28,5 @@ services:
 
     ekreative_test_build_core.builds_uploader:
             class: Ekreative\TestBuild\CoreBundle\Services\BuildsUploader
-            arguments: [ "@doctrine.orm.entity_manager", "@security.context", "@ekreative_test_build_core.file_uploader", "@ekreative_test_build_core.ipa_reader",  "@router"  ]
+            arguments: [ "@doctrine.orm.entity_manager", "@security.context", "@ekreative_test_build_core.file_uploader", "@ekreative_test_build_core.ipa_reader",  "@router" , @logger ]
             scope: request

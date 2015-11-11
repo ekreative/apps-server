@@ -15,6 +15,7 @@ use ApkParser\Parser;
 use Doctrine\ORM\EntityManager;
 use Ekreative\TestBuild\CoreBundle\AWS\S3;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -27,14 +28,19 @@ class BuildsUploader
     private $s3;
     private $router;
     private $ipaReader;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(EntityManager $em, SecurityContext $context, S3 $s3, IpaReader $ipaReader, UrlGeneratorInterface $router)
+    public function __construct(EntityManager $em, SecurityContext $context, S3 $s3, IpaReader $ipaReader, UrlGeneratorInterface $router, LoggerInterface $logger)
     {
         $this->em        = $em;
         $this->s3        = $s3;
         $this->user      = $context->getToken()->getUser();
         $this->ipaReader = $ipaReader;
         $this->router    = $router;
+        $this->logger = $logger;
     }
 
     public function upload(UploadedFile $file, $comment, $project, $type, $ci = false)
@@ -88,28 +94,43 @@ class BuildsUploader
                 try {
                     $app->setBundleId($manifest->getPackageName());
                 } catch (\Exception $e) {
-
+                    $this->logger->error('Coundnt read apk bundle id', [
+                        'e' => $e,
+                        'manifest' => $manifest
+                    ]);
                 }
                 try {
                     $app->setVersion($manifest->getVersionName());
                 } catch (\Exception $e) {
-
+                    $this->logger->error('Coundnt read apk version name', [
+                        'e' => $e,
+                        'manifest' => $manifest
+                    ]);
                 }
 
                 try {
                     $app->setBuildNumber($manifest->getVersionCode());
                 } catch (\Exception $e) {
-
+                    $this->logger->error('Coundnt read apk version code', [
+                        'e' => $e,
+                        'manifest' => $manifest
+                    ]);
                 }
                 try {
                     $app->setMinSdkLevel($manifest->getMinSdkLevel());
                 } catch (\Exception $e) {
-
+                    $this->logger->error('Coundnt read apk min sdk', [
+                        'e' => $e,
+                        'manifest' => $manifest
+                    ]);
                 }
                 try {
                     $app->setDebuggable($manifest->isDebuggable());
                 } catch (\Exception $e) {
-
+                    $this->logger->error('Coundnt read apk debug', [
+                        'e' => $e,
+                        'manifest' => $manifest
+                    ]);
                 }
                 $app->setPermssions(implode(', ', array_keys($manifest->getPermissions())));
 
@@ -121,7 +142,9 @@ class BuildsUploader
                 unlink($tmpfname);
 
             } catch (\Exception $e) {
-
+                $this->logger->error('Coundnt read apk manifest', [
+                    'e' => $e
+                ]);
             }
 
         }
