@@ -188,7 +188,7 @@ class IpaReader
 
         if (is_file($this->plist)) {
 
-            $plist = new CFPropertyList($this->plist, CFPropertyList::FORMAT_BINARY);
+            $plist = new CFPropertyList($this->plist);
             $plist = $plist->toArray();
 
             $info['CFBundleName']                     = $plist['CFBundleName'];
@@ -199,7 +199,9 @@ class IpaReader
             $info['CFBundleDisplayName']              = $plist['CFBundleDisplayName'];
             $info['CFBundleShortVersionString']       = $plist['CFBundleShortVersionString'];
             $info['CFBundleSupportedPlatforms']       = implode(',', $plist['CFBundleSupportedPlatforms']);
-            $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
+            if (array_key_exists('UISupportedInterfaceOrientations', $plist)) {
+                $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
+            }
         }
 
         $this->info = $info;
