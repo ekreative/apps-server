@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 /**
  * @Route("/builds/")
  */
@@ -26,7 +28,9 @@ class BuildsController extends Controller
          * @var App $app
          */
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
-
+        if (!$app) {
+            throw new NotFoundHttpException('No build with that token');
+        }
 
         if ($app->isType(App::TYPE_ANDROID)) {
             $url = $app->getBuildUrl();
