@@ -19,7 +19,7 @@ services:
 
     ekreative_test_build_core.file_uploader:
             class: Ekreative\TestBuild\CoreBundle\AWS\S3
-            arguments: [ @ekreative_test_build_core.amazon_s3, %ekreative_test_build_core.amazon_s3.base_url% , %ekreative_test_build_core.amazon_s3.bucket% ]
+            arguments: [ @ekreative_test_build_core.amazon_s3, %ekreative_test_build_core.amazon_s3.base_url% , %ekreative_test_build_core.amazon_s3.bucket%, @logger ]
 
     ekreative_test_build_core.ipa_reader:
             class: Ekreative\TestBuild\CoreBundle\Services\IpaReader

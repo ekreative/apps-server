@@ -14,6 +14,7 @@ use Appshed\SlideBundle\Entity\Slide;
 use Appshed\SlideBundle\Lib\Globals;
 use Aws\S3\Enum\CannedAcl;
 use Aws\S3\S3Client;
+use Psr\Log\LoggerInterface;
 
 class S3
 {
@@ -21,31 +22,38 @@ class S3
     private $s3;
     private $bucketName;
     private $baseUrl;
+    private $logger;
 
-    function __construct(S3Client $s3, $baseUrl, $bucketName)
+    function __construct(S3Client $s3, $baseUrl, $bucketName, LoggerInterface $loggerInterface)
     {
         $this->bucketName = $bucketName;
         $this->baseUrl    = $baseUrl;
         $this->s3         = $s3;
+        $this->logger = $loggerInterface;
     }
 
     public function upload($path, $filename, $headers = [])
     {
-        $config = [
-            'Bucket' => $this->bucketName,
-            'Key'    => $filename,
-            'Body'   => fopen($path, 'r'),
-            'ACL'    => CannedAcl::PUBLIC_READ
-        ];
+        try {
+            $config = [
+                'Bucket' => $this->bucketName,
+                'Key' => $filename,
+                'Body' => fopen($path, 'r'),
+                'ACL' => CannedAcl::PUBLIC_READ
+            ];
 
 
-        foreach ($headers as $key => $header) {
-            $config[$key] = $header;
+            foreach ($headers as $key => $header) {
+                $config[$key] = $header;
+            }
+
+            $result = $this->s3->putObject($config);
+
+            return $result['ObjectURL'];
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to upload file', ['e' => $e]);
+            throw $e;
         }
-
-        $result = $this->s3->putObject($config);
-
-        return $result['ObjectURL'];
     }
 
     public function delete($filename)
