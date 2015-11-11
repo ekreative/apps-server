@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "864aa2f596c55a6e92a0e853a2cd026c",
-    "content-hash": "182076751a3d3455385a91d209289c03",
+    "hash": "51122de7393cc8dc88179d2a36d24d67",
+    "content-hash": "44838e0d30143776dc16ad7178646045",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -812,16 +812,16 @@
         },
         {
             "name": "ekreative/redmine_login",
-            "version": "2.3.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ekreative/redmine-login.git",
-                "reference": "da3edfc0b1c7601cf73e94c416f9de603b8abc60"
+                "reference": "48b00455461e121d01574320c5e1987f6fc3b8a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ekreative/redmine-login/zipball/da3edfc0b1c7601cf73e94c416f9de603b8abc60",
-                "reference": "da3edfc0b1c7601cf73e94c416f9de603b8abc60",
+                "url": "https://api.github.com/repos/ekreative/redmine-login/zipball/48b00455461e121d01574320c5e1987f6fc3b8a7",
+                "reference": "48b00455461e121d01574320c5e1987f6fc3b8a7",
                 "shasum": ""
             },
             "require": {
@@ -840,7 +840,14 @@
             "type": "symfony-bundle",
             "extra": {
                 "incenteev-parameters": {
-                    "file": "tests/parameters.yml"
+                    "file": "tests/parameters.yml",
+                    "env-map": {
+                        "redmine": "SYMFONY__REDMINE",
+                        "admin_user": "SYMFONY__ADMIN_USER",
+                        "admin_pass": "SYMFONY__ADMIN_PASS",
+                        "user_user": "SYMFONY__USER_USER",
+                        "user_pass": "SYMFONY__USER_PASS"
+                    }
                 }
             },
             "autoload": {
@@ -852,7 +859,8 @@
             "license": [
                 "MIT"
             ],
-            "time": "2015-07-30 10:29:55"
+            "description": "Login to symfony using redmine as user provider",
+            "time": "2015-10-27 14:46:34"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1201,21 +1209,21 @@
         },
         {
             "name": "incenteev/composer-parameter-handler",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Incenteev/ParameterHandler.git",
-                "reference": "84a205fe80a46101607bafbc423019527893ddd0"
+                "reference": "d7ce7f06136109e81d1cb9d57066c4d4a99cf1cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Incenteev/ParameterHandler/zipball/84a205fe80a46101607bafbc423019527893ddd0",
-                "reference": "84a205fe80a46101607bafbc423019527893ddd0",
+                "url": "https://api.github.com/repos/Incenteev/ParameterHandler/zipball/d7ce7f06136109e81d1cb9d57066c4d4a99cf1cc",
+                "reference": "d7ce7f06136109e81d1cb9d57066c4d4a99cf1cc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "symfony/yaml": "~2.0"
+                "symfony/yaml": "~2.3|~3.0"
             },
             "require-dev": {
                 "composer/composer": "1.0.*@dev",
@@ -1248,7 +1256,7 @@
             "keywords": [
                 "parameters management"
             ],
-            "time": "2015-06-03 08:27:03"
+            "time": "2015-11-10 17:04:01"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -1828,25 +1836,25 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v3.0.10",
+            "version": "v3.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "18fc2063c4d6569cdca47a39fbac32342eb65f3c"
+                "reference": "a79e205737b58d557c05caef6dfa8f94d8084bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/18fc2063c4d6569cdca47a39fbac32342eb65f3c",
-                "reference": "18fc2063c4d6569cdca47a39fbac32342eb65f3c",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/a79e205737b58d557c05caef6dfa8f94d8084bca",
+                "reference": "a79e205737b58d557c05caef6dfa8f94d8084bca",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.2",
-                "symfony/framework-bundle": "~2.3"
+                "symfony/framework-bundle": "~2.3|~3.0"
             },
             "require-dev": {
-                "symfony/expression-language": "~2.4",
-                "symfony/security-bundle": "~2.4"
+                "symfony/expression-language": "~2.4|~3.0",
+                "symfony/security-bundle": "~2.4|~3.0"
             },
             "suggest": {
                 "symfony/expression-language": "",
@@ -1879,7 +1887,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2015-08-03 11:59:27"
+            "time": "2015-10-28 15:47:04"
         },
         {
             "name": "sensiolabs/security-checker",

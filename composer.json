@@ -22,7 +22,7 @@
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
         "mcfedr/json-form": "^3.0",
-        "ekreative/redmine_login": "^2.0",
+        "ekreative/redmine_login": "^3.1.0",
         "stof/doctrine-extensions-bundle": "^1.1",
         "tufanbarisyildirim/php-apk-parser": "dev-master",
         "rodneyrehm/plist": "^2.0"
