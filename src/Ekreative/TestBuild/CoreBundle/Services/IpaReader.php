@@ -124,7 +124,7 @@ class IpaReader
                 $plist          = $filename;
                 $unpackFiles [] = $filename;
             }
-            if ((strpos($filename, 'icon') !== false) && substr_count($filename, '/') == 2) {
+            if ((strpos($filename, '.png') !== false) && substr_count($filename, '/') == 2) {
                 $unpackFiles [] = $filename;
             }
 
@@ -169,16 +169,18 @@ class IpaReader
 
             $this->icon = $this->getIconPath($iconGroups);
 
-            $info['CFBundleName']               = $plist['CFBundleName'];
-            $info['CFBundleVersion']            = $plist['CFBundleVersion'];
-            $info['MinimumOSVersion']           = $plist['MinimumOSVersion'];
-            $info['DTPlatformVersion']          = $plist['DTPlatformVersion'];
-            $info['CFBundleIdentifier']         = $plist['CFBundleIdentifier'];
-            $info['CFBundleDisplayName']        = $plist['CFBundleDisplayName'];
-            $info['CFBundleShortVersionString'] = $plist['CFBundleShortVersionString'];
-            $info['CFBundleShortVersionString'] = $plist['CFBundleShortVersionString'];
+            $info['CFBundleName']               = array_key_exists('CFBundleName', $plist)                ? $plist['CFBundleName']               :'CFBundleName'   ;
+            $info['CFBundleVersion']            = array_key_exists('CFBundleVersion', $plist)             ? $plist['CFBundleVersion']            :'CFBundleVersion'   ;
+            $info['MinimumOSVersion']           = array_key_exists('MinimumOSVersion', $plist)            ? $plist['MinimumOSVersion']           :'MinimumOSVersion'   ;
+            $info['DTPlatformVersion']          = array_key_exists('CFBundleIconFiles', $plist)           ? $plist['DTPlatformVersion']          :'DTPlatformVersion'   ;
+            $info['CFBundleIdentifier']         = array_key_exists('CFBundleIdentifier', $plist)          ? $plist['CFBundleIdentifier']         :'CFBundleIdentifier'   ;
+            $info['CFBundleDisplayName']        = array_key_exists('CFBundleDisplayName', $plist)         ? $plist['CFBundleDisplayName']        :'CFBundleDisplayName'   ;
+            $info['CFBundleShortVersionString'] = array_key_exists('CFBundleShortVersionString', $plist)  ? $plist['CFBundleShortVersionString'] :'CFBundleShortVersionString'   ;
+            $info['CFBundleShortVersionString'] = array_key_exists('CFBundleShortVersionString', $plist)  ? $plist['CFBundleShortVersionString'] :'CFBundleShortVersionString'   ;
             $info['CFBundleSupportedPlatforms'] = implode(',', $plist['CFBundleSupportedPlatforms']);
 
+
+            print_r($iconGroups);
 
             if (array_key_exists('UISupportedInterfaceOrientations', $plist)) {
                 $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
@@ -204,8 +206,8 @@ class IpaReader
             }
         }
 
-        $merged = call_user_func_array('array_merge', $iconsGroups);
-        $merged = array_flip($merged);
+        $original = call_user_func_array('array_merge', $iconsGroups);
+        $merged = array_flip($original);
         $names  = [
             'icon-72@2x',
             'icon-76',
@@ -226,8 +228,23 @@ class IpaReader
             }
         }
 
-        return $this->basePath . '/' . $icon . (strpos($icon, '.png') > 0 ? '' : '.png');
 
+        if(!$icon)   {
+            end($original);
+            $icon = current($original);
+        }
+
+
+        $iconPath = $this->basePath . '/' . $icon . (strpos($icon, '.png') > 0 ? '' : '.png');
+
+        if(!file_exists($iconPath)){
+
+            $iconPath = $this->basePath . '/' . $icon. (strpos($icon, '.png') > 0 ? '' : '@2x.png');
+
+        }
+
+
+        return  $iconPath;
     }
 
 
@@ -258,7 +275,7 @@ class IpaReader
 
     public function __destruct()
     {
-        if($this->tmpDir){
+        if ($this->tmpDir) {
             $this->deleteDir($this->tmpDir);
         }
     }
