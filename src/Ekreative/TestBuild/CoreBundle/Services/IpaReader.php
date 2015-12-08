@@ -140,35 +140,6 @@ class IpaReader
 
     }
 
-    public function clean($dir = null)
-    {
-
-        if (is_null($dir)) {
-            $dir = $this->tmpDir;
-        }
-
-        if (is_dir($dir)) {
-            $ignore[] = '/^\.$/';
-            $ignore[] = '/^\.\.$/';
-            $objects  = scandir($dir);
-            foreach ($objects as $object) {
-                $reduce = function ($found, $pattern) use ($object) {
-                    return $found && ! preg_match($pattern, $object);
-                };
-                if (array_reduce($ignore, $reduce, true)) {
-                    if (is_dir($dir . '/' . $object)) {
-                        $this->clean($dir . '/' . $object, $ignore);
-                        rmdir($dir . '/' . $object);
-                    } else {
-                        unlink($dir . '/' . $object);
-                    }
-                }
-            }
-        }
-
-    }
-
-
     private function readInfoPlist()
     {
 
@@ -283,6 +254,32 @@ class IpaReader
 
         return $this->tmpDir . '/' . $fileinfo['filename'] . $suffix . '.' . $fileinfo['extension'];
 
+    }
+
+    public function __destruct()
+    {
+        if($this->tmpDir){
+            $this->deleteDir($this->tmpDir);
+        }
+    }
+
+    private function deleteDir($dirPath)
+    {
+        if ( ! is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $this->deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
     }
 
 

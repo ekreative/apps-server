@@ -87,7 +87,7 @@ class BuildsUploader
 
             $iconUrl      = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
             $app->setIconUrl($iconUrl);
-            $ipaReader->clean();
+
 
         } else {
 
@@ -200,6 +200,8 @@ class BuildsUploader
 
         return $app;
     }
+
+
 
 
 }
