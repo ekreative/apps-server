@@ -21,6 +21,7 @@ class IpaReader
     private $info = [];
     private $icon;
     private $plist;
+    private $basePath;
 
     public function __construct($to)
     {
@@ -29,7 +30,7 @@ class IpaReader
             throw new Exception('Tmp directory not found or not set');
         }
 
-        $this->to  = $to;
+        $this->to = $to;
     }
 
 
@@ -47,7 +48,6 @@ class IpaReader
 
         $this->unZipFiles($path);
 
-        $this->readInfoPlist();
 
     }
 
@@ -107,6 +107,7 @@ class IpaReader
     private function unZipFiles($file)
     {
 
+
         $this->tmpDir = $this->to . microtime(true);
 
         mkdir($this->tmpDir, 0777, true);
@@ -115,30 +116,27 @@ class IpaReader
         $icon  = null;
         $plist = null;
 
-        for ($i = 0; $i < $zip->numFiles; $i ++) {
-            $filename = $zip->getNameIndex($i);
 
-            if (strpos($filename, '57x57') > 0) {
-                $icon = $filename;
+        $unpackFiles = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            if ((strpos($filename, 'Info.plist') > 0) && substr_count($filename, '/') == 2) {
+                $plist          = $filename;
+                $unpackFiles [] = $filename;
             }
-            if (strpos($filename, '57x57@2x') > 0) {
-                $icon = $filename;
+            if ((strpos($filename, 'icon') !== false) && substr_count($filename, '/') == 2) {
+                $unpackFiles [] = $filename;
             }
-            if (strpos($filename, '60x60@2x') > 0) {
-                $icon = $filename;
-            }
-            if (strpos($filename, '76x76@2x') > 0) {
-                $icon = $filename;
-            }
-            if ((strpos($filename, 'Info.plist') > 0) && substr_count($filename,'/')==2) {
-                $plist = $filename;
-            }
+
         }
 
-        $zip->extractTo($this->tmpDir, [$icon, $plist]);
+        $zip->extractTo($this->tmpDir, $unpackFiles);
 
-        $this->icon  = $this->tmpDir . '/' . $icon;
+        $this->basePath = $this->tmpDir . '/' . pathinfo($plist, PATHINFO_DIRNAME);
+
         $this->plist = $this->tmpDir . '/' . $plist;
+        $this->readInfoPlist();
+
 
     }
 
@@ -159,10 +157,10 @@ class IpaReader
                 };
                 if (array_reduce($ignore, $reduce, true)) {
                     if (is_dir($dir . '/' . $object)) {
-                        $this->clean($dir .  '/' . $object, $ignore);
-                        rmdir($dir .  '/' . $object);
+                        $this->clean($dir . '/' . $object, $ignore);
+                        rmdir($dir . '/' . $object);
                     } else {
-                        unlink($dir .  '/' . $object);
+                        unlink($dir . '/' . $object);
                     }
                 }
             }
@@ -191,14 +189,26 @@ class IpaReader
             $plist = new CFPropertyList($this->plist);
             $plist = $plist->toArray();
 
-            $info['CFBundleName']                     = $plist['CFBundleName'];
-            $info['CFBundleVersion']                  = $plist['CFBundleVersion'];
-            $info['MinimumOSVersion']                 = $plist['MinimumOSVersion'];
-            $info['DTPlatformVersion']                = $plist['DTPlatformVersion'];
-            $info['CFBundleIdentifier']               = $plist['CFBundleIdentifier'];
-            $info['CFBundleDisplayName']              = $plist['CFBundleDisplayName'];
-            $info['CFBundleShortVersionString']       = $plist['CFBundleShortVersionString'];
-            $info['CFBundleSupportedPlatforms']       = implode(',', $plist['CFBundleSupportedPlatforms']);
+            $iconGroups = [];
+            foreach ($plist as $key => $value) {
+                if (strpos($key, 'CFBundleIcons') === 0) {
+                    $iconGroups[] = $value;
+                }
+            }
+
+            $this->icon = $this->getIconPath($iconGroups);
+
+            $info['CFBundleName']               = $plist['CFBundleName'];
+            $info['CFBundleVersion']            = $plist['CFBundleVersion'];
+            $info['MinimumOSVersion']           = $plist['MinimumOSVersion'];
+            $info['DTPlatformVersion']          = $plist['DTPlatformVersion'];
+            $info['CFBundleIdentifier']         = $plist['CFBundleIdentifier'];
+            $info['CFBundleDisplayName']        = $plist['CFBundleDisplayName'];
+            $info['CFBundleShortVersionString'] = $plist['CFBundleShortVersionString'];
+            $info['CFBundleShortVersionString'] = $plist['CFBundleShortVersionString'];
+            $info['CFBundleSupportedPlatforms'] = implode(',', $plist['CFBundleSupportedPlatforms']);
+
+
             if (array_key_exists('UISupportedInterfaceOrientations', $plist)) {
                 $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
             }
@@ -208,13 +218,55 @@ class IpaReader
     }
 
 
-    public function unpackImage($path){
+    private function getIconPath($groups)
+    {
 
 
-        if(PHP_OS=='Darwin'){
+        $iconsGroups = [];
+        foreach ($groups as $group) {
+            if (array_key_exists('CFBundlePrimaryIcon', $group)) {
+                $group = $group['CFBundlePrimaryIcon'];
+                if (array_key_exists('CFBundleIconFiles', $group)) {
+                    $group         = $group['CFBundleIconFiles'];
+                    $iconsGroups[] = $group;
+                }
+            }
+        }
+
+        $merged = call_user_func_array('array_merge', $iconsGroups);
+        $merged = array_flip($merged);
+        $names  = [
+            'icon-72@2x',
+            'icon-76',
+            'icon-72',
+            'icon-60',
+            'icon-50',
+            'icon-40',
+            'icon@2x',
+            'icon-small',
+            'icon',
+        ];
+
+        $icon = null;
+
+        foreach ($names as $name) {
+            if ( ! $icon && array_key_exists($name, $merged)) {
+                $icon = $name;
+            }
+        }
+
+        return $this->basePath . '/' . $icon . (strpos($icon, '.png') > 0 ? '' : '.png');
+
+    }
+
+
+    public function unpackImage($path)
+    {
+
+        if (PHP_OS == 'Darwin') {
             $pngdefry = 'pngdefry-osx';
-        }else{
-        //}else if(PHP_OS=='Linux'){
+        } else {
+            //}else if(PHP_OS=='Linux'){
             $pngdefry = 'pngdefry-linux';
         }
 
@@ -223,13 +275,13 @@ class IpaReader
         $suffix = microtime(true);
 
         $fileinfo = pathinfo($path);
-        $process = proc_open( __DIR__ .'/'.$pngdefry.' -s '.$suffix.' -o '.$this->tmpDir.' '.$path , [], $pipes);
+        $process  = proc_open(__DIR__ . '/' . $pngdefry . ' -s ' . $suffix . ' -o ' . $this->tmpDir . ' ' . $path, [], $pipes);
 
         if (is_resource($process)) {
             proc_close($process);
         }
 
-        return $this->tmpDir.'/'.$fileinfo['filename'].$suffix.'.'.$fileinfo['extension'];
+        return $this->tmpDir . '/' . $fileinfo['filename'] . $suffix . '.' . $fileinfo['extension'];
 
     }
 

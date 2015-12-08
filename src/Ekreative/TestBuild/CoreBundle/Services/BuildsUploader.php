@@ -65,6 +65,10 @@ class BuildsUploader
             'ContentDisposition' => 'filename="appicon.png"',
             'ContentType'        => 'image/png'
         ];
+
+
+
+
         if ($app->isType(App::TYPE_IOS)) {
 
             $ipaReader = $this->ipaReader;
@@ -80,6 +84,7 @@ class BuildsUploader
             $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
             $app->setBundleId($ipaReader->getBundleIdentifier());
             $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
+
             $iconUrl      = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
             $app->setIconUrl($iconUrl);
             $ipaReader->clean();
