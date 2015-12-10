@@ -179,9 +179,6 @@ class IpaReader
             $info['CFBundleShortVersionString'] = array_key_exists('CFBundleShortVersionString', $plist)  ? $plist['CFBundleShortVersionString'] :'CFBundleShortVersionString'   ;
             $info['CFBundleSupportedPlatforms'] = implode(',', $plist['CFBundleSupportedPlatforms']);
 
-
-            print_r($iconGroups);
-
             if (array_key_exists('UISupportedInterfaceOrientations', $plist)) {
                 $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
             }
@@ -263,7 +260,9 @@ class IpaReader
         $suffix = microtime(true);
 
         $fileinfo = pathinfo($path);
-        $process  = proc_open(__DIR__ . '/' . $pngdefry . ' -s ' . $suffix . ' -o ' . $this->tmpDir . ' ' . $path, [], $pipes);
+
+        $command =  __DIR__ . '/' . $pngdefry . ' -s ' . $suffix . ' -o ' . $this->tmpDir . ' ' . str_replace(" ", "\\ ",$path);
+        $process  = proc_open($command , [], $pipes);
 
         if (is_resource($process)) {
             proc_close($process);
