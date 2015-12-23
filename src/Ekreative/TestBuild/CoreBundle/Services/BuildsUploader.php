@@ -83,10 +83,12 @@ class BuildsUploader
             $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
             $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
             $app->setBundleId($ipaReader->getBundleIdentifier());
-            $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
+            if(file_exists($app->getIconFileName())) {
+                $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
 
-            $iconUrl      = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
-            $app->setIconUrl($iconUrl);
+                $iconUrl = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
+                $app->setIconUrl($iconUrl);
+            }
 
 
         } else {
