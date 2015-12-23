@@ -75,11 +75,11 @@ class BuildsUploader
 
             $ipaReader->read($build->getRealPath());
             $app->setBundleName($ipaReader->getBundleName());
-            $app->setVersion($ipaReader->getBundleVersion());
+            $app->setVersion($ipaReader->getBundleShortVersionString());
             $app->setMinimumOSVersion($ipaReader->getMinimumOSVersion());
             $app->setPlatformVersion($ipaReader->getPlatformVersion());
             $app->setBundleDisplayName($ipaReader->getBundleDisplayName());
-            $app->setBuildNumber($ipaReader->getBundleShortVersionString());
+            $app->setBuildNumber($ipaReader->getBundleVersion());
             $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
             $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
             $app->setBundleId($ipaReader->getBundleIdentifier());
