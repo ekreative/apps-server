@@ -83,14 +83,10 @@ class BuildsUploader
             $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
             $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
             $app->setBundleId($ipaReader->getBundleIdentifier());
-            if(file_exists($app->getIconFileName())) {
-                $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
+            $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
 
-                $iconUrl = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
-                $app->setIconUrl($iconUrl);
-            }
-
-
+            $iconUrl = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
+            $app->setIconUrl($iconUrl);
         } else {
 
             try {
@@ -196,7 +192,7 @@ class BuildsUploader
         }
 
         $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($this->router->generate('build_install',
-                ['token' => $app->getToken()])) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
+                ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
         $this->em->persist($app);
         $this->em->flush();
 
