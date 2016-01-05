@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Route("/builds")
@@ -61,7 +62,9 @@ class BuildsController extends JsonController
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
         $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('comment'), $project, $type, $request->request->get('ci') == 'true');
 
-        return new JsonResponse($app);
+        $data = $app->jsonSerialize();
+        $data['install'] = $this->generateUrl('build_install', ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+        return new JsonResponse($data);
     }
 
 
