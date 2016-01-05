@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     filter = require('gulp-filter'),
     jshint = require('gulp-jshint'),
+    gutil = require('gulp-util'),
     jshintStylish = require('jshint-stylish');
 
 gulp.task('default', ['build']);
@@ -22,7 +23,9 @@ gulp.task('clean', function (cb) {
 gulp.task('styles', function() {
     return gulp.src(['web-src/less/*'])
         .pipe(less())
+        .on('error', gutil.log)
         .pipe(uglifycss())
+        .pipe(concat('app.css'))
         .pipe(gulp.dest('web/css'));
 });
 
