@@ -103,6 +103,11 @@ class IpaReader
         return $this->info['UISupportedInterfaceOrientations'];
     }
 
+    public function getAppServer()
+    {
+        return $this->info['APP_SERVER'];
+    }
+
 
     private function unZipFiles($file)
     {
@@ -154,6 +159,7 @@ class IpaReader
         $info['CFBundleDisplayName']              = null;
         $info['DTPlatformVersion']                = null;
         $info['CFBundleIdentifier']               = null;
+        $info['APP_SERVER'] = null;
 
         if (is_file($this->plist)) {
 
@@ -178,7 +184,7 @@ class IpaReader
             $info['CFBundleShortVersionString'] = array_key_exists('CFBundleShortVersionString', $plist)  ? $plist['CFBundleShortVersionString'] :'CFBundleShortVersionString'   ;
             $info['CFBundleShortVersionString'] = array_key_exists('CFBundleShortVersionString', $plist)  ? $plist['CFBundleShortVersionString'] :'CFBundleShortVersionString'   ;
             $info['CFBundleSupportedPlatforms'] = implode(',', $plist['CFBundleSupportedPlatforms']);
-
+            $info['APP_SERVER']               = array_key_exists('APP_SERVER', $plist)                ? $plist['APP_SERVER']               :'APP_SERVER'   ;
             if (array_key_exists('UISupportedInterfaceOrientations', $plist)) {
                 $info['UISupportedInterfaceOrientations'] = implode(',', $plist['UISupportedInterfaceOrientations']);
             }
@@ -282,7 +288,7 @@ class IpaReader
     private function deleteDir($dirPath)
     {
         if ( ! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
+            throw new \InvalidArgumentException("$dirPath must be a directory");
         }
         if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
             $dirPath .= '/';

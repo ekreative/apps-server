@@ -6,6 +6,9 @@
     "autoload": {
         "psr-4": { "": "src/", "SymfonyStandard\\": "app/SymfonyStandard/" }
     },
+    "autoload-dev": {
+        "psr-4": { "": "tests/" }
+    },
     "require": {
         "php": ">=5.3.9",
         "symfony/symfony": "2.7.*",
@@ -28,7 +31,8 @@
         "rodneyrehm/plist": "^2.0"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "sensio/generator-bundle": "~2.3",
+        "phpunit/phpunit": "^5.1"
     },
     "scripts": {
         "post-root-package-install": [
@@ -66,5 +70,11 @@
         "branch-alias": {
             "dev-master": "2.7-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mcfedr/php-apk-parser"
+        }
+    ]
 }

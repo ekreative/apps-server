@@ -242,6 +242,13 @@ class App implements \JsonSerializable
      */
     private $ci;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $appServer;
+
     function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
@@ -726,7 +733,8 @@ class App implements \JsonSerializable
             'projectid' => $this->getProjectId(),
             'iconurl' => $this->getIconUrl(),
             'date' => $this->getCreated()->format('U'),
-            'release' => $this->getRelease()
+            'release' => $this->getRelease(),
+            'appServer' => $this->getAppServer()
         ];
     }
 
@@ -987,6 +995,24 @@ class App implements \JsonSerializable
     public function setCi($ci)
     {
         $this->ci = $ci;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppServer()
+    {
+        return $this->appServer;
+    }
+
+    /**
+     * @param string $appServer
+     * @return App
+     */
+    public function setAppServer($appServer)
+    {
+        $this->appServer = $appServer;
         return $this;
     }
 }
