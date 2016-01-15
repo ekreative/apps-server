@@ -29,7 +29,7 @@
             <td>Size</td>
             <td>Created</td>
             <td>Build</td>
-            <td></td>
+            <td>App Server</td>
             {% if delete %}
                 <td></td>
                 <td>Release</td>
@@ -53,6 +53,7 @@
                 <td>
                     <a class="btn btn-primary" href="{{ path('build_install',{'token':app.token}) }}" target="_blank">Install</a>
                 </td>
+                <td>{{ app.appServer }}</td>
                 {% if delete %}
                     <td>
                         <form method="post" action="{{ path('build_delete',{'token':app.token,'project':app.projectId,'type':app.type}) }}">
