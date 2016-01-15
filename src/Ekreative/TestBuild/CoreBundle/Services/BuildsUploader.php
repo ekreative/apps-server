@@ -22,6 +22,10 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 class BuildsUploader
 {
+    private static $ICON_HEADERS = [
+        'ContentDisposition' => 'filename="appicon.png"',
+        'ContentType'        => 'image/png'
+    ];
 
     private $em;
     private $user;
@@ -61,98 +65,18 @@ class BuildsUploader
         $build = $app->getBuild();
         $app->setRelease(false);
         $app->setDebuggable(false);
-        $iconHeaders = [
-            'ContentDisposition' => 'filename="appicon.png"',
-            'ContentType'        => 'image/png'
-        ];
 
 
 
 
         if ($app->isType(App::TYPE_IOS)) {
 
-            $ipaReader = $this->ipaReader;
-
-            $ipaReader->read($build->getRealPath());
-            $app->setBundleName($ipaReader->getBundleName());
-            $app->setVersion($ipaReader->getBundleShortVersionString());
-            $app->setMinimumOSVersion($ipaReader->getMinimumOSVersion());
-            $app->setPlatformVersion($ipaReader->getPlatformVersion());
-            $app->setBundleDisplayName($ipaReader->getBundleDisplayName());
-            $app->setBuildNumber($ipaReader->getBundleVersion());
-            $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
-            $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
-            $app->setBundleId($ipaReader->getBundleIdentifier());
-            if(file_exists($app->getIconFileName())) {
-                $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
-
-                $iconUrl = $s3Service->upload($unpackedIcon, $app->getIconFileName(), $iconHeaders);
-                $app->setIconUrl($iconUrl);
-            }
+            $this->readIosData($app, $build);
 
 
         } else {
 
-            try {
-
-                $apk      = new Parser($build->getRealPath());
-                $manifest = $apk->getManifest();
-
-                try {
-                    $app->setBundleId($manifest->getPackageName());
-                } catch (\Exception $e) {
-                    $this->logger->error('Coundnt read apk bundle id', [
-                        'e' => $e,
-                        'manifest' => $manifest
-                    ]);
-                }
-                try {
-                    $app->setVersion($manifest->getVersionName());
-                } catch (\Exception $e) {
-                    $this->logger->error('Coundnt read apk version name', [
-                        'e' => $e,
-                        'manifest' => $manifest
-                    ]);
-                }
-
-                try {
-                    $app->setBuildNumber($manifest->getVersionCode());
-                } catch (\Exception $e) {
-                    $this->logger->error('Coundnt read apk version code', [
-                        'e' => $e,
-                        'manifest' => $manifest
-                    ]);
-                }
-                try {
-                    $app->setMinSdkLevel($manifest->getMinSdkLevel());
-                } catch (\Exception $e) {
-                    $this->logger->error('Coundnt read apk min sdk', [
-                        'e' => $e,
-                        'manifest' => $manifest
-                    ]);
-                }
-                try {
-                    $app->setDebuggable($manifest->isDebuggable());
-                } catch (\Exception $e) {
-                    $this->logger->error('Coundnt read apk debug', [
-                        'e' => $e,
-                        'manifest' => $manifest
-                    ]);
-                }
-                $app->setPermssions(implode(', ', array_keys($manifest->getPermissions())));
-
-                $resourceId = $apk->getManifest()->getApplication()->getIcon();
-                $resources  = $apk->getResources($resourceId);
-                $tmpfname   = tempnam("/tmp", $manifest->getPackageName());
-                file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
-                $app->setIconUrl($s3Service->upload($tmpfname, $app->getIconFileName()), $iconHeaders);
-                unlink($tmpfname);
-
-            } catch (\Exception $e) {
-                $this->logger->error('Coundnt read apk manifest', [
-                    'e' => $e
-                ]);
-            }
+            $this->readAndroidData($app, $build);
 
         }
 
@@ -203,7 +127,92 @@ class BuildsUploader
         return $app;
     }
 
+    private function readIosData(App $app, UploadedFile $build)
+    {
+        $ipaReader = $this->ipaReader;
 
+        $ipaReader->read($build->getRealPath());
+        $app->setBundleName($ipaReader->getBundleName());
+        $app->setVersion($ipaReader->getBundleShortVersionString());
+        $app->setMinimumOSVersion($ipaReader->getMinimumOSVersion());
+        $app->setPlatformVersion($ipaReader->getPlatformVersion());
+        $app->setBundleDisplayName($ipaReader->getBundleDisplayName());
+        $app->setBuildNumber($ipaReader->getBundleVersion());
+        $app->setBundleSupportedPlatforms($ipaReader->getBundleShortVersionString());
+        $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
+        $app->setBundleId($ipaReader->getBundleIdentifier());
+        $app->setAppServer($ipaReader->getAppServer());
+        if(file_exists($app->getIconFileName())) {
+            $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
 
+            $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), static::$ICON_HEADERS);
+            $app->setIconUrl($iconUrl);
+        }
+    }
 
+    private function readAndroidData(App $app, UploadedFile $build)
+    {
+        try {
+
+            $apk      = new Parser($build->getRealPath());
+            $manifest = $apk->getManifest();
+
+            try {
+                $app->setBundleId($manifest->getPackageName());
+            } catch (\Exception $e) {
+                $this->logger->error('Coundnt read apk bundle id', [
+                    'e' => $e,
+                    'manifest' => $manifest
+                ]);
+            }
+            try {
+                $app->setVersion($manifest->getVersionName());
+            } catch (\Exception $e) {
+                $this->logger->error('Coundnt read apk version name', [
+                    'e' => $e,
+                    'manifest' => $manifest
+                ]);
+            }
+
+            try {
+                $app->setBuildNumber($manifest->getVersionCode());
+            } catch (\Exception $e) {
+                $this->logger->error('Coundnt read apk version code', [
+                    'e' => $e,
+                    'manifest' => $manifest
+                ]);
+            }
+            try {
+                $app->setMinSdkLevel($manifest->getMinSdkLevel());
+            } catch (\Exception $e) {
+                $this->logger->error('Coundnt read apk min sdk', [
+                    'e' => $e,
+                    'manifest' => $manifest
+                ]);
+            }
+            try {
+                $app->setDebuggable($manifest->isDebuggable());
+            } catch (\Exception $e) {
+                $this->logger->error('Coundnt read apk debug', [
+                    'e' => $e,
+                    'manifest' => $manifest
+                ]);
+            }
+            $app->setPermssions(implode(', ', array_keys($manifest->getPermissions())));
+
+            $resourceId = $apk->getManifest()->getApplication()->getIcon();
+            $resources  = $apk->getResources($resourceId);
+            $tmpfname   = tempnam("/tmp", $manifest->getPackageName());
+            file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
+            $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName()), static::$ICON_HEADERS);
+            unlink($tmpfname);
+
+            $app->setAppServer($manifest->getMetaData('APP_SERVER'));
+
+        } catch (\Exception $e) {
+            $this->logger->error('Coundnt read apk manifest', [
+                'e' => $e
+            ]);
+        }
+    }
 }
