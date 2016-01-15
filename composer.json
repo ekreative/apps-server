@@ -1,8 +1,8 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "ekreative/apps-server",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "This is the program we use to manage builds of our apps",
     "autoload": {
         "psr-4": { "Ekreative\\TestBuild\\": "src/Ekreative/TestBuild/", "SymfonyStandard\\": "app/SymfonyStandard/" }
     },
@@ -11,6 +11,7 @@
     },
     "require": {
         "php": ">=5.3.9",
+        "ext-apc": "*",
         "symfony/symfony": "2.7.*",
         "doctrine/orm": "~2.2,>=2.2.3,<2.5",
         "doctrine/dbal": "<2.5",
