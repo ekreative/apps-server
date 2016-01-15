@@ -1,14 +1,21 @@
 language: php
 php:
+    - 5.5
     - 5.6
     - hhvm
-    - 7
+    - 7.0
 
 matrix:
     allow_failures:
         - php: hhvm
 
 before_script:
+    - if [[ $TRAVIS_PHP_VERSION =~ 5.[56] ]] ; then echo yes | pecl install apcu-4.0.10; fi;
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then echo yes | pecl install apcu; fi;
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta; echo yes | pecl install apcu_bc; fi;
+# Pecl installs the extensions in the wrong order into php.ini
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then sed '/extension="apcu\{0,1\}\.so"/d' /home/travis/.phpenv/versions/7.0.2/etc/php.ini > tmp && mv tmp /home/travis/.phpenv/versions/7.0.2/etc/php.ini; fi;
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then printf "extension=\"apcu.so\"\nextension=\"apc.so\"" >> /home/travis/.phpenv/versions/7.0.2/etc/php.ini; fi;
     - composer selfupdate
     - composer install --prefer-source
 
