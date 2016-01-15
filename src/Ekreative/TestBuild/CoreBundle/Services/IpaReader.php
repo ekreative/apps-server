@@ -43,7 +43,7 @@ class IpaReader
     public function read($path)
     {
         if ( ! file_exists($path)) {
-            throw new Exception('Ipa File not found');
+            throw new \Exception('Ipa File not found');
         }
 
         $this->unZipFiles($path);

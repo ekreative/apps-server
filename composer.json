@@ -4,10 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-4": { "": "src/", "SymfonyStandard\\": "app/SymfonyStandard/" }
+        "psr-4": { "Ekreative\\TestBuild\\": "src/Ekreative/TestBuild/", "SymfonyStandard\\": "app/SymfonyStandard/" }
     },
     "autoload-dev": {
-        "psr-4": { "": "tests/" }
+        "psr-4": { "Ekreative\\TestBuild\\": "tests/Ekreative/TestBuild/" }
     },
     "require": {
         "php": ">=5.3.9",
