@@ -4,6 +4,10 @@ php:
     - hhvm
     - 7
 
+matrix:
+    allow_failures:
+        - php: hhvm
+
 before_script:
     - composer selfupdate
     - composer install --prefer-source
