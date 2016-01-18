@@ -14,8 +14,8 @@ before_script:
     - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then echo yes | pecl install apcu; fi;
     - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then pecl config-set preferred_state beta; echo yes | pecl install apcu_bc; fi;
 # Pecl installs the extensions in the wrong order into php.ini
-    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then sed '/extension="apcu\{0,1\}\.so"/d' /home/travis/.phpenv/versions/7.0.2/etc/php.ini > tmp && mv tmp /home/travis/.phpenv/versions/7.0.2/etc/php.ini; fi;
-    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then printf "extension=\"apcu.so\"\nextension=\"apc.so\"" >> /home/travis/.phpenv/versions/7.0.2/etc/php.ini; fi;
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then sed '/extension="apcu\{0,1\}\.so"/d' ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini > tmp && mv tmp ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
+    - if [[ $TRAVIS_PHP_VERSION = 7.* ]] ; then printf "extension=\"apcu.so\"\nextension=\"apc.so\"" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi;
     - composer selfupdate
     - composer install --prefer-source
 
