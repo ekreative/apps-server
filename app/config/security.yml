@@ -20,13 +20,13 @@ security:
             pattern: ^/login$
             security: false
 
-        unstallUrl:
+        installUrl:
             pattern: ^/builds/install/
             security: false
 
         secured_area:
             pattern: ^/
-            anonymous:
+            anonymous: true
             simple_form:
                 authenticator: ekreative_redmine_login.authenticator
                 check_path:    login_check
@@ -39,5 +39,5 @@ security:
                 path: /logout
 
     access_control:
-            - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-            - { path: ^/, roles: ROLE_REDMINE }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_REDMINE }
