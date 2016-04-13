@@ -134,7 +134,11 @@ class BuildsController extends Controller
         $currentUser = $this->getUser();
         $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
-        $data    = $client->get('projects/' . $project . '/memberships.json')->getBody();
+        $data    = $client->get('projects/' . $project . '/memberships.json', [
+            'query' => [
+                'limit' => 100
+            ]
+        ])->getBody();
         $members = json_decode($data, true);
 
         $upload = false;
