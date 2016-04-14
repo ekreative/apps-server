@@ -204,7 +204,7 @@ class BuildsUploader
             $resources  = $apk->getResources($resourceId);
             $tmpfname   = tempnam("/tmp", $manifest->getPackageName());
             file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
-            $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName()), static::$ICON_HEADERS);
+            $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName(), static::$ICON_HEADERS));
             unlink($tmpfname);
 
             $app->setAppServer($manifest->getMetaData('APP_SERVER'));
