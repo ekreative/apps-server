@@ -38,14 +38,14 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="version", type="string", length=255)
+     * @ORM\Column(name="version", type="string", length=255, nullable=true)
      */
     private $version;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="buildNumber", type="string", length=255)
+     * @ORM\Column(name="buildNumber", type="string", length=255, nullable=true)
      */
     private $buildNumber;
 
