@@ -52,7 +52,7 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="bundleId", type="string", length=255)
+     * @ORM\Column(name="bundleId", type="string", length=255, nullable=true)
      */
     private $bundleId;
 
