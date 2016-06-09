@@ -24,7 +24,7 @@ class BuildsUploader
 {
     private static $ICON_HEADERS = [
         'ContentDisposition' => 'filename="appicon.png"',
-        'ContentType'        => 'image/png'
+        'ContentType' => 'image/png'
     ];
 
     private $em;
@@ -39,11 +39,11 @@ class BuildsUploader
 
     public function __construct(EntityManager $em, SecurityContext $context, S3 $s3, IpaReader $ipaReader, UrlGeneratorInterface $router, LoggerInterface $logger)
     {
-        $this->em        = $em;
-        $this->s3        = $s3;
-        $this->user      = $context->getToken()->getUser();
+        $this->em = $em;
+        $this->s3 = $s3;
+        $this->user = $context->getToken()->getUser();
         $this->ipaReader = $ipaReader;
-        $this->router    = $router;
+        $this->router = $router;
         $this->logger = $logger;
     }
 
@@ -67,8 +67,6 @@ class BuildsUploader
         $app->setDebuggable(false);
 
 
-
-
         if ($app->isType(App::TYPE_IOS)) {
 
             $this->readIosData($app, $build);
@@ -90,13 +88,13 @@ class BuildsUploader
 
         if ($app->isType(App::TYPE_IOS)) {
             $headers = array(
-                'ContentType'        => 'application/octet-stream',
+                'ContentType' => 'application/octet-stream',
                 'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"'
             );
         } else if ($app->isType(App::TYPE_ANDROID)) {
             $headers = [
                 'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"',
-                'ContentType'        => 'application/vnd.android.package-archive'
+                'ContentType' => 'application/vnd.android.package-archive'
             ];
         }
 
@@ -108,19 +106,19 @@ class BuildsUploader
             $tempFile = tempnam("/tmp", "plist");
 
             $plist = $this->em->getRepository('EkreativeTestBuildCoreBundle:App')
-                              ->getPlistString(
-                                  $app->getBuildUrl(),
-                                  $app->getBundleId(),
-                                  $app->getVersion(),
-                                  $build->getFilename());
+                ->getPlistString(
+                    $app->getBuildUrl(),
+                    $app->getBundleId(),
+                    $app->getVersion(),
+                    $build->getFilename());
 
             file_put_contents($tempFile, $plist);
             $app->setPlistUrl($s3Service->upload($tempFile, $app->getPlistName(), $headers));
             unlink($tempFile);
         }
 
-        $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($this->router->generate('build_install',
-                ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
+        $app->setQrcodeUrl('http://chart.apis.google.com/chart?chl=' . urlencode($this->router->generate('build_install_platform',
+                ['token' => $app->getToken(), 'platform' => $app->getType()], UrlGeneratorInterface::ABSOLUTE_URL)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
         $this->em->persist($app);
         $this->em->flush();
 
@@ -142,7 +140,7 @@ class BuildsUploader
         $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
         $app->setBundleId($ipaReader->getBundleIdentifier());
         $app->setAppServer($ipaReader->getAppServer());
-        if(file_exists($app->getIconFileName())) {
+        if (file_exists($app->getIconFileName())) {
             $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
 
             $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), static::$ICON_HEADERS);
@@ -154,7 +152,7 @@ class BuildsUploader
     {
         try {
 
-            $apk      = new Parser($build->getRealPath());
+            $apk = new Parser($build->getRealPath());
             $manifest = $apk->getManifest();
 
             try {
@@ -201,8 +199,8 @@ class BuildsUploader
             $app->setPermssions(implode(', ', array_keys($manifest->getPermissions())));
 
             $resourceId = $apk->getManifest()->getApplication()->getIcon();
-            $resources  = $apk->getResources($resourceId);
-            $tmpfname   = tempnam("/tmp", $manifest->getPackageName());
+            $resources = $apk->getResources($resourceId);
+            $tmpfname = tempnam("/tmp", $manifest->getPackageName());
             file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
             $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName(), static::$ICON_HEADERS));
             unlink($tmpfname);

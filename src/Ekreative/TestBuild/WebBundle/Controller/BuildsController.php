@@ -19,6 +19,7 @@ class BuildsController extends Controller
 {
     /**
      * @Route("install/{token}",name="build_install")
+     * @Route("install/{platform}/{token}",name="build_install_platform")
      * @Template()
      */
     public function installAction($token)
@@ -40,7 +41,7 @@ class BuildsController extends Controller
         }
 
 
-        $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install', ['token' => $token],
+        $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
                 true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
 
@@ -101,7 +102,7 @@ class BuildsController extends Controller
     {
         $request = $this->getRequest();
 
-        $form  = $request->request->get('form');
+        $form = $request->request->get('form');
         $files = $request->files->get('form');
 
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
@@ -114,11 +115,11 @@ class BuildsController extends Controller
     private function newAppForm(App $app)
     {
         $form = $this->createFormBuilder($app)
-                     ->add('build', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
-                     ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
-                     ->setAction($this->generateUrl('upload', ['type' => $app->getType(), 'project' => $app->getProjectId()]))
-                     ->setMethod('POST')
-                     ->add('save', 'submit', ['label' => 'Upload']);
+            ->add('build', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
+            ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
+            ->setAction($this->generateUrl('upload', ['type' => $app->getType(), 'project' => $app->getProjectId()]))
+            ->setMethod('POST')
+            ->add('save', 'submit', ['label' => 'Upload']);
 
         return $form->getForm();
     }
@@ -134,7 +135,7 @@ class BuildsController extends Controller
         $currentUser = $this->getUser();
         $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
-        $data    = $client->get('projects/' . $project . '/memberships.json', [
+        $data = $client->get('projects/' . $project . '/memberships.json', [
             'query' => [
                 'limit' => 100
             ]
@@ -144,7 +145,7 @@ class BuildsController extends Controller
         $upload = false;
         $delete = false;
 
-        $result          = [];
+        $result = [];
         $result['title'] = 'Builds';
 
 
@@ -171,13 +172,15 @@ class BuildsController extends Controller
             $app = new App();
             $app->setType($type);
             $app->setProjectId($project);
-            $form              = $this->newAppForm($app);
+            $form = $this->newAppForm($app);
             $result['appform'] = $form->createView();
         }
 
-        $result['type']   = $type;
+        $result['type'] = $type;
         $result['delete'] = $delete;
-        $result['apps']   = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
+        $result['project'] = $project;
+
+        $result['apps'] = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
 
         return $result;
     }

@@ -5,12 +5,18 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
-
+    <h1>{{ title }} - {{ type }}</h1>
     {% if appform is defined %}
         <div class="upload-form">
             {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
             <div class="row">
+
+                {% if type=='ios' %}
+                    <a class="btn btn-primary pull-right" href="{{ path('project_builds',{'project':project,'type':'android'}) }}" >Android</a>
+                {% else %}
+                    <a class="btn btn-primary pull-right" href="{{ path('project_builds',{'project':project,'type':'ios'}) }}" >Ios</a>
+                {% endif %}
+
                 <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
                 <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
                 <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
@@ -18,7 +24,6 @@
             {{ form_end(appform) }}
         </div>
     {% endif %}
-
     <table class="table">
         <tr>
             <td>#</td>
@@ -51,7 +56,7 @@
                 <td>{{ app.created|date("d/m/Y H:i") }}</td>
 
                 <td>
-                    <a class="btn btn-primary" href="{{ path('build_install',{'token':app.token}) }}" target="_blank">Install</a>
+                    <a class="btn btn-primary" href="{{ path('build_install_platform',{'token':app.token,'platform':app.type}) }}" target="_blank">Install</a>
                 </td>
                 <td>{{ app.appServer }}</td>
                 {% if delete %}
