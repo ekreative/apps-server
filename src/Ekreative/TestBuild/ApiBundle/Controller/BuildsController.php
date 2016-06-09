@@ -22,7 +22,6 @@ class BuildsController extends JsonController
 {
 
 
-
     /**
      * @Route("/{project}/{type}")
      * @Method("GET")
@@ -31,13 +30,11 @@ class BuildsController extends JsonController
      *   section="Builds"
      * )
      */
-    public function buildsAction($project,$type)
+    public function buildsAction($project, $type)
     {
         $apps = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
-        return new JsonResponse(array('apps'=>$apps));
+        return new JsonResponse($apps);
     }
-
-
 
 
     /**

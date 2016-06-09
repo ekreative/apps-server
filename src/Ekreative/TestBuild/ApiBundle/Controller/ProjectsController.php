@@ -14,7 +14,7 @@ class ProjectsController extends Controller
 {
 
     /**
-     * @Route("{page}",defaults={"page" = "1"})
+     * @Route("projects/{page}",defaults={"page" = "1"})
      * @Method("GET")
      * @ApiDoc(
      *   description="List of projects",
@@ -27,7 +27,7 @@ class ProjectsController extends Controller
 
         $data = $this->get('ekreative_redmine_login.client_provider')->get($this->getUser())->get('projects.json?page='.$page)->getBody();
         $projects = json_decode($data, true);
-        return new JsonResponse($projects['projects']);
+        return new JsonResponse($projects);
     }
 
 }

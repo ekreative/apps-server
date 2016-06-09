@@ -12,9 +12,11 @@
             <div class="row">
 
                 {% if type=='ios' %}
-                    <a class="btn btn-primary pull-right" href="{{ path('project_builds',{'project':project,'type':'android'}) }}" >Android</a>
+                    <a class="btn btn-primary pull-right"
+                       href="{{ path('project_builds',{'project':project,'type':'android'}) }}">Android</a>
                 {% else %}
-                    <a class="btn btn-primary pull-right" href="{{ path('project_builds',{'project':project,'type':'ios'}) }}" >Ios</a>
+                    <a class="btn btn-primary pull-right"
+                       href="{{ path('project_builds',{'project':project,'type':'ios'}) }}">Ios</a>
                 {% endif %}
 
                 <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
@@ -46,30 +48,39 @@
                 <td><img width="57" height="57" src="{{ app.iconUrl }}"></td>
                 <td>
                     {% if app.ci %}
-                        <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server" data-toggle="tooltip"></span>
+                        <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server"
+                              data-toggle="tooltip"></span>
                     {% endif %}
                     {{ app.comment ?: app.name }}
                 </td>
                 <td>{{ app.version }} ({{ app.buildNumber }})</td>
                 <td>{{ app.bundleId }}</td>
                 <td>{{ app.getPublicAppSize() }}</td>
-                <td>{{ app.created|date("d/m/Y H:i") }}</td>
+                <td>
+                    <div>
+                        {{ app.created|date("d/m/Y H:i") }}
+                    </div>
+                    <small>{{ app.createdName }}</small>
+                </td>
 
                 <td>
-                    <a class="btn btn-primary" href="{{ path('build_install_platform',{'token':app.token,'platform':app.type}) }}" target="_blank">Install</a>
+                    <a class="btn btn-primary"
+                       href="{{ path('build_install_platform',{'token':app.token,'platform':app.type}) }}"
+                       target="_blank">Install</a>
                 </td>
                 <td>{{ app.appServer }}</td>
                 {% if delete %}
                     <td>
-                        <form method="post" action="{{ path('build_delete',{'token':app.token,'project':app.projectId,'type':app.type}) }}">
+                        <form method="post"
+                              action="{{ path('build_delete',{'token':app.token,'project':app.projectId,'type':app.type}) }}">
                             <button class="btn btn-primary" type="submit">Delete</button>
                         </form>
                     </td>
                     <td>
                         {% if app.release %}
-                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}" >YES</a>
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}">YES</a>
                         {% else %}
-                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}" >NO</a>
+                            <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}">NO</a>
                         {% endif %}
                     </td>
                 {% endif %}
