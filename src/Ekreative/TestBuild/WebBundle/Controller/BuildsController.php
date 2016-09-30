@@ -45,7 +45,7 @@ class BuildsController extends Controller
                 true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
 
-        return ['app' => $app, 'url' => $url, 'qrcode' => $qrcode];
+        return ['app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode];
     }
 
     /**

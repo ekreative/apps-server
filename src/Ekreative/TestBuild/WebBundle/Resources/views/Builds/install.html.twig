@@ -5,19 +5,24 @@
 {% endblock %}
 
 {% block body %}
-<div class="content-center margin-bottom-40">
-    <div><img src="{{ qrcode }}"></div>
-    <div class="app-name">{{ app.name }}</div>
-    <div class="margin-top-15">{{ app.type }} {{ app.version }} ({{ app.buildNumber }})</div>
-    <div>
-        {% if app.ci %}
-            <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server" data-toggle="tooltip"></span>
+    <div class="content-center margin-bottom-40">
+        <div><img src="{{ qrcode }}"></div>
+        <div class="app-name">{{ app.name }}</div>
+        <div class="margin-top-15">{{ app.type }} {{ app.version }} ({{ app.buildNumber }})</div>
+        <div>
+            {% if app.ci %}
+                <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server"
+                      data-toggle="tooltip"></span>
+            {% endif %}
+            {{ app.comment }}
+        </div>
+        <div>{{ app.appServer }}</div>
+        <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
+        <div>{{ app.getPublicAppSize() }}</div>
+        <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>
+        {% if app.type=='ios' %}
+            <br>
+            <div><a class="btn btn-primary" href="{{ buildUrl }}">Download IPA</a></div>
         {% endif %}
-        {{ app.comment }}
     </div>
-    <div>{{ app.appServer }}</div>
-    <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
-    <div>{{ app.getPublicAppSize() }}</div>
-    <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>
-</div>
 {% endblock %}
