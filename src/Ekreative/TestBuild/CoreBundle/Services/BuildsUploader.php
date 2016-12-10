@@ -140,7 +140,8 @@ class BuildsUploader
         $app->setSupportedInterfaceOrientations($ipaReader->getSupportedInterfaceOrientations());
         $app->setBundleId($ipaReader->getBundleIdentifier());
         $app->setAppServer($ipaReader->getAppServer());
-        if (file_exists($app->getIconFileName())) {
+        $icon = $ipaReader->getIcon();
+        if ($icon) {
             $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
 
             $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), static::$ICON_HEADERS);

@@ -209,47 +209,37 @@ class IpaReader
             }
         }
 
+        $iconPath = null;
         $original = call_user_func_array('array_merge', $iconsGroups);
-        $merged = array_flip($original);
-        $names  = [
-            'icon-72@2x',
-            'icon-76',
-            'icon-72',
-            'icon-60',
-            'icon-50',
-            'icon-40',
-            'icon@2x',
-            'icon-small',
-            'icon',
-        ];
-
-        $icon = null;
-
-        foreach ($names as $name) {
-            if ( ! $icon && array_key_exists($name, $merged)) {
-                $icon = $name;
+        $original = array_unique($original);
+        $largest = 0;
+        foreach ($original as $maybe) {
+            $maybepaths = $this->iconToPaths($maybe);
+            foreach ($maybepaths as $maybepath) {
+                if (file_exists($maybepath)) {
+                    $size = filesize($maybepath);
+                    if ($size > $largest) {
+                        $iconPath = $maybepath;
+                        $largest = $size;
+                    }
+                }
             }
         }
-
-
-        if(!$icon)   {
-            end($original);
-            $icon = current($original);
-        }
-
-
-        $iconPath = $this->basePath . '/' . $icon . (strpos($icon, '.png') > 0 ? '' : '.png');
-
-        if(!file_exists($iconPath)){
-
-            $iconPath = $this->basePath . '/' . $icon. (strpos($icon, '.png') > 0 ? '' : '@2x.png');
-
-        }
-
 
         return  $iconPath;
     }
 
+    private function iconToPath($icon, $ext = '.png') {
+        return $this->basePath . '/' . $icon. (strpos($icon, '.png') > 0 ? '' : $ext);
+    }
+
+    private function iconToPaths($icon) {
+        return [
+            $this->iconToPath($icon),
+            $this->iconToPath($icon, '@2x.png'),
+            $this->iconToPath($icon, '@3x.png')
+        ];
+    }
 
     public function unpackImage($path)
     {
