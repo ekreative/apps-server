@@ -252,7 +252,6 @@ class App implements \JsonSerializable
     function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
-        $this->setIconUrl('https://placehold.it/57x57');
     }
 
     /**
@@ -615,7 +614,7 @@ class App implements \JsonSerializable
      */
     public function getIconUrl()
     {
-        return $this->iconUrl;
+        return $this->iconUrl ?: 'https://testbuild.rocks/images/icon.png';
     }
 
     /**
