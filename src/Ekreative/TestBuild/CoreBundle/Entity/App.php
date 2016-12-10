@@ -252,7 +252,7 @@ class App implements \JsonSerializable
     function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
-        $this->setIconUrl('http://lorempixel.com/57/57/cats/');
+        $this->setIconUrl('https://placehold.it/57x57');
     }
 
     /**
