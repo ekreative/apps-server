@@ -7,8 +7,7 @@
 {% block body %}
     <div class="content-center margin-bottom-40">
         <div><img src="{{ qrcode }}"></div>
-        <div><img src="{{ app.iconUrl }}"></div>
-        <div class="app-name">{{ app.name }}</div>
+        <div class="app-name"><img width="57" height="57" src="{{ app.iconUrl }}"> {{ app.name }}</div>
         <div class="margin-top-15">{{ app.type }} {{ app.version }} ({{ app.buildNumber }})</div>
         <div>
             {% if app.ci %}
