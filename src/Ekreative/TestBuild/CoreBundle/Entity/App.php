@@ -676,10 +676,8 @@ class App implements \JsonSerializable
 
         if ($this->isType(App::TYPE_ANDROID)) {
             $name[] = '.apk';
-        } else {
-            if ($this->isType(App::TYPE_IOS)) {
-                $name[] = '.ipa';
-            }
+        } elseif ($this->isType(App::TYPE_IOS)) {
+            $name[] = '.ipa';
         }
 
         return implode('_', $name);
@@ -698,10 +696,8 @@ class App implements \JsonSerializable
         if ($this->isType(App::TYPE_ANDROID)) {
             $name[] = '.apk';
 
-        } else {
-            if ($this->isType(App::TYPE_ANDROID)) {
-                $name[] = '.ipa';
-            }
+        } elseif ($this->isType(App::TYPE_IOS)) {
+            $name[] = '.ipa';
         }
 
         return implode('_', array_filter($name));
