@@ -10,7 +10,7 @@
         "psr-4": { "Ekreative\\TestBuild\\": "tests/Ekreative/TestBuild/" }
     },
     "require": {
-        "php": ">=5.5",
+        "php": ">=7",
         "ext-apc": "*",
         "symfony/symfony": "^2.8.0",
         "doctrine/orm": "^2.4.8",

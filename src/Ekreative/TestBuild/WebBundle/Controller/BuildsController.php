@@ -41,7 +41,7 @@ class BuildsController extends Controller
         }
 
 
-        $qrcode = 'http://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
+        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
                 true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
 
