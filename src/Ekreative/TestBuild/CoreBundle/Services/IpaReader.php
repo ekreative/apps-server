@@ -254,6 +254,11 @@ class IpaReader
     public function unpackImage($path)
     {
 
+        if (mime_content_type($path) == 'image/png') {
+            //sometime images not compressed
+            return $path;
+        }
+
         if (PHP_OS == 'Darwin') {
             $pngdefry = 'pngdefry-osx';
         } else {
