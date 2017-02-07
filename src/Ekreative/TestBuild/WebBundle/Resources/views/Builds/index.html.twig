@@ -36,7 +36,9 @@
             <td>Size</td>
             <td>Created</td>
             <td>Build</td>
+            <td>Ref</td>
             <td>App Server</td>
+            <td>Install</td>
             {% if delete %}
                 <td></td>
                 <td>Release</td>
@@ -62,13 +64,13 @@
                     </div>
                     <small>{{ app.createdName }}</small>
                 </td>
-
+                <td>{{ app.ref }}</td>
+                <td>{{ app.appServer }}</td>
                 <td>
                     <a class="btn btn-primary"
                        href="{{ path('build_install_platform',{'token':app.token,'platform':app.type}) }}"
                        target="_blank">Install</a>
                 </td>
-                <td>{{ app.appServer }}</td>
                 {% if delete %}
                     <td>
                         <form method="post"
