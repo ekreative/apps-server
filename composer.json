@@ -10,7 +10,7 @@
         "psr-4": { "Ekreative\\TestBuild\\": "tests/Ekreative/TestBuild/" }
     },
     "require": {
-        "php": ">=7",
+        "php": ">=5.6",
         "ext-apc": "*",
         "symfony/symfony": "^2.8.0",
         "doctrine/orm": "^2.4.8",
@@ -58,7 +58,10 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "5.6"
+        }
     },
     "extra": {
         "symfony-app-dir": "app",
