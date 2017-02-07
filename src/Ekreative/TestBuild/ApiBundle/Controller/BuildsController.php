@@ -57,7 +57,7 @@ class BuildsController extends JsonController
         $request = $this->getRequest();
 
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
-        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('comment'), $project, $type, $request->request->get('ci') == 'true');
+        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('comment'), $project, $type, $request->request->get('ref'), $request->request->get('ci') == 'true');
 
         $data = $app->jsonSerialize();
         $data['install'] = $this->generateUrl('build_install', ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);

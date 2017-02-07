@@ -245,6 +245,13 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ref;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $appServer;
@@ -729,7 +736,8 @@ class App implements \JsonSerializable
             'iconurl' => $this->getIconUrl(),
             'date' => $this->getCreated()->format('U'),
             'release' => $this->getRelease(),
-            'appServer' => $this->getAppServer()
+            'appServer' => $this->getAppServer(),
+            'ref' => $this->getRef()
         ];
     }
 
@@ -990,6 +998,24 @@ class App implements \JsonSerializable
     public function setCi($ci)
     {
         $this->ci = $ci;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
+    }
+
+    /**
+     * @param string $ref
+     * @return App
+     */
+    public function setRef($ref)
+    {
+        $this->ref = $ref;
         return $this;
     }
 
