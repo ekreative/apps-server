@@ -1,7 +1,4 @@
 <?php
-/**
- * Created by mcfedr on 1/15/16 10:59
- */
 
 namespace Ekreative\TestBuild\CoreBundle\Tests\Services;
 
@@ -10,11 +7,11 @@ use Ekreative\TestBuild\CoreBundle\AWS\S3;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Ekreative\TestBuild\CoreBundle\Services\BuildsUploader;
 use Ekreative\TestBuild\CoreBundle\Services\IpaReader;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
-use Psr\Log\LoggerInterface;
 
 class BuildsUploaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +28,6 @@ class BuildsUploaderTest extends \PHPUnit_Framework_TestCase
         $readAndroidData = $this->getPrivateMethod(BuildsUploader::class, 'readAndroidData');
         $readAndroidData->invokeArgs($uploader, [$app, $build]);
     }
-
 
     public function testApk()
     {
@@ -76,10 +72,12 @@ class BuildsUploaderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected static function getPrivateMethod($class, $name) {
+    protected static function getPrivateMethod($class, $name)
+    {
         $class = new \ReflectionClass($class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
+
         return $method;
     }
 }

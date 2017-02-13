@@ -2,8 +2,6 @@
 
 namespace Ekreative\TestBuild\ApiBundle\Controller;
 
-use Ekreative\RedmineLoginBundle\Security\RedmineUser;
-use Ekreative\TestBuild\ApiBundle\Form\AppType;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Mcfedr\JsonFormBundle\Controller\JsonController;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -20,8 +18,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BuildsController extends JsonController
 {
-
-
     /**
      * @Route("/{project}/{type}")
      * @Method("GET")
@@ -33,9 +29,9 @@ class BuildsController extends JsonController
     public function buildsAction($project, $type)
     {
         $apps = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
+
         return new JsonResponse($apps);
     }
-
 
     /**
      * @Route("/upload/{project}/{type}", name="jenkins_url")
@@ -52,8 +48,6 @@ class BuildsController extends JsonController
      */
     public function uploadAction($project, $type)
     {
-
-
         $request = $this->getRequest();
 
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
@@ -61,10 +55,7 @@ class BuildsController extends JsonController
 
         $data = $app->jsonSerialize();
         $data['install'] = $this->generateUrl('build_install', ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+
         return new JsonResponse($data);
     }
-
-
 }
-
-

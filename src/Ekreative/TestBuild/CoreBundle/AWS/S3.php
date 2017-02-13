@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vitaliy
- * Date: 2/10/15
- * Time: 10:11 AM
- */
 
 namespace Ekreative\TestBuild\CoreBundle\AWS;
 
@@ -13,17 +7,16 @@ use Psr\Log\LoggerInterface;
 
 class S3
 {
-
     private $s3;
     private $bucketName;
     private $baseUrl;
     private $logger;
 
-    function __construct(S3Client $s3, $baseUrl, $bucketName, LoggerInterface $loggerInterface)
+    public function __construct(S3Client $s3, $baseUrl, $bucketName, LoggerInterface $loggerInterface)
     {
         $this->bucketName = $bucketName;
-        $this->baseUrl    = $baseUrl;
-        $this->s3         = $s3;
+        $this->baseUrl = $baseUrl;
+        $this->s3 = $s3;
         $this->logger = $loggerInterface;
     }
 
@@ -36,7 +29,6 @@ class S3
                 'Body' => fopen($path, 'r'),
                 'ACL' => 'public-read'
             ];
-
 
             foreach ($headers as $key => $header) {
                 $config[$key] = $header;
@@ -55,9 +47,7 @@ class S3
     {
         $this->s3->deleteObject([
             'Bucket' => $this->bucketName,
-            'Key'    => $filename,
+            'Key' => $filename,
         ]);
     }
-
-
 }

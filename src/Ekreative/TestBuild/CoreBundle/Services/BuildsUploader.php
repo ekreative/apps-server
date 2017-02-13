@@ -1,15 +1,6 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: vitaliy
- * Date: 8/6/15
- * Time: 1:03 AM
- */
-
-
 namespace Ekreative\TestBuild\CoreBundle\Services;
-
 
 use ApkParser\Parser;
 use Doctrine\ORM\EntityManager;
@@ -49,9 +40,7 @@ class BuildsUploader
 
     public function upload(UploadedFile $file, $comment, $project, $type, $ref = null, $ci = false)
     {
-
         $s3Service = $this->s3;
-
 
         $app = new App();
         $app->setComment($comment);
@@ -67,32 +56,24 @@ class BuildsUploader
         $app->setRelease(false);
         $app->setDebuggable(false);
 
-
         if ($app->isType(App::TYPE_IOS)) {
-
             $this->readIosData($app, $build);
-
-
         } else {
-
             $this->readAndroidData($app, $build);
-
         }
 
         $app->setCreatedName($this->user->getFirstName() . '  ' . $this->user->getLastName());
         $app->setCreatedId($this->user->getId());
 
-
         $app->setName($build->getClientOriginalName());
         $this->em->persist($app);
 
-
         if ($app->isType(App::TYPE_IOS)) {
-            $headers = array(
+            $headers = [
                 'ContentType' => 'application/octet-stream',
                 'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"'
-            );
-        } else if ($app->isType(App::TYPE_ANDROID)) {
+            ];
+        } elseif ($app->isType(App::TYPE_ANDROID)) {
             $headers = [
                 'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"',
                 'ContentType' => 'application/vnd.android.package-archive'
@@ -102,9 +83,8 @@ class BuildsUploader
         $app->setBuildUrl($s3Service->upload($build->getRealPath(), $app->getFilename(), $headers));
         unlink($build->getRealPath());
 
-
         if ($app->isType(App::TYPE_IOS)) {
-            $tempFile = tempnam("/tmp", "plist");
+            $tempFile = tempnam('/tmp', 'plist');
 
             $plist = $this->em->getRepository('EkreativeTestBuildCoreBundle:App')
                 ->getPlistString(
@@ -153,7 +133,6 @@ class BuildsUploader
     private function readAndroidData(App $app, UploadedFile $build)
     {
         try {
-
             $apk = new Parser($build->getRealPath());
             $manifest = $apk->getManifest();
 
@@ -202,13 +181,12 @@ class BuildsUploader
 
             $resourceId = $apk->getManifest()->getApplication()->getIcon();
             $resources = $apk->getResources($resourceId);
-            $tmpfname = tempnam("/tmp", $manifest->getPackageName());
+            $tmpfname = tempnam('/tmp', $manifest->getPackageName());
             file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
             $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName(), static::$ICON_HEADERS));
             unlink($tmpfname);
 
             $app->setAppServer($manifest->getMetaData('APP_SERVER'));
-
         } catch (\Exception $e) {
             $this->logger->error('Coundnt read apk manifest', [
                 'e' => $e

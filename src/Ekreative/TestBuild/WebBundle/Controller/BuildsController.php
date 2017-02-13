@@ -4,12 +4,11 @@ namespace Ekreative\TestBuild\WebBundle\Controller;
 
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Ekreative\TestBuild\CoreBundle\Roles\EkreativeUserRoles;
-use Ekreative\TestBuild\CoreBundle\Services\IpaReader;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,9 +23,8 @@ class BuildsController extends Controller
      */
     public function installAction($token)
     {
-
         /**
-         * @var App $app
+         * @var App
          */
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
         if (!$app) {
@@ -37,13 +35,10 @@ class BuildsController extends Controller
             $url = $app->getBuildUrl();
         } elseif ($app->isType(App::TYPE_IOS)) {
             $url = 'itms-services:///?action=download-manifest&url=' . urlencode($app->getPlistUrl());
-
         }
-
 
         $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
                 true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
-
 
         return ['app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode];
     }
@@ -54,7 +49,6 @@ class BuildsController extends Controller
      */
     public function releaseAction(App $app)
     {
-
         $app->inverseRelease();
 
         $em = $this->getDoctrine()->getManager();
@@ -73,7 +67,6 @@ class BuildsController extends Controller
      */
     public function deleteAction($project, $type, $token)
     {
-
         $s3Service = $this->get('ekreative_test_build_core.file_uploader');
 
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
@@ -86,12 +79,10 @@ class BuildsController extends Controller
             $s3Service->delete($app->getPlistName());
         }
 
-
         $em->remove($app);
         $em->flush();
 
         return $this->redirect($this->generateUrl('project_builds', ['type' => $type, 'project' => $project]));
-
     }
 
     /**
@@ -109,14 +100,13 @@ class BuildsController extends Controller
         $app = $buildsUploader->upload($files['build'], $form['comment'], $project, $type);
 
         return $this->redirect($this->generateUrl('project_builds', ['type' => $app->getType(), 'project' => $app->getProjectId()]));
-
     }
 
     private function newAppForm(App $app)
     {
         $form = $this->createFormBuilder($app)
-            ->add('build', 'file', array('attr' => array('placeholder' => 'version', 'class' => "form-control")))
-            ->add('comment', 'text', array('required' => false, 'attr' => array('placeholder' => 'comment', 'class' => "form-control")))
+            ->add('build', 'file', ['attr' => ['placeholder' => 'version', 'class' => 'form-control']])
+            ->add('comment', 'text', ['required' => false, 'attr' => ['placeholder' => 'comment', 'class' => 'form-control']])
             ->setAction($this->generateUrl('upload', ['type' => $app->getType(), 'project' => $app->getProjectId()]))
             ->setMethod('POST')
             ->add('save', 'submit', ['label' => 'Upload']);
@@ -125,7 +115,7 @@ class BuildsController extends Controller
     }
 
     /**
-     * This has been moved to the end because the route conflicts with the others
+     * This has been moved to the end because the route conflicts with the others.
      *
      * @Route("{project}/{type}/",name="project_builds", requirements={"type"="^ios|android$"})
      * @Template()
@@ -147,7 +137,6 @@ class BuildsController extends Controller
 
         $result = [];
         $result['title'] = 'Builds';
-
 
         foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
             $result['title'] = $member['project']['name'];
@@ -184,5 +173,4 @@ class BuildsController extends Controller
 
         return $result;
     }
-
 }

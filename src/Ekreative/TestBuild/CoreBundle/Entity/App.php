@@ -6,20 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * App
+ * App.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Ekreative\TestBuild\CoreBundle\Entity\AppRepository")
  */
 class App implements \JsonSerializable
 {
-
     const TYPE_ANDROID = 'android';
     const TYPE_IOS = 'ios';
 
-
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -33,7 +31,6 @@ class App implements \JsonSerializable
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-
 
     /**
      * @var string
@@ -55,7 +52,6 @@ class App implements \JsonSerializable
      * @ORM\Column(name="bundleId", type="string", length=255, nullable=true)
      */
     private $bundleId;
-
 
     ////android
 
@@ -80,67 +76,66 @@ class App implements \JsonSerializable
      */
     private $debuggable;
 
-
     //// ios
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleName", type="string", nullable=true)
      */
     private $bundleName;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleVersion", type="string", nullable=true)
      */
     private $bundleVersion;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="minimumOSVersion", type="string", nullable=true)
      */
     private $minimumOSVersion;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="platformVersion", type="string", nullable=true)
      */
     private $platformVersion;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleIdentifier", type="string", nullable=true)
      */
     private $bundleIdentifier;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleDisplayName", type="string", nullable=true)
      */
     private $bundleDisplayName;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleShortVersionString", type="string", nullable=true)
      */
     private $bundleShortVersionString;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="bundleSupportedPlatforms", type="string", nullable=true)
      */
     private $bundleSupportedPlatforms;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="supportedInterfaceOrientations", type="string", nullable=true)
      */
@@ -149,7 +144,7 @@ class App implements \JsonSerializable
     ////other
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="size", type="integer")
      */
@@ -209,7 +204,6 @@ class App implements \JsonSerializable
      */
     private $release;
 
-
     private $icon;
 
     private $build;
@@ -225,7 +219,6 @@ class App implements \JsonSerializable
      *
      * @ORM\Column(name="created", type="datetime")
      */
-
     private $created;
 
     /**
@@ -256,7 +249,7 @@ class App implements \JsonSerializable
      */
     private $appServer;
 
-    function __construct()
+    public function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
     }
@@ -277,7 +270,6 @@ class App implements \JsonSerializable
         $this->created = $created;
     }
 
-
     /**
      * @return string
      */
@@ -293,7 +285,6 @@ class App implements \JsonSerializable
     {
         $this->token = $token;
     }
-
 
     /**
      * @return UploadedFile
@@ -324,7 +315,6 @@ class App implements \JsonSerializable
      */
     public function setBuild(UploadedFile $build)
     {
-
         if (file_exists($build->getRealPath())) {
             $this->setSize(filesize($build->getRealPath()));
         }
@@ -332,12 +322,9 @@ class App implements \JsonSerializable
         $this->build = $build;
     }
 
-
     public function getPublicAppSize()
     {
-
         return $this->formatBytes($this->getSize());
-
     }
 
     private function formatBytes($b)
@@ -363,11 +350,10 @@ class App implements \JsonSerializable
         }
     }
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -375,7 +361,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -385,7 +371,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -399,7 +385,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -409,7 +395,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      *
@@ -423,7 +409,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get buildUrl
+     * Get buildUrl.
      *
      * @return string
      */
@@ -433,7 +419,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set buildUrl
+     * Set buildUrl.
      *
      * @param string $buildUrl
      *
@@ -447,7 +433,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get version
+     * Get version.
      *
      * @return string
      */
@@ -457,7 +443,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set version
+     * Set version.
      *
      * @param string $version
      *
@@ -471,7 +457,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get buildNumber
+     * Get buildNumber.
      *
      * @return string
      */
@@ -481,7 +467,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set buildNumber
+     * Set buildNumber.
      *
      * @param string $buildNumber
      *
@@ -495,7 +481,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get qrcodeUrl
+     * Get qrcodeUrl.
      *
      * @return string
      */
@@ -505,7 +491,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set qrcodeUrl
+     * Set qrcodeUrl.
      *
      * @param string $qrcodeUrl
      *
@@ -519,7 +505,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get bundleId
+     * Get bundleId.
      *
      * @return string
      */
@@ -529,7 +515,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set bundleId
+     * Set bundleId.
      *
      * @param string $bundleId
      *
@@ -543,7 +529,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get createdName
+     * Get createdName.
      *
      * @return string
      */
@@ -553,7 +539,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set createdName
+     * Set createdName.
      *
      * @param string $createdName
      *
@@ -567,7 +553,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get createdId
+     * Get createdId.
      *
      * @return string
      */
@@ -577,7 +563,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set createdId
+     * Set createdId.
      *
      * @param string $createdId
      *
@@ -591,7 +577,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get projectId
+     * Get projectId.
      *
      * @return string
      */
@@ -601,7 +587,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set projectId
+     * Set projectId.
      *
      * @param string $projectId
      *
@@ -615,7 +601,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Get iconUrl
+     * Get iconUrl.
      *
      * @return string
      */
@@ -625,7 +611,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * Set iconUrl
+     * Set iconUrl.
      *
      * @param string $iconUrl
      *
@@ -638,19 +624,16 @@ class App implements \JsonSerializable
         return $this;
     }
 
-
     public function isType($type)
     {
         return $this->getType() == $type;
     }
-
 
     /**
      * @var string
      *
      * @ORM\Column(name="plistUrl", type="string", length=255, nullable=true)
      */
-
     private $plistUrl;
 
     /**
@@ -669,7 +652,6 @@ class App implements \JsonSerializable
         $this->plistUrl = $plistUrl;
     }
 
-
     private function getFolderWithToken()
     {
         return '/' . $this->getProjectId() . '/' . $this->getToken();
@@ -677,12 +659,11 @@ class App implements \JsonSerializable
 
     public function getFilename()
     {
-
         $name = [$this->getFolderWithToken()];
 
-        if ($this->isType(App::TYPE_ANDROID)) {
+        if ($this->isType(self::TYPE_ANDROID)) {
             $name[] = '.apk';
-        } elseif ($this->isType(App::TYPE_IOS)) {
+        } elseif ($this->isType(self::TYPE_IOS)) {
             $name[] = '.ipa';
         }
 
@@ -694,27 +675,23 @@ class App implements \JsonSerializable
         return $this->getFolderWithToken() . '.plist';
     }
 
-
     public function getDownloadNameFilename()
     {
         $name = [$this->getVersion()];
         $name[] = $this->getCreated()->format('H:i:s_d-m-Y');
-        if ($this->isType(App::TYPE_ANDROID)) {
+        if ($this->isType(self::TYPE_ANDROID)) {
             $name[] = '.apk';
-
-        } elseif ($this->isType(App::TYPE_IOS)) {
+        } elseif ($this->isType(self::TYPE_IOS)) {
             $name[] = '.ipa';
         }
 
         return implode('_', array_filter($name));
     }
 
-
     public function getIconFileName()
     {
         return $this->getFolderWithToken() . '_icon';
     }
-
 
     public function jsonSerialize()
     {
@@ -984,7 +961,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCi()
     {
@@ -992,12 +969,14 @@ class App implements \JsonSerializable
     }
 
     /**
-     * @param boolean $ci
+     * @param bool $ci
+     *
      * @return App
      */
     public function setCi($ci)
     {
         $this->ci = $ci;
+
         return $this;
     }
 
@@ -1011,11 +990,13 @@ class App implements \JsonSerializable
 
     /**
      * @param string $ref
+     *
      * @return App
      */
     public function setRef($ref)
     {
         $this->ref = $ref;
+
         return $this;
     }
 
@@ -1029,11 +1010,13 @@ class App implements \JsonSerializable
 
     /**
      * @param string $appServer
+     *
      * @return App
      */
     public function setAppServer($appServer)
     {
         $this->appServer = $appServer;
+
         return $this;
     }
 }

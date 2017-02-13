@@ -2,26 +2,22 @@
 
 namespace Ekreative\TestBuild\WebBundle\Controller;
 
-use Ekreative\TestBuild\CoreBundle\Entity\App;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Ekreative\RedmineLoginBundle\Form\LoginType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Ekreative\RedmineLoginBundle\Form\LoginType;
 use Symfony\Component\Security\Core\Security;
 
-class ProjectsController extends Controller {
-
+class ProjectsController extends Controller
+{
     /**
      * @Route("{page}",name="projects", defaults={"page" = "1"}, requirements={"page": "\d+"})
      * @Template()
      */
-    public function indexAction($page, Request $request) {
-
-
+    public function indexAction($page, Request $request)
+    {
         $query = [];
 
         $name = $request->query->get('q');
@@ -36,7 +32,6 @@ class ProjectsController extends Controller {
 
         $pages = ceil($projectsData['total_count'] / $projectsData['limit']);
 
-
         return [
             'searshForm' => $this->getSearshForm($request)->createView(),
             'pages' => $pages,
@@ -49,10 +44,13 @@ class ProjectsController extends Controller {
     /**
      * @Route("/login", name="login")
      * @Method({"GET", "POST"})
+     *
      * @param Request $request
+     *
      * @return array
      */
-    public function loginAction(Request $request) {
+    public function loginAction(Request $request)
+    {
         $session = $request->getSession();
         $form = $this->createForm(new LoginType(), [
             'username' => $session->get(Security::LAST_USERNAME)
@@ -69,6 +67,7 @@ class ProjectsController extends Controller {
             $error = $session->get(Security::AUTHENTICATION_ERROR);
             $session->remove(Security::AUTHENTICATION_ERROR);
         }
+
         return $this->render('@EkreativeTestBuildWeb/User/login.html.twig', [
                     'last_username' => $session->get(Security::LAST_USERNAME),
                     'error' => $error,
@@ -79,22 +78,21 @@ class ProjectsController extends Controller {
     /**
      * @Route("/login_check", name="login_check")
      */
-    public function loginCheckAction() {
-
+    public function loginCheckAction()
+    {
     }
 
-    private function getSearshForm(Request $request) {
-
+    private function getSearshForm(Request $request)
+    {
         return $this->get('form.factory')->createNamedBuilder(null, 'form', [
             'q' => $request->query->get('q')
         ], [
             'csrf_protection' => false
         ])
-                        ->add('q', 'text',['required'=> false,'attr'=>['placeholder'=>'Search...']])
+                        ->add('q', 'text', ['required' => false, 'attr' => ['placeholder' => 'Search...']])
                         ->setMethod('get')
                         ->setAction($this->generateUrl('projects'))
 
                         ->getForm();
     }
-
 }

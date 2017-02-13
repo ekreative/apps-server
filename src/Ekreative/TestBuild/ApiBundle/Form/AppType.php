@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vitaliy
- * Date: 6/27/15
- * Time: 3:10 PM
- */
 
 namespace Ekreative\TestBuild\ApiBundle\Form;
 
