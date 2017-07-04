@@ -19,18 +19,38 @@ class BuildsController extends Controller
     /**
      * @Route("install/{token}",name="build_install")
      * @Route("install/{platform}/{token}",name="build_install_platform")
-     * @Template()
      */
     public function installAction($token)
     {
-        /**
-         * @var App
-         */
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByToken($token);
         if (!$app) {
             throw new NotFoundHttpException('No build with that token');
         }
 
+        return $this->renderApp($app);
+    }
+
+    /**
+     * @Route("{projectSlug}/{type}/{ref}", requirements={"type"="^ios|android$"})
+     */
+    public function latestAction($projectSlug, $type, $ref)
+    {
+        list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
+
+        if ($ref == 'latest') {
+            $ref = [null, 'master'];
+        }
+
+        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref);
+        if (!$app) {
+            throw new NotFoundHttpException('No build with that token');
+        }
+
+        return $this->renderApp($app);
+    }
+
+    private function renderApp(App $app)
+    {
         if ($app->isType(App::TYPE_ANDROID)) {
             $url = $app->getBuildUrl();
         } elseif ($app->isType(App::TYPE_IOS)) {
@@ -40,7 +60,9 @@ class BuildsController extends Controller
         $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
                 true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
-        return ['app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode];
+        return $this->render('@EkreativeTestBuildWeb/Builds/install.html.twig', [
+            'app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode
+        ]);
     }
 
     /**
@@ -89,10 +111,8 @@ class BuildsController extends Controller
      * @Route("upload/{project}/{type}",name="upload")
      * @Method("POST")
      */
-    public function uploadAction($project, $type)
+    public function uploadAction($project, $type, Request $request)
     {
-        $request = $this->getRequest();
-
         $form = $request->request->get('form');
         $files = $request->files->get('form');
 
@@ -117,15 +137,39 @@ class BuildsController extends Controller
     /**
      * This has been moved to the end because the route conflicts with the others.
      *
-     * @Route("{project}/{type}/",name="project_builds", requirements={"type"="^ios|android$"})
+     * @Route("{projectSlug}/{type}/",name="project_builds", requirements={"type"="^ios|android$"})
      * @Template()
      */
-    public function indexAction(Request $request, $project, $type)
+    public function indexAction($projectSlug, $type)
+    {
+        list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
+
+        if ($upload) {
+            $app = new App();
+            $app->setType($type);
+            $app->setProjectId($projectId);
+            $form = $this->newAppForm($app);
+            $result['appform'] = $form->createView();
+        }
+
+        $result = [];
+        $result['title'] = $projectName;
+
+        $result['type'] = $type;
+        $result['delete'] = $delete;
+        $result['project'] = $projectId;
+
+        $result['apps'] = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($projectId, $type);
+
+        return $result;
+    }
+
+    private function getProjectIdAndPermissions($projectSlug)
     {
         $currentUser = $this->getUser();
         $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
-        $data = $client->get('projects/' . $project . '/memberships.json', [
+        $data = $client->get('projects/' . $projectSlug . '/memberships.json', [
             'query' => [
                 'limit' => 100
             ]
@@ -135,12 +179,12 @@ class BuildsController extends Controller
         $upload = false;
         $delete = false;
 
-        $result = [];
-        $result['title'] = 'Builds';
+        $projectName = null;
+        $projectId = null;
 
         foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
-            $result['title'] = $member['project']['name'];
-            $project = $member['project']['id'];
+            $projectName = $member['project']['name'];
+            $projectId = $member['project']['id'];
 
             $user = array_key_exists('user', $member) ? $member['user'] : ['id' => null];
             if ($user['id'] == $currentUser->getId()) {
@@ -157,20 +201,10 @@ class BuildsController extends Controller
             }
         }
 
-        if ($upload) {
-            $app = new App();
-            $app->setType($type);
-            $app->setProjectId($project);
-            $form = $this->newAppForm($app);
-            $result['appform'] = $form->createView();
+        if (!$projectId) {
+            throw new NotFoundHttpException("Project with slug not found $projectSlug");
         }
 
-        $result['type'] = $type;
-        $result['delete'] = $delete;
-        $result['project'] = $project;
-
-        $result['apps'] = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppsForProject($project, $type);
-
-        return $result;
+        return [$projectId, $upload, $delete, $projectName];
     }
 }
