@@ -24,6 +24,18 @@ class AppRepository extends EntityRepository
     }
 
     /**
+     * @param int $id
+     * @param string $type
+     *
+     * @param string $ref
+     * @return \Ekreative\TestBuild\CoreBundle\Entity\App
+     */
+    public function getAppForProject($id, $type, $ref)
+    {
+        return $this->findOneBy(['projectId' => $id, 'type' => $type, 'ref' => $ref], ['id' => 'DESC']);
+    }
+
+    /**
      * @param $id
      * @param $type
      *
