@@ -38,7 +38,7 @@ class BuildsController extends Controller
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
         if ($ref == 'latest') {
-            $ref = null;
+            $ref = [null, 'master'];
         }
 
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref);
