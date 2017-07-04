@@ -78,7 +78,7 @@ class BuildsController extends Controller
         $em->flush();
 
         return $this->redirect(
-            $this->generateUrl('project_builds', ['type' => $app->getType(), 'project' => $app->getProjectId()])
+            $this->generateUrl('project_builds', ['type' => $app->getType(), 'projectSlug' => $app->getProjectId()])
         );
     }
 
@@ -104,7 +104,7 @@ class BuildsController extends Controller
         $em->remove($app);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('project_builds', ['type' => $type, 'project' => $project]));
+        return $this->redirect($this->generateUrl('project_builds', ['type' => $type, 'projectSlug' => $project]));
     }
 
     /**
@@ -119,7 +119,7 @@ class BuildsController extends Controller
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
         $app = $buildsUploader->upload($files['build'], $form['comment'], $project, $type);
 
-        return $this->redirect($this->generateUrl('project_builds', ['type' => $app->getType(), 'project' => $app->getProjectId()]));
+        return $this->redirect($this->generateUrl('project_builds', ['type' => $app->getType(), 'projectSlug' => $app->getProjectId()]));
     }
 
     private function newAppForm(App $app)

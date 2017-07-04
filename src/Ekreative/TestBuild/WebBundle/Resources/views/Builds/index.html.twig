@@ -13,10 +13,10 @@
 
                 {% if type=='ios' %}
                     <a class="btn btn-primary pull-right"
-                       href="{{ path('project_builds',{'project':project,'type':'android'}) }}">Android</a>
+                       href="{{ path('project_builds',{'projectSlug':project,'type':'android'}) }}">Android</a>
                 {% else %}
                     <a class="btn btn-primary pull-right"
-                       href="{{ path('project_builds',{'project':project,'type':'ios'}) }}">Ios</a>
+                       href="{{ path('project_builds',{'projectSlug':project,'type':'ios'}) }}">Ios</a>
                 {% endif %}
 
                 <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
