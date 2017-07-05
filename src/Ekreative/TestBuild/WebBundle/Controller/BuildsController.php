@@ -159,6 +159,8 @@ class BuildsController extends Controller
     {
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
+        $result = [];
+
         if ($upload) {
             $app = new App();
             $app->setType($type);
@@ -167,7 +169,6 @@ class BuildsController extends Controller
             $result['appform'] = $form->createView();
         }
 
-        $result = [];
         $result['title'] = $projectName;
 
         $result['type'] = $type;
