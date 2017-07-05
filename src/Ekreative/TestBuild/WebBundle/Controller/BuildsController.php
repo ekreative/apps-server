@@ -72,11 +72,18 @@ class BuildsController extends Controller
             $url = 'itms-services:///?action=download-manifest&url=' . urlencode($app->getPlistUrl());
         }
 
-        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
-                true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
+        $install = $this->generateUrl('build_install_platform', [
+            'token' => $app->getToken(),
+            'platform' => $app->getType(),
+        ],true);
+        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($install) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
         return $this->render('@EkreativeTestBuildWeb/Builds/install.html.twig', [
-            'app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode
+            'app' => $app,
+            'url' => $url,
+            'buildUrl' => $app->getBuildUrl(),
+            'qrcode' => $qrcode,
+            'install' => $install,
         ]);
     }
 
