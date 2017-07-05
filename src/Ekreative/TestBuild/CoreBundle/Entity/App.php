@@ -8,7 +8,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * App.
  *
- * @ORM\Table()
+ * @ORM\Table(indexes={
+ *     @ORM\Index(columns={"projectId", "type", "ref"}),
+ *     @ORM\Index(columns={"commit"}),
+ * })
  * @ORM\Entity(repositoryClass="Ekreative\TestBuild\CoreBundle\Entity\AppRepository")
  */
 class App implements \JsonSerializable
@@ -211,7 +214,7 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="token", type="string", length=255)
+     * @ORM\Column(name="token", type="string", length=255, unique=true)
      */
     private $token;
     /**
@@ -241,6 +244,13 @@ class App implements \JsonSerializable
      * @ORM\Column(type="string", nullable=true)
      */
     private $ref;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $commit;
 
     /**
      * @var string
@@ -998,6 +1008,22 @@ class App implements \JsonSerializable
         $this->ref = $ref;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommit()
+    {
+        return $this->commit;
+    }
+
+    /**
+     * @param string $commit
+     */
+    public function setCommit($commit)
+    {
+        $this->commit = $commit;
     }
 
     /**

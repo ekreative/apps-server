@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -31,6 +32,19 @@ class BuildsController extends Controller
     }
 
     /**
+     * @Route("installByCommit/{commit}", requirements={"commit"="^[0-9a-f]{40}$"})
+     */
+    public function commitAction($commit)
+    {
+        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByCommit($commit);
+        if (!$app) {
+            throw new NotFoundHttpException('No build with that commit');
+        }
+
+        return $this->renderApp($app);
+    }
+
+    /**
      * @Route("{projectSlug}/{type}/{ref}", requirements={"type"="^ios|android$"})
      */
     public function latestAction($projectSlug, $type, $ref)
@@ -43,7 +57,7 @@ class BuildsController extends Controller
 
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref);
         if (!$app) {
-            throw new NotFoundHttpException('No build with that token');
+            throw new NotFoundHttpException('No build on that branch');
         }
 
         return $this->renderApp($app);
@@ -57,11 +71,18 @@ class BuildsController extends Controller
             $url = 'itms-services:///?action=download-manifest&url=' . urlencode($app->getPlistUrl());
         }
 
-        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($this->generateUrl('build_install_platform', ['token' => $token, 'platform' => $app->getType()],
-                true)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
+        $install = $this->generateUrl('build_install_platform', [
+            'token' => $app->getToken(),
+            'platform' => $app->getType(),
+        ], true);
+        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($install) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
         return $this->render('@EkreativeTestBuildWeb/Builds/install.html.twig', [
-            'app' => $app, 'url' => $url, 'buildUrl' => $app->getBuildUrl(), 'qrcode' => $qrcode
+            'app' => $app,
+            'url' => $url,
+            'buildUrl' => $app->getBuildUrl(),
+            'qrcode' => $qrcode,
+            'install' => $install,
         ]);
     }
 
@@ -144,6 +165,8 @@ class BuildsController extends Controller
     {
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
+        $result = [];
+
         if ($upload) {
             $app = new App();
             $app->setType($type);
@@ -152,7 +175,6 @@ class BuildsController extends Controller
             $result['appform'] = $form->createView();
         }
 
-        $result = [];
         $result['title'] = $projectName;
 
         $result['type'] = $type;
@@ -167,6 +189,9 @@ class BuildsController extends Controller
     private function getProjectIdAndPermissions($projectSlug)
     {
         $currentUser = $this->getUser();
+        if (!$currentUser) {
+            throw new AccessDeniedHttpException('You must be logged in to access this resource');
+        }
         $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
         $data = $client->get('projects/' . $projectSlug . '/memberships.json', [
