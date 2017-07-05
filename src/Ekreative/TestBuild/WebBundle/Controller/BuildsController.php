@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * @Route("/builds/")
@@ -75,7 +74,7 @@ class BuildsController extends Controller
         $install = $this->generateUrl('build_install_platform', [
             'token' => $app->getToken(),
             'platform' => $app->getType(),
-        ],true);
+        ], true);
         $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($install) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
         return $this->render('@EkreativeTestBuildWeb/Builds/install.html.twig', [

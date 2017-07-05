@@ -24,7 +24,7 @@ class AppRepository extends EntityRepository
     }
 
     /**
-     * @param int $id
+     * @param int    $id
      * @param string $type
      * @param string $ref
      *
