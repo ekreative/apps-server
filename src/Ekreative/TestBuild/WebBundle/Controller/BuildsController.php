@@ -31,6 +31,19 @@ class BuildsController extends Controller
     }
 
     /**
+     * @Route("installByCommit/{commit}", requirements={"commit"="^[0-9a-f]{40}$"})
+     */
+    public function commitAction($commit)
+    {
+        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByCommit($commit);
+        if (!$app) {
+            throw new NotFoundHttpException('No build with that commit');
+        }
+
+        return $this->renderApp($app);
+    }
+
+    /**
      * @Route("{projectSlug}/{type}/{ref}", requirements={"type"="^ios|android$"})
      */
     public function latestAction($projectSlug, $type, $ref)
@@ -43,7 +56,7 @@ class BuildsController extends Controller
 
         $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref);
         if (!$app) {
-            throw new NotFoundHttpException('No build with that token');
+            throw new NotFoundHttpException('No build on that branch');
         }
 
         return $this->renderApp($app);

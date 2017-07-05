@@ -38,7 +38,7 @@ class BuildsUploader
         $this->logger = $logger;
     }
 
-    public function upload(UploadedFile $file, $comment, $project, $type, $ref = null, $ci = false)
+    public function upload(UploadedFile $file, $comment, $project, $type, $ref = null, $commit = null, $ci = false)
     {
         $s3Service = $this->s3;
 
@@ -51,6 +51,7 @@ class BuildsUploader
         $app->setType($type);
         $app->setCi($ci);
         $app->setRef($ref);
+        $app->setCommit($commit);
 
         $build = $app->getBuild();
         $app->setRelease(false);

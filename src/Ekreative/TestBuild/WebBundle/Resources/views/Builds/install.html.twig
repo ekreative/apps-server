@@ -16,6 +16,12 @@
             {% endif %}
             {{ app.comment }}
         </div>
+        {% if app.ref %}
+            <div><span class="glyphicon glyphicon-tree-deciduous" title="Ref (branch or tag)" data-toggle="tooltip"></span> {{ app.ref }}</div>
+        {% endif %}
+        {% if app.commit %}
+            <div><span class="glyphicon glyphicon-leaf" title="Commit" data-toggle="tooltip"></span> {{ app.commit }}</div>
+        {% endif %}
         <div>{{ app.appServer }}</div>
         <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
         <div>{{ app.getPublicAppSize() }}</div>
