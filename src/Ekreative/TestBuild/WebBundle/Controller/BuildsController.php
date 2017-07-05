@@ -9,7 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * @Route("/builds/")
@@ -180,6 +182,9 @@ class BuildsController extends Controller
     private function getProjectIdAndPermissions($projectSlug)
     {
         $currentUser = $this->getUser();
+        if (!$currentUser) {
+            throw new AccessDeniedHttpException('You must be logged in to access this resource');
+        }
         $client = $this->get('ekreative_redmine_login.client_provider')->get($currentUser);
 
         $data = $client->get('projects/' . $projectSlug . '/memberships.json', [
