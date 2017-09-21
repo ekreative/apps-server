@@ -724,7 +724,8 @@ class App implements \JsonSerializable
             'date' => $this->getCreated()->format('U'),
             'release' => $this->getRelease(),
             'appServer' => $this->getAppServer(),
-            'ref' => $this->getRef()
+            'ref' => $this->getRef(),
+            'commit' => $this->getCommit(),
         ];
     }
 
