@@ -17,7 +17,6 @@ class ProjectsController extends Controller
      *   description="List of projects",
      *   section="Projects"
      * )
-
      */
     public function indexAction($page)
     {

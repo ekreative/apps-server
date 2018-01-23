@@ -8,7 +8,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -41,8 +40,11 @@ class BuildsController extends JsonController
      *   section="Builds",
      *   parameters={
      *      {"name"="comment", "dataType"="string", "required"=true, "description"="Comment for the build"},
-     *      {"name"="app",  "dataType"="file", "required"=true, "description"="Build of the app"},
-     *     {"name"="ci",  "dataType"="bool", "required"=false, "description"="if 'true' then the build is marked as a ci build"},
+     *      {"name"="app", "dataType"="file", "required"=true, "description"="Build of the app"},
+     *      {"name"="ci", "dataType"="bool", "required"=false, "description"="if 'true' then the build is marked as a ci build"},
+     *      {"name"="ref", "dataType"="string", "required"=false, "description"="git ref for the build"},
+     *      {"name"="commit", "dataType"="string", "required"=false, "description"="git commit for the build"},
+     *      {"name"="job-name", "dataType"="string", "required"=false, "description"="job name for the build"},
      *  }
      * )
      */
@@ -51,7 +53,14 @@ class BuildsController extends JsonController
         $request = $this->getRequest();
 
         $buildsUploader = $this->get('ekreative_test_build_core.builds_uploader');
-        $app = $buildsUploader->upload($request->files->get('app'), $request->request->get('comment'), $project, $type, $request->request->get('ref'), $request->request->get('commit'), $request->request->get('ci') == 'true');
+        $app = $buildsUploader->upload($request->files->get('app'),
+            $request->request->get('comment'),
+            $project,
+            $type,
+            $request->request->get('ref'),
+            $request->request->get('commit'),
+            $request->request->get('job-name'),
+            $request->request->get('ci') == 'true');
 
         $data = $app->jsonSerialize();
         $data['install'] = $this->generateUrl('build_install', ['token' => $app->getToken()], UrlGeneratorInterface::ABSOLUTE_URL);

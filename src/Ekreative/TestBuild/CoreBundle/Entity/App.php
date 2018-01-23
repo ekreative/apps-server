@@ -9,8 +9,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * App.
  *
  * @ORM\Table(indexes={
- *     @ORM\Index(columns={"projectId", "type", "ref"}),
- *     @ORM\Index(columns={"commit"}),
+ *     @ORM\Index(columns={"projectId", "type", "ref", "job_name"}),
+ *     @ORM\Index(columns={"commit", "job_name"}),
  * })
  * @ORM\Entity(repositoryClass="Ekreative\TestBuild\CoreBundle\Entity\AppRepository")
  */
@@ -248,9 +248,16 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="`commit`")
      */
     private $commit;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $jobName;
 
     /**
      * @var string
@@ -726,6 +733,7 @@ class App implements \JsonSerializable
             'appServer' => $this->getAppServer(),
             'ref' => $this->getRef(),
             'commit' => $this->getCommit(),
+            'jobName' => $this->getJobName(),
         ];
     }
 
@@ -1025,6 +1033,22 @@ class App implements \JsonSerializable
     public function setCommit($commit)
     {
         $this->commit = $commit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJobName()
+    {
+        return $this->jobName;
+    }
+
+    /**
+     * @param string $jobName
+     */
+    public function setJobName($jobName)
+    {
+        $this->jobName = $jobName;
     }
 
     /**

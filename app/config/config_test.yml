@@ -1,6 +1,10 @@
 imports:
     - { resource: config_dev.yml }
 
+parameters:
+    sqlite_path: '%kernel.cache_dir%/db.sqlite'
+    sqlite_backup: '%kernel.cache_dir%/db-backup.sqlite'
+
 framework:
     test: ~
     session:
@@ -14,3 +18,14 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        connections:
+            default:
+                driver: pdo_sqlite
+                charset: UTF8
+                mapping_types:
+                    enum: string
+                path: '%sqlite_path%'
+                profiling: false
