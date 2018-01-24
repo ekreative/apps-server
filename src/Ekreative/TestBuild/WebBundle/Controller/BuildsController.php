@@ -32,7 +32,7 @@ class BuildsController extends Controller
     }
 
     /**
-     * @Route("installByCommit/{commit}/{jobName}", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-]+$"}, defaults={"jobName"=null})
+     * @Route("installByCommit/{commit}/{jobName}", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function commitAction($commit, $jobName = null)
     {
@@ -45,7 +45,7 @@ class BuildsController extends Controller
     }
 
     /**
-     * @Route("{projectSlug}/{type}/{ref}/{jobName}", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-]+$"}, defaults={"jobName"=null})
+     * @Route("{projectSlug}/{type}/{ref}/{jobName}", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function latestAction($projectSlug, $type, $ref, $jobName = null)
     {
