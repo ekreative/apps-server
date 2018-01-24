@@ -18,8 +18,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class BuildsController extends Controller
 {
     /**
-     * @Route("install/{token}",name="build_install")
-     * @Route("install/{platform}/{token}",name="build_install_platform")
+     * @Route("install/{token}", name="build_install")
+     * @Route("install/{platform}/{token}", name="build_install_platform")
      */
     public function installAction($token)
     {
@@ -32,11 +32,11 @@ class BuildsController extends Controller
     }
 
     /**
-     * @Route("installByCommit/{commit}", requirements={"commit"="^[0-9a-f]{40}$"})
+     * @Route("installByCommit/{commit}/{jobName}", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-]+$"}, defaults={"jobName"=null})
      */
-    public function commitAction($commit)
+    public function commitAction($commit, $jobName = null)
     {
-        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByCommit($commit);
+        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppByCommit($commit, $jobName);
         if (!$app) {
             throw new NotFoundHttpException('No build with that commit');
         }
@@ -45,17 +45,13 @@ class BuildsController extends Controller
     }
 
     /**
-     * @Route("{projectSlug}/{type}/{ref}", requirements={"type"="^ios|android$"})
+     * @Route("{projectSlug}/{type}/{ref}/{jobName}", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-]+$"}, defaults={"jobName"=null})
      */
-    public function latestAction($projectSlug, $type, $ref)
+    public function latestAction($projectSlug, $type, $ref, $jobName = null)
     {
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
-        if ($ref == 'latest') {
-            $ref = [null, 'master'];
-        }
-
-        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref);
+        $app = $this->getDoctrine()->getRepository('EkreativeTestBuildCoreBundle:App')->getAppForProject($projectId, $type, $ref, $jobName);
         if (!$app) {
             throw new NotFoundHttpException('No build on that branch');
         }

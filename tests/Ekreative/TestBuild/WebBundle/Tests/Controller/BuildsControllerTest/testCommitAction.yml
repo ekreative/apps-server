@@ -1,0 +1,20 @@
+Ekreative\TestBuild\CoreBundle\Entity\App:
+  app:
+    name: test-app
+    version: 1
+    buildNumber: 2
+    bundleId: test.app
+    size: 100
+    type: ios
+    buildUrl: https://s3.com/3/12312.ipa
+    qrcodeUrl: https://charts.com/qr.png
+    createdName: Fred
+    projectId: 3
+    release: false
+    createdId: 4
+    created: <datetime()>
+    comment: A build that i like
+    ci: true
+    ref: branch-name
+    commit: 197fd2c17325b8ffb3db56c787e80c580c47d4c5
+    jobName: 'a-job'

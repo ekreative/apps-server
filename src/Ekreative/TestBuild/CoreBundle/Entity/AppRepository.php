@@ -27,27 +27,42 @@ class AppRepository extends EntityRepository
      * @param int    $id
      * @param string $type
      * @param string $ref
+     * @param string $jobName
      *
      * @return \Ekreative\TestBuild\CoreBundle\Entity\App
      */
-    public function getAppForProject($id, $type, $ref)
+    public function getAppForProject($id, $type, $ref, $jobName = null)
     {
-        return $this->findOneBy(['projectId' => $id, 'type' => $type, 'ref' => $ref], ['id' => 'DESC']);
+        if ($ref == 'latest') {
+            $ref = [null, 'master'];
+        }
+        $find = ['projectId' => $id, 'type' => $type, 'ref' => $ref];
+        if ($jobName) {
+            $find['jobName'] = $jobName;
+        }
+
+        return $this->findOneBy($find, ['id' => 'DESC']);
     }
 
     /**
      * @param string $commit
+     * @param string $jobName
      *
      * @return \Ekreative\TestBuild\CoreBundle\Entity\App
      */
-    public function getAppByCommit($commit)
+    public function getAppByCommit($commit, $jobName = null)
     {
-        return $this->findOneBy(['commit' => $commit], ['id' => 'DESC']);
+        $find = ['commit' => $commit];
+        if ($jobName) {
+            $find['jobName'] = $jobName;
+        }
+
+        return $this->findOneBy($find, ['id' => 'DESC']);
     }
 
     /**
-     * @param $id
-     * @param $type
+     * @param int[] $projectIds
+     * @param bool  $releaded
      *
      * @return App[]
      */

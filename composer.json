@@ -32,7 +32,9 @@
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
         "phpunit/phpunit": "^4.8",
-        "friendsofphp/php-cs-fixer": "^2.1"
+        "friendsofphp/php-cs-fixer": "^2.1",
+        "doctrine/data-fixtures": "^1.2",
+        "nelmio/alice": "^2.3"
     },
     "scripts": {
         "post-root-package-install": [
