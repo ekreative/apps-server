@@ -25,7 +25,7 @@ class S3
         try {
             $config = [
                 'Bucket' => $this->bucketName,
-                'Key' => $filename,
+                'Key' => trim($filename, '/'),
                 'Body' => fopen($path, 'r'),
                 'ACL' => 'public-read'
             ];
