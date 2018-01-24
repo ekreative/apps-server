@@ -13,7 +13,6 @@ services:
               -
                 version: '2006-03-01'
                 region: %ekreative_test_build_core.aws_region%
-                signature_version: 'v4'
                 credentials:
                     key: %ekreative_test_build_core.aws_key%
                     secret: %ekreative_test_build_core.aws_secret%

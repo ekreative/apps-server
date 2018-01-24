@@ -126,9 +126,16 @@ class BuildsUploader
         $icon = $ipaReader->getIcon();
         if ($icon) {
             $unpackedIcon = $ipaReader->unpackImage($ipaReader->getIcon());
-
-            $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), static::$ICON_HEADERS);
-            $app->setIconUrl($iconUrl);
+            if (file_exists($unpackedIcon)) {
+                try {
+                    $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), static::$ICON_HEADERS);
+                    $app->setIconUrl($iconUrl);
+                } catch (\Exception $e) {
+                    $this->logger->warning('Failed to upload icon from ipa', [
+                        'e' => $e
+                    ]);
+                }
+            }
         }
     }
 
@@ -185,7 +192,13 @@ class BuildsUploader
             $resources = $apk->getResources($resourceId);
             $tmpfname = tempnam('/tmp', $manifest->getPackageName());
             file_put_contents($tmpfname, stream_get_contents($apk->getStream(end($resources))));
-            $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName(), static::$ICON_HEADERS));
+            try {
+                $app->setIconUrl($this->s3->upload($tmpfname, $app->getIconFileName(), static::$ICON_HEADERS));
+            } catch (\Exception $e) {
+                $this->logger->warning('Failed to upload icon from apk', [
+                    'e' => $e
+                ]);
+            }
             unlink($tmpfname);
 
             $app->setAppServer($manifest->getMetaData('APP_SERVER'));
