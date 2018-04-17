@@ -47,7 +47,7 @@ class S3
     {
         $this->s3->deleteObject([
             'Bucket' => $this->bucketName,
-            'Key' => $filename,
+            'Key' => trim($filename, '/'),
         ]);
     }
 }
