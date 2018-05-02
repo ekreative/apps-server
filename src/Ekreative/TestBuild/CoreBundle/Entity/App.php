@@ -68,7 +68,7 @@ class App implements \JsonSerializable
     /**
      * @var string
      *
-     * @ORM\Column(name="permssions", type="string", nullable=true)
+     * @ORM\Column(name="permssions", type="text", nullable=true)
      */
     private $permssions;
 
