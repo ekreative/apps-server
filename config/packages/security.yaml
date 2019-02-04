@@ -1,0 +1,38 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        webservice:
+            id: ekreative_redmine_login.provider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern: ^/login$
+            security: false
+
+        installUrl:
+            pattern: ^/builds/(install|installByCommit)/
+            security: false
+
+        secured_area:
+            pattern: ^/
+            anonymous: true
+            simple_form:
+                authenticator: ekreative_redmine_login.authenticator
+                check_path:    login_check
+                login_path:    login
+                username_parameter: login[username]
+                password_parameter: login[password]
+            simple_preauth:
+                authenticator: ekreative_redmine_login.api_authenticator
+            logout:
+                path: /logout
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_REDMINE }
