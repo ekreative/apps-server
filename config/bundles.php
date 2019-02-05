@@ -16,4 +16,5 @@ return [
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Mcfedr\JsonFormBundle\McfedrJsonFormBundle::class => ['all' => true],
     Ekreative\RedmineLoginBundle\EkreativeRedmineLoginBundle::class => ['all' => true],
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
 ];
