@@ -2,11 +2,12 @@
 
 namespace App\Controller\Web;
 
+use App\Form\Model\SearchForm;
+use App\Form\Model\SearchFormType;
 use Ekreative\RedmineLoginBundle\Client\ClientProvider;
 use Ekreative\RedmineLoginBundle\Form\Type\LoginType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,8 +16,6 @@ use Symfony\Component\Security\Core\Security;
 /**
  * Class ProjectsController
  * @package App\Controller\Web
- *
- * @Route("")
  */
 class ProjectsController extends AbstractController
 {
@@ -36,29 +35,29 @@ class ProjectsController extends AbstractController
 
     /**
      * @Route("{page}",name="projects", defaults={"page" = "1"}, requirements={"page": "\d+"})
+     * @param Request $request
+     * @param $page
+     * @return Response
      */
-    public function index($page, Request $request)
+    public function index(Request $request, $page)
     {
-        $query = [];
+        $searchForm = new SearchForm();
+        $form = $this->createForm(SearchFormType::class, $searchForm);
+        $form->handleRequest($request);
 
-        $name = $request->query->get('q');
-        if ($name) {
-            $query[] = 'name=' . $name;
-        }
+        $searchForm->setPage($page);
 
-        $query[] = 'page=' . $page;
-
-        $data = $this->loginProvider->get($this->getUser())->get('projects.json?' . implode('&', $query))->getBody();
+        $data = $this->loginProvider->get($this->getUser())->get('projects.json?' . implode('&', $searchForm->getQueryArray()))->getBody();
         $projectsData = json_decode($data, true);
 
         $pages = ceil($projectsData['total_count'] / $projectsData['limit']);
 
         return $this->render('Projects/index.html.twig' ,[
-            'searchForm' => $this->getSearchForm($request)->createView(),
+            'searchForm' => $form->createView(),
             'pages' => $pages,
             'page' => $page,
             'projects' => $projectsData['projects'],
-            'q' => $name
+            'filter' => $searchForm
         ]);
     }
 
@@ -66,7 +65,6 @@ class ProjectsController extends AbstractController
      * @Route("/login", name="login", methods={"GET", "POST"})
      *
      * @param Request $request
-     *
      * @return Response
      */
     public function login(Request $request)
@@ -100,16 +98,5 @@ class ProjectsController extends AbstractController
      */
     public function loginCheck()
     {
-    }
-
-    private function getSearchForm(Request $request)
-    {
-        return $this->createFormBuilder(null, ['csrf_protection' => false])
-                        ->add('q', TextType::class, ['required' => false, 'attr' => ['placeholder' => 'Search...'], 'data' => $request->query->get('q')])
-                        ->setMethod(Request::METHOD_GET)
-                        ->setAction($this->generateUrl('projects'))
-
-
-                        ->getForm();
     }
 }

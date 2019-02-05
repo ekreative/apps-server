@@ -9,13 +9,16 @@ use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
 use Ekreative\RedmineLoginBundle\Client\ClientProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/builds/")
+ * @Route("/builds")
  */
 class BuildsController extends AbstractController
 {
@@ -55,8 +58,8 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("install/{token}", name="build_install")
-     * @Route("install/{platform}/{token}", name="build_install_platform")
+     * @Route("/install/{token}", name="build_install")
+     * @Route("/install/{platform}/{token}", name="build_install_platform")
      */
     public function install($token)
     {
@@ -69,7 +72,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("installByCommit/{commit}/{jobName}", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
+     * @Route("/installByCommit/{commit}/{jobName}", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function commit($commit, $jobName = null)
     {
@@ -82,7 +85,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("{projectSlug}/{type}/{ref}/{jobName}", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
+     * @Route("/latest/{projectSlug}/{type}/{ref}/{jobName}", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function latest($projectSlug, $type, $ref, $jobName = null)
     {
@@ -96,6 +99,10 @@ class BuildsController extends AbstractController
         return $this->renderApp($app);
     }
 
+    /**
+     * @param App $app
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     private function renderApp(App $app)
     {
         if ($app->isType(App::TYPE_ANDROID)) {
@@ -120,7 +127,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("release/{app}",name="build_inverse_release")
+     * @Route("/release/{app}",name="build_inverse_release")
      * @throws \Exception
      */
     public function release(App $app)
@@ -137,7 +144,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("delete/{project}/{type}/{token}",name="build_delete", methods={"POST"})
+     * @Route("/delete/{project}/{type}/{token}",name="build_delete", methods={"POST"})
      */
     public function delete($project, $type, $token)
     {
@@ -158,7 +165,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("upload/{project}/{type}",name="upload", methods={"POST"})
+     * @Route("/upload/{project}/{type}",name="upload", methods={"POST"})
      * @throws \Exception
      */
     public function upload($project, $type, Request $request)
@@ -175,11 +182,11 @@ class BuildsController extends AbstractController
     private function newAppForm(App $app)
     {
         $form = $this->createFormBuilder($app)
-            ->add('build', 'file', ['attr' => ['placeholder' => 'version', 'class' => 'form-control']])
-            ->add('comment', 'text', ['required' => false, 'attr' => ['placeholder' => 'comment', 'class' => 'form-control']])
+            ->add('build', FileType::class, ['attr' => ['placeholder' => 'version', 'class' => 'form-control']])
+            ->add('comment', TextType::class, ['required' => false, 'attr' => ['placeholder' => 'comment', 'class' => 'form-control']])
             ->setAction($this->generateUrl('upload', ['type' => $app->getType(), 'project' => $app->getProjectId()]))
-            ->setMethod('POST')
-            ->add('save', 'submit', ['label' => 'Upload']);
+            ->setMethod(Request::METHOD_POST)
+            ->add('save', SubmitType::class, ['label' => 'Upload']);
 
         return $form->getForm();
     }
@@ -187,7 +194,7 @@ class BuildsController extends AbstractController
     /**
      * This has been moved to the end because the route conflicts with the others.
      *
-     * @Route("{projectSlug}/{type}/",name="project_builds", requirements={"type"="^ios|android$"})
+     * @Route("/show/{projectSlug}/{type}/", name="project_builds", requirements={"type"="^ios|android$"})
      */
     public function index($projectSlug, $type)
     {
@@ -214,6 +221,10 @@ class BuildsController extends AbstractController
         return $this->render('Builds/index.html.twig', $result);
     }
 
+    /**
+     * @param $projectSlug
+     * @return array
+     */
     private function getProjectIdAndPermissions($projectSlug)
     {
         $currentUser = $this->getUser();

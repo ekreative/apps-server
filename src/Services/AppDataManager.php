@@ -46,23 +46,22 @@ class AppDataManager
 
     public function getAppByToken($token)
     {
-        $paginator = $this->s3Service->getPaginator();
-
-        $filtered = $paginator->search('Contents[?Name = `1048576`]');
+        return [];
     }
 
     public function getAppByCommit($commit, $jobName)
     {
-
+        return [];
     }
 
-    public function getAppForProject($projectId, $type, $ref, $jobName) {
-
+    public function getAppForProject($projectId, $type, $ref, $jobName)
+    {
+        return [];
     }
 
     public function getAppsForProject($projectId, $type)
     {
-
+        return [];
     }
 
     /**

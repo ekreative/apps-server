@@ -7,7 +7,9 @@
         <nav class="text-center">
             <ul class="pagination" style="display: inline-block">
                 {% for i in 1..pages %}
-                    <li {% if i==page %} class="page-item active"{% else %} class="page-item" {% endif %}><a class="page-link" href="{{ path('projects',{'page':i, 'q': q}) }}">{{ i }}</a></li>
+                    <li {% if i==page %} class="page-item active"{% else %} class="page-item" {% endif %}>
+                        <a class="page-link" href="{{ path('projects',{'page':i, 'query': filter.query}) }}">{{ i }}</a>
+                    </li>
                     {% endfor %}
             </ul>
         </nav>
@@ -20,10 +22,10 @@
         </div>
 
         <div class="col-lg-6">
-            <div class="input-group">
-                {{ form_widget(searchForm.q)}}
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-default btn">Find!</button>
+            <div class="input-group mb-3">
+                {{ form_widget(searchForm.query)}}
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Find!</button>
                 </span>
             </div><!-- /input-group -->
         </div><!-- /.col-lg-6 -->
@@ -50,10 +52,10 @@
                     <td>{{ project.created_on|date("d/m/Y") }}</td>
                     <td>{{ project.updated_on|date("d/m/Y") }}</td>
                     <td>
-                        <a class="btn-sm btn-primary" href="{{ path('project_builds',{'projectSlug':project.identifier,'type':'ios'}) }}">IOS</a>
+                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'ios'}) }}">IOS</a>
                     </td>
                     <td>
-                        <a class="btn-sm btn-primary" href="{{ path('project_builds',{'projectSlug':project.identifier,'type':'android'}) }}">Android</a>
+                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'android'}) }}">Android</a>
                     </td>
                 </tr>
             {% endfor %}

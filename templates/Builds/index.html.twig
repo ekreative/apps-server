@@ -10,18 +10,19 @@
         <div class="upload-form">
             {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
             <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
+                <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(appform.comment) }}</div>
+                <div class="col-sm-2 col-md-2 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
 
-                {% if type=='ios' %}
-                    <a class="btn btn-primary pull-right"
-                       href="{{ path('project_builds',{'projectSlug':project,'type':'android'}) }}">Android</a>
-                {% else %}
-                    <a class="btn btn-primary pull-right"
-                       href="{{ path('project_builds',{'projectSlug':project,'type':'ios'}) }}">Ios</a>
-                {% endif %}
-
-                <div class="col-sm-6 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
-                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.comment) }}</div>
-                <div class="col-sm-6 col-md-4 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
+                <div class="col-sm-2 col-md-2 col-lg-2 text-right">
+                    {% if type=='ios' %}
+                        <a class="btn btn-primary"
+                           href="{{ path('project_builds',{'projectSlug':project,'type':'android'}) }}">Android</a>
+                    {% else %}
+                        <a class="btn btn-primary"
+                           href="{{ path('project_builds',{'projectSlug':project,'type':'ios'}) }}">Ios</a>
+                    {% endif %}
+                </div>
             </div>
             {{ form_end(appform) }}
         </div>
