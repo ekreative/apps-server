@@ -1,6 +1,11 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-        {{ form(form) }}
+    <div class="col-md-6 offset-md-3">
+        {% if error %}
+            <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+        {% endif %}
 
+        {{ form(form) }}
+    </div>
 {% endblock %}
