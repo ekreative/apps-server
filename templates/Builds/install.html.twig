@@ -29,7 +29,7 @@
         <div>{{ app.created|date('H:i:s d/m/Y') }}</div>
         <div>{{ app.getPublicAppSize() }}</div>
         <div><a class="btn btn-primary" href="{{ url }}">Install</a></div>
-        {% if app.type=='ios' %}
+        {% if app.type == 'ios' %}
             <br>
             <div><a class="btn btn-primary" href="{{ buildUrl }}">Download IPA</a></div>
         {% endif %}

@@ -51,7 +51,7 @@ class App implements \JsonSerializable
     private $permssions;
 
     /**
-     * @var string
+     * @var bool
      */
     private $debuggable;
 
@@ -143,7 +143,7 @@ class App implements \JsonSerializable
     private $iconUrl;
 
     /**
-     * @var string
+     * @var bool
      */
     private $release;
 
@@ -156,7 +156,7 @@ class App implements \JsonSerializable
      */
     private $token;
     /**
-     * @var string
+     * @var \DateTime
      */
     private $created;
 
@@ -195,13 +195,24 @@ class App implements \JsonSerializable
      */
     private $plistUrl;
 
+    /**
+     * @var string
+     */
+    private $jsonUrl;
+
+    /**
+     * @var string
+     */
+    private $jsonName;
+
     public function __construct()
     {
         $this->setToken(md5(time() . rand(100, 1000)));
+        $this->jsonName = PHP_INT_MAX - time();
     }
 
     /**
-     * @return string
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -209,7 +220,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * @param string $created
+     * @param \DateTime $created
      */
     public function setCreated($created)
     {
@@ -591,9 +602,14 @@ class App implements \JsonSerializable
         $this->plistUrl = $plistUrl;
     }
 
+    private function getBaseFolder()
+    {
+        return '/' . $this->getProjectId() . '/' . $this->getType() . '/';
+    }
+
     private function getFolderWithToken()
     {
-        return '/' . $this->getProjectId() . '/' . $this->getToken();
+        return $this->getBaseFolder() . $this->getToken();
     }
 
     public function getFilename()
@@ -614,9 +630,28 @@ class App implements \JsonSerializable
         return $this->getFolderWithToken() . '.plist';
     }
 
-    public function getJsonName()
+    private function getJsonName()
     {
-        return $this->getFolderWithToken() . '.json';
+        return $this->getBaseFolder() . 'json/' . $this->jsonName . '.json';
+    }
+
+    /**
+     * @return string
+     */
+    public function getJsonUrl()
+    {
+        return $this->jsonUrl ? $this->jsonUrl : $this->getJsonName();
+    }
+
+    /**
+     * @param string $jsonUrl
+     * @return App
+     */
+    public function setJsonUrl($jsonUrl)
+    {
+        $this->jsonUrl = $jsonUrl;
+
+        return $this;
     }
 
     public function getDownloadNameFilename()
@@ -685,13 +720,21 @@ class App implements \JsonSerializable
         return $this->release;
     }
 
+    /**
+     * @return bool
+     */
+    public function isRelease()
+    {
+        return $this->release;
+    }
+
     public function inverseRelease()
     {
         return $this->release = !$this->release;
     }
 
     /**
-     * @param string $release
+     * @param bool $release
      */
     public function setRelease($release)
     {
@@ -731,7 +774,7 @@ class App implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getDebuggable()
     {
@@ -739,7 +782,15 @@ class App implements \JsonSerializable
     }
 
     /**
-     * @param string $debuggable
+     * @return bool
+     */
+    public function isDebuggable()
+    {
+        return $this->debuggable;
+    }
+
+    /**
+     * @param bool $debuggable
      */
     public function setDebuggable($debuggable)
     {
@@ -996,5 +1047,18 @@ class App implements \JsonSerializable
         $this->appServer = $appServer;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLinkJson()
+    {
+        $data = [
+            'projectId' => $this->getProjectId(),
+            'link' => ltrim($this->getJsonUrl(), '/')
+        ];
+
+        return json_encode($data, true);
     }
 }

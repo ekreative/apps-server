@@ -28,8 +28,8 @@ class S3
     }
 
     /**
-     * @param $path
-     * @param $filename
+     * @param string $path
+     * @param string $filename
      * @param array $headers
      * @return mixed
      * @throws \Exception
@@ -58,7 +58,7 @@ class S3
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      */
     public function delete($filename)
     {
@@ -69,12 +69,43 @@ class S3
     }
 
     /**
+     * @param array $parameters
      * @return \Aws\ResultPaginator
      */
-    public function getPaginator()
+    public function getPaginator(array $parameters)
     {
-        return $this->s3->getPaginator('ListObjects', [
-            'Bucket' => $this->bucketName
+        return $this->s3->getPaginator('ListObjectsV2', array_merge(['Bucket' => $this->bucketName], $parameters));
+    }
+
+    /**
+     * @param array $parameters
+     * @return \Iterator
+     */
+    public function getIterator(array $parameters)
+    {
+        return $this->s3->getIterator('ListObjectsV2', array_merge(['Bucket' => $this->bucketName], $parameters));
+    }
+
+    /**
+     * @param array $parameters
+     * @return \Aws\Result
+     */
+    public function getListObject(array $parameters)
+    {
+        return $this->s3->listObjectsV2(array_merge(['Bucket' => $this->bucketName], $parameters));
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getObjectByKey($key)
+    {
+        $result =  $this->s3->getObject([
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
         ]);
+
+        return (string) $result['Body'];
     }
 }

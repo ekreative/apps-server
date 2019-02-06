@@ -36,3 +36,10 @@ services:
     ekreative.file_uploader:
         alias: App\AWS\S3
 
+
+    App\Normalizer\AppNormalizer:
+        tags:
+            - { name: serializer.normalizer }
+    ekreative.app_normalizer:
+        alias: App\Normalizer\AppNormalizer
+        public: true

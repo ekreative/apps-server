@@ -37,11 +37,11 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/{project}/{type}", methods={"GET"})
+     * @Route("/{project}/{type}", methods={"GET"}, name="jenkins_projects")
      */
-    public function builds($project, $type)
+    public function builds(Request $request, $project, $type)
     {
-        $apps = $this->appDataManager->getAppsForProject($project, $type);
+        $apps = $this->appDataManager->getAppsForProject($project, $type, $request->query->get('page', 1));
 
         return $this->json($apps);
     }

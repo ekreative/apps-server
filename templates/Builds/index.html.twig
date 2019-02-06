@@ -1,56 +1,70 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-    {{ title }}
+    {{ buildApp.name }}
+{% endblock %}
+
+{% block pages %}
+    <div>
+        <div class="text-center">
+            <ul class="pagination">
+                <li class="page-item {% if paginator.prevPage < 1 %}disabled{% endif %}"><a class="page-link" href="{{ path('project_builds', {'projectSlug': slug, 'type': buildApp.type, 'page': paginator.prevPage}) }}">Previous</a></li>
+                <li class="page-item {% if paginator.numberOfPages < paginator.nextPage %}disabled{% endif %}"><a class="page-link" href="{{ path('project_builds', {'projectSlug': slug, 'type': buildApp.type, 'page': paginator.nextPage}) }}">Next</a></li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block body %}
-    <h1>{{ title }} - {{ type }}</h1>
-    {% if appform is defined %}
+    <h1>{{ buildApp.name }} - {{ buildApp.type }}</h1>
+    {% if form is not null %}
         <div class="upload-form">
-            {{ form_start(appform , {'attr':{'class':'form-horizontal'}}) }}
+            {{ form_start(form , {'attr':{'class':'form-horizontal'}}) }}
             <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(appform.build) }}</div>
-                <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(appform.comment) }}</div>
-                <div class="col-sm-2 col-md-2 col-lg-2">{{ form_widget(appform.save,{'attr':{'class':'btn btn-success'}}) }}</div>
+                <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(form.build) }}</div>
+                <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(form.comment) }}</div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
 
                 <div class="col-sm-2 col-md-2 col-lg-2 text-right">
-                    {% if type=='ios' %}
+                    {% if buildApp.type == 'ios' %}
                         <a class="btn btn-primary"
-                           href="{{ path('project_builds',{'projectSlug':project,'type':'android'}) }}">Android</a>
+                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'android'}) }}">Android</a>
                     {% else %}
                         <a class="btn btn-primary"
-                           href="{{ path('project_builds',{'projectSlug':project,'type':'ios'}) }}">Ios</a>
+                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'ios'}) }}">Ios</a>
                     {% endif %}
                 </div>
             </div>
-            {{ form_end(appform) }}
+            {{ form_end(form) }}
         </div>
     {% endif %}
+
+    {{ block('pages') }}
+
     <table class="table">
         <thead>
             <tr>
-                <td>#</td>
-                <td></td>
-                <td>Comment</td>
-                <td>Version (Build #)</td>
-                <td>Bundle id</td>
-                <td>Size</td>
-                <td>Created</td>
-                <td>Ref</td>
-                <td>App Server</td>
-                <td>Install</td>
+                <th></th>
+                <th>Comment</th>
+                <th>Version (Build #)</th>
+                <th>Bundle id</th>
+                <th>Size</th>
+                <th>Created</th>
+                <th>Ref</th>
+                <th>App Server</th>
+                <th>Install</th>
                 {% if delete %}
-                    <td></td>
-                    <td>Release</td>
+                    <th></th>
+                    <th>Release</th>
                 {% endif %}
             </tr>
         </thead>
 
         <tbody>
-            {% for app in apps %}
+            {% for app in paginator.data %}
                 <tr>
-                    <td>{{ app.id }}</td>
                     <td><img width="57" height="57" src="{{ app.iconUrl }}"></td>
                     <td>
                         {% if app.ci %}
@@ -72,21 +86,21 @@
                     <td>{{ app.appServer }}</td>
                     <td>
                         <a class="btn btn-primary"
-                           href="{{ path('build_install_platform',{'token':app.token,'platform':app.type}) }}"
+                           href="{{ path('build_install_platform', {'token':app.token, 'platform':app.type}) }}"
                            target="_blank">Install</a>
                     </td>
                     {% if delete %}
                         <td>
                             <form method="post"
-                                  action="{{ path('build_delete',{'token':app.token,'project':app.projectId,'type':app.type}) }}">
+                                  action="{{ path('build_delete', {'token': app.token, 'project': app.projectId, 'type': app.type}) }}">
                                 <button class="btn btn-primary" type="submit">Delete</button>
                             </form>
                         </td>
                         <td>
                             {% if app.release %}
-                                <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}">YES</a>
+                                <a class="btn btn-primary" href="{{ path('build_inverse_release', {'token': app.token}) }}">YES</a>
                             {% else %}
-                                <a class="btn btn-primary" href="{{ path('build_inverse_release',{'app':app.id}) }}">NO</a>
+                                <a class="btn btn-primary" href="{{ path('build_inverse_release', {'token': app.token}) }}">NO</a>
                             {% endif %}
                         </td>
                     {% endif %}
@@ -95,4 +109,6 @@
         </tbody>
 
     </table>
+
+    {{ block('pages') }}
 {% endblock %}

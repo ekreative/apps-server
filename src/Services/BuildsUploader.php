@@ -45,7 +45,7 @@ class BuildsUploader
     {
         $this->em = $em;
         $this->s3 = $s3;
-        $this->user = $context->getToken()->getUser();
+        $this->user = $context->getToken() !== null ? $context->getToken()->getUser() : null;
         $this->ipaReader = $ipaReader;
         $this->router = $router;
         $this->logger = $logger;
