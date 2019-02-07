@@ -43,3 +43,10 @@ services:
     ekreative.app_normalizer:
         alias: App\Normalizer\AppNormalizer
         public: true
+
+    App\Command\AddJsonInfoToS3:
+        tags:
+            - { name: console.command }
+    app.session_destroy:
+        alias: App\Command\AddJsonInfoToS3
+        public: true

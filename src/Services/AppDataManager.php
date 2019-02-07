@@ -46,10 +46,32 @@ class AppDataManager
         if ($app->getCommit()) {
             if ($app->getJobName()) {
                 $this->save(self::COMMIT_FOLDER . $app->getCommit() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
-                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
+//                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
             } else {
                 $this->save(self::COMMIT_FOLDER . $app->getCommit() . '.json', $app->getLinkJson());
             }
+        }
+
+        if ($app->getRef()) {
+            if ($app->getJobName()) {
+                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()) , $app->getLinkJson());
+                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
+            } else {
+                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
+            }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @throws \Exception
+     */
+    public function saveJsonDataFromArray(array $data)
+    {
+        foreach ($data as $item) {
+            /** @var App $app */
+            $app = $this->serializer->denormalize($item, App::class, 'json', []);
+            $this->saveJsonData($app);
         }
     }
 
@@ -147,24 +169,9 @@ class AppDataManager
     public function getAppForProject($projectId, $type, $ref, $jobName = null)
     {
         if ($jobName) {
-            $object = $this->s3Service->getObjectByKey(self::INDEX_FOLDER . $projectId. '/' . $type . '/' . $jobName . '.json');
-            if (!$object) {
-                throw new \Exception('Build not found');
-            }
-
-            $data = (array) json_decode($object);
-
-            if ($data) {
-                $content = $this->s3Service->getObjectByKey($data['link']);
-
-                if ($content) {
-                    return $this->serializer->deserialize($content, App::class, 'json', []);
-                }
-            }
-        } else {
             $param = [
                 'Delimiter' => '/',
-                'Prefix' => $projectId . '/' . $type . '/' . 'json/',
+                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . $type . '/' . $ref . '/'. $jobName . '/',
                 'MaxKeys' => 1
             ];
             /** @var Result $object */
@@ -173,8 +180,38 @@ class AppDataManager
 
             if ($key && $key = reset($key)) {
                 $content = $this->s3Service->getObjectByKey($key);
-                if ($content) {
-                    return $this->serializer->deserialize($content, App::class, 'json', []);
+
+                $data = (array) json_decode($content);
+
+                if ($data) {
+                    $content = $this->s3Service->getObjectByKey($data['link']);
+
+                    if ($content) {
+                        return $this->serializer->deserialize($content, App::class, 'json', []);
+                    }
+                }
+            }
+        } else {
+            $param = [
+                'Delimiter' => '/',
+                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . $type . '/' . $ref . '/',
+                'MaxKeys' => 1
+            ];
+            /** @var Result $object */
+            $list = $this->s3Service->getListObject($param);
+            $key = $list->search('Contents[].Key');
+
+            if ($key && $key = reset($key)) {
+                $content = $this->s3Service->getObjectByKey($key);
+
+                $data = (array) json_decode($content);
+
+                if ($data) {
+                    $content = $this->s3Service->getObjectByKey($data['link']);
+
+                    if ($content) {
+                        return $this->serializer->deserialize($content, App::class, 'json', []);
+                    }
                 }
             }
         }
@@ -192,7 +229,7 @@ class AppDataManager
     {
         $param = [
             'Delimiter' => '/',
-            'Prefix' => $projectId . '/' . $type . '/' . 'json/',
+            'Prefix' => $projectId . '/' . $type . '/',
         ];
 
         return $this->getApps($param, $page);

@@ -131,4 +131,9 @@ class ApiForm
     {
         $this->ci = ($ci == 'true');
     }
+
+    public function isValid()
+    {
+        return ($this->commit || $this->jobName) && !$this->ref;
+    }
 }

@@ -604,7 +604,7 @@ class App implements \JsonSerializable
 
     private function getBaseFolder()
     {
-        return '/' . $this->getProjectId() . '/' . $this->getType() . '/';
+        return '/' . $this->getProjectId() . '/';
     }
 
     private function getFolderWithToken()
@@ -632,7 +632,7 @@ class App implements \JsonSerializable
 
     private function getJsonName()
     {
-        return $this->getBaseFolder() . 'json/' . $this->jsonName . '.json';
+        return $this->getBaseFolder() . $this->getType() . '/' . $this->jsonName . '.json';
     }
 
     /**
