@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api;
 
+use App\Form\Model\ApiForm;
+use App\Form\Model\ApiFormType;
 use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -51,15 +53,21 @@ class BuildsController extends AbstractController
      */
     public function upload(Request $request, $project, $type)
     {
+        $apiForm = new ApiForm();
+        $form = $this->createForm(ApiFormType::class, $apiForm);
+        $form->handleRequest($request);
+        $apiForm->setJobName($request->request->get('job-name'));
+
         try {
-            $app = $this->buildUploader->upload($request->files->get('app'),
-                $request->request->get('comment'),
+            $app = $this->buildUploader->upload(
+                $apiForm->getApp(),
+                $apiForm->getComment(),
                 $project,
                 $type,
-                $request->request->get('ref'),
-                $request->request->get('commit'),
-                $request->request->get('job-name'),
-                $request->request->get('ci') == 'true');
+                $apiForm->getRef(),
+                $apiForm->getCommit(),
+                $apiForm->getJobName(),
+                $apiForm->isCi());
 
             $this->appDataManager->saveJsonData($app);
         } catch (\Exception $e) {

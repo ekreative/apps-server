@@ -94,7 +94,6 @@ class BuildsUploader
         $app->setCreatedId($this->user->getId());
 
         $app->setName($build->getClientOriginalName());
-//        $this->em->persist($app);
 
         if ($app->isType(App::TYPE_IOS)) {
             $headers = [
@@ -128,8 +127,6 @@ class BuildsUploader
 
         $app->setQrcodeUrl('https://chart.apis.google.com/chart?chl=' . urlencode($this->router->generate('build_install_platform',
                 ['token' => $app->getToken(), 'platform' => $app->getType()], UrlGeneratorInterface::ABSOLUTE_URL)) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2');
-//        $this->em->persist($app);
-//        $this->em->flush();
 
         $this->appDataManager->saveJsonData($app);
 

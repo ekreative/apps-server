@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\AWS\S3;
 use App\Entity\App;
-use App\PaginatorS3\S3Paginator;
+use App\PaginatorS3\Paginator;
+use Aws\Result;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -12,7 +13,6 @@ class AppDataManager
 {
     const INDEX_FOLDER = 'index/';
     const COMMIT_FOLDER = 'commit/';
-    const LIMIT_PAGINATION = 2;
 
     /**
      * @var S3
@@ -44,7 +44,12 @@ class AppDataManager
         $this->save($app->getJsonUrl(), $this->serializer->serialize($app, 'json', []));
         $this->save(self::INDEX_FOLDER . $app->getToken() . '.json', $app->getLinkJson());
         if ($app->getCommit()) {
-            $this->save(self::COMMIT_FOLDER . $app->getCommit() . '.json', $app->getLinkJson());
+            if ($app->getJobName()) {
+                $this->save(self::COMMIT_FOLDER . $app->getCommit() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
+                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
+            } else {
+                $this->save(self::COMMIT_FOLDER . $app->getCommit() . '.json', $app->getLinkJson());
+            }
         }
     }
 
@@ -108,7 +113,11 @@ class AppDataManager
      */
     public function getAppByCommit($commit, $jobName = null)
     {
-        $object = $this->s3Service->getObjectByKey(self::COMMIT_FOLDER . $commit . '.json');
+        if ($jobName) {
+            $object = $this->s3Service->getObjectByKey(self::COMMIT_FOLDER . $commit . '/' . $jobName . '.json');
+        } else {
+            $object = $this->s3Service->getObjectByKey(self::COMMIT_FOLDER . $commit . '.json');
+        }
 
         if (!$object) {
             throw new \Exception('Token not found');
@@ -127,16 +136,57 @@ class AppDataManager
         throw new \Exception('Token not found');
     }
 
-    public function getAppForProject($projectId, $type, $ref, $jobName)
+    /**
+     * @param $projectId
+     * @param $type
+     * @param $ref
+     * @param $jobName
+     * @return object
+     * @throws \Exception
+     */
+    public function getAppForProject($projectId, $type, $ref, $jobName = null)
     {
-        return [];
+        if ($jobName) {
+            $object = $this->s3Service->getObjectByKey(self::INDEX_FOLDER . $projectId. '/' . $type . '/' . $jobName . '.json');
+            if (!$object) {
+                throw new \Exception('Build not found');
+            }
+
+            $data = (array) json_decode($object);
+
+            if ($data) {
+                $content = $this->s3Service->getObjectByKey($data['link']);
+
+                if ($content) {
+                    return $this->serializer->deserialize($content, App::class, 'json', []);
+                }
+            }
+        } else {
+            $param = [
+                'Delimiter' => '/',
+                'Prefix' => $projectId . '/' . $type . '/' . 'json/',
+                'MaxKeys' => 1
+            ];
+            /** @var Result $object */
+            $list = $this->s3Service->getListObject($param);
+            $key = $list->search('Contents[].Key');
+
+            if ($key && $key = reset($key)) {
+                $content = $this->s3Service->getObjectByKey($key);
+                if ($content) {
+                    return $this->serializer->deserialize($content, App::class, 'json', []);
+                }
+            }
+        }
+
+        throw new \Exception('Build not found');
     }
 
     /**
      * @param string $projectId
      * @param string $type
      * @param int $page
-     * @return S3Paginator
+     * @return Paginator
      */
     public function getAppsForProject($projectId, $type, $page = 1)
     {
@@ -151,46 +201,18 @@ class AppDataManager
     /**
      * @param  array $param
      * @param int $page
-     * @return S3Paginator
+     * @return Paginator
      */
     private function getApps(array $param, int $page)
     {
         $data = new ArrayCollection();
-        $s3Paginator = $this->getS3JsonObjects($param, $page);
+        $s3Paginator = new Paginator($this->s3Service, $page, $param);
 
         foreach ($s3Paginator->getData() as $object) {
             $data->add($this->serializer->deserialize($object, App::class, 'json', []));
         }
 
         $s3Paginator->setData($data);
-
-        return $s3Paginator;
-    }
-
-    /**
-     * @param array $param
-     * @param int $page
-     * @return S3Paginator
-     */
-    private function getS3JsonObjects(array $param, int $page)
-    {
-        $s3Paginator = new S3Paginator();
-        $count = 0;
-
-        $iterator = $this->s3Service->getIterator($param);
-
-        foreach ($iterator as $item) {
-            $key = $item['Key'];
-            $count++;
-
-            if ($count <= ($page * self::LIMIT_PAGINATION) && (($page - 1) * self::LIMIT_PAGINATION) < $count) {
-                $s3Paginator->addToData($this->s3Service->getObjectByKey($key));
-            }
-        }
-
-        $s3Paginator->setNumberOfPages(ceil($count / self::LIMIT_PAGINATION));
-        $s3Paginator->setPrevPage($page - 1);
-        $s3Paginator->setNextPage($page + 1);
 
         return $s3Paginator;
     }

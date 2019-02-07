@@ -214,9 +214,15 @@ class BuildsController extends AbstractController
     {
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
-        $app = $this->appDataManager->getAppForProject($projectId, $type, $ref, $jobName);
-        if (!$app) {
-            throw new NotFoundHttpException('No build on that branch');
+        try {
+            /** @var App $app */
+            $app = $this->appDataManager->getAppForProject($projectId, $type, $ref, $jobName);
+
+            if (!$app) {
+                throw new \Exception();
+            }
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException('No build with that parameters');
         }
 
         return $this->renderApp($app);
