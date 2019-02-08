@@ -60,7 +60,7 @@ class AddJsonInfoToS3 extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $sqlCount = "SELECT COUNT(*) AS number_of_rows FROM app";
+        $sqlCount = "SELECT COUNT(*) AS number_of_rows FROM app WHERE app.id > ?";
 
         $sql = "SELECT 
           app.id AS `id`,
@@ -109,6 +109,7 @@ class AddJsonInfoToS3 extends Command
             $conn = $this->doctrine->getConnection();
 
             $statement = $conn->prepare($sqlCount);
+            $statement->bindValue(1, $id ?: 0, ParameterType::INTEGER);
             $statement->execute();
 
             $numberOfRows = (int) $statement->fetch(0)['number_of_rows'];
