@@ -51,7 +51,7 @@
             <div class="col-sm-4" style="margin-bottom: 15px">
                 <div class="card">
                     <div class="card-header">
-                        <img alt="Icon" width="57" height="57" src="{{ item.iconUrl }}" style="margin-right: 10px">
+                        <img alt="Icon" width="57" height="57" src="{{ item.iconUrl == 'https://testbuild.rocks/images/icon.png' ? asset('build/images/icon.png') : item.iconUrl }}" style="margin-right: 10px">
                         <span>{{ item.bundleId }}</span>
                         <span style="display: block; margin-top: 5px"><small>{{ item.created|date("d/m/Y H:i") }}</small></span>
                         <span><small>{{ item.createdName }}</small></span>
