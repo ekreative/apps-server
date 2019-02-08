@@ -5,7 +5,7 @@
     {% block pages %}
     <div>
         <nav class="text-center">
-            <ul class="pagination" style="display: inline-block">
+            <ul class="pagination">
                 {% for i in 1..pages %}
                     <li {% if i==page %} class="page-item active"{% else %} class="page-item" {% endif %}>
                         <a class="page-link" href="{{ path('projects',{'page':i, 'query': filter.query}) }}">{{ i }}</a>
