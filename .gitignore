@@ -1,18 +1,16 @@
-/app/bootstrap.php.cache
-/app/cache/*
-/app/config/parameters.yml
-/app/logs/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
-/app/phpunit.xml
-/build/
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
 /vendor/
-/bin/
-/composer.phar
-/web/bundles/
-/web/css/
-/web/js/
-/web/fonts/
-/web/images/
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
 /node_modules/
-/.php_cs.cache
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###

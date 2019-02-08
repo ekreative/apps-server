@@ -1,26 +1,10 @@
 {
-  "name": "apps-server",
-  "version": "1.0.0",
-  "description": "A little server for builds of apps",
   "devDependencies": {
-    "del": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-concat": "^2.6.1",
-    "gulp-filter": "^5.0.0",
-    "gulp-imagemin": "^3.3.0",
-    "gulp-less": "^3.3.2",
-    "gulp-sourcemaps": "^2.6.0",
-    "gulp-uglify": "^3.0.0",
-    "gulp-uglifycss": "^1.0.8",
-    "standard": "^10.0.2"
-  },
-  "dependencies": {
-    "bootstrap": "^3.3.7",
-    "jquery": "^3.2.1"
-  },
-  "scripts": {
-    "gulp": "gulp",
-    "test": "standard"
+    "@symfony/webpack-encore": "^0.23.0",
+    "bootstrap": "^4.2.1",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.11.0",
+    "popper.js": "^1.14.7",
+    "sass-loader": "^7.0.1"
   }
 }

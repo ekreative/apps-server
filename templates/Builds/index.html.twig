@@ -1,0 +1,95 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ buildApp.name }}
+{% endblock %}
+
+{% block pages %}
+    <div>
+        <div class="text-center">
+            <ul class="pagination">
+                <li class="page-item {% if paginator.prevPage < 1 %}disabled{% endif %}"><a class="page-link" href="{{ path('project_builds', {'projectSlug': slug, 'type': buildApp.type}) }}">First</a></li>
+                <li class="page-item {% if paginator.prevPage < 1 %}disabled{% endif %}"><a class="page-link" href="{{ path('project_builds', {'projectSlug': slug, 'type': buildApp.type, 'page': paginator.prevPage}) }}">Previous</a></li>
+                <li class="page-item {% if paginator.numberOfPages < paginator.nextPage %}disabled{% endif %}"><a class="page-link" href="{{ path('project_builds', {'projectSlug': slug, 'type': buildApp.type, 'page': paginator.nextPage}) }}">Next</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <h1>{{ buildApp.name }} - {{ buildApp.type }}</h1>
+    {% if form is not null %}
+        <div class="upload-form">
+            {{ form_start(form , {'attr':{'class':'form-horizontal'}}) }}
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(form.build) }}</div>
+                <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(form.comment) }}</div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+
+                <div class="col-sm-2 col-md-2 col-lg-2 text-right">
+                    {% if buildApp.type == 'ios' %}
+                        <a class="btn btn-primary"
+                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'android'}) }}">Android</a>
+                    {% else %}
+                        <a class="btn btn-primary"
+                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'ios'}) }}">Ios</a>
+                    {% endif %}
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    {% endif %}
+
+    {% if paginator.numberOfPages > 1 %}
+        {{ block('pages') }}
+    {% endif %}
+
+    <div class="row">
+        {% for item in paginator.data %}
+            <div class="col-sm-4" style="margin-bottom: 15px">
+                <div class="card">
+                    <div class="card-header">
+                        <img alt="Icon" width="57" height="57" src="{{ item.iconUrl }}" style="margin-right: 10px">
+                        <span>{{ item.bundleId }}</span>
+                        <span style="display: block; margin-top: 5px"><small>{{ item.created|date("d/m/Y H:i") }}</small></span>
+                        <span><small>{{ item.createdName }}</small></span>
+                        <span class="float-right"><small>{% if item.ref %} Ref: {{ item.ref }}{% endif %}</small></span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>{{ item.version }} ({{ item.buildNumber }})</span>
+                            <span class="float-right"><small>{{ item.getPublicAppSize() }}</small></span>
+                        </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            {{ item.appServer }}
+                        </h6>
+                        <p class="card-text">
+                            {% if item.ci %}
+                                <span class="glyphicon glyphicon-fire" title="This build was uploaded by a CI server"
+                                data-toggle="tooltip"></span>
+                            {% endif %}
+                            {{ item.comment ?: item.name }}
+                        </p>
+
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="{{ path('build_install_platform', {'token':item.token, 'platform':item.type}) }}"
+                           target="_blank" class="card-link btn-link btn">Install</a>
+                        {% if delete %}
+                            <form method="post" action="{{ path('build_delete', {'token': app.token, 'project': item.projectId, 'type': item.type}) }}" style="display: inline-block">
+                                <button class="btn-link btn" type="submit" style="color: red">Delete</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if paginator.numberOfPages > 1 %}
+        {{ block('pages') }}
+    {% endif %}
+
+{% endblock %}

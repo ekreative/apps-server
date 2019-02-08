@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+
+
+{% block body %}
+    {% block pages %}
+    <div>
+        <nav class="text-center">
+            <ul class="pagination" style="display: inline-block">
+                {% for i in 1..pages %}
+                    <li {% if i==page %} class="page-item active"{% else %} class="page-item" {% endif %}>
+                        <a class="page-link" href="{{ path('projects',{'page':i, 'query': filter.query}) }}">{{ i }}</a>
+                    </li>
+                    {% endfor %}
+            </ul>
+        </nav>
+    </div>
+    {% endblock %}
+
+    {{ form_start(searchForm) }}
+    <div class="row">
+        <div class="col-lg-6">
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group mb-3">
+                {{ form_widget(searchForm.query)}}
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Find!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div>
+    {{ form_end(searchForm) }}
+
+    <table class="table margin-top-15">
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Project name</td>
+                <td>Date created</td>
+                <td>Date updated</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.id }}</td>
+                    <td>{{ project.name }}</td>
+                    <td>{{ project.created_on|date("d/m/Y") }}</td>
+                    <td>{{ project.updated_on|date("d/m/Y") }}</td>
+                    <td>
+                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'ios'}) }}">IOS</a>
+                    </td>
+                    <td>
+                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'android'}) }}">Android</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+    {{ block('pages') }}
+
+{% endblock %}

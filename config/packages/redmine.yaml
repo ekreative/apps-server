@@ -1,0 +1,10 @@
+ekreative_redmine_login:
+    redmine: '%env(REDMINE)%'
+
+services:
+
+  Ekreative\RedmineLoginBundle\Client\ClientProvider:
+    arguments:
+      - '%env(REDMINE)%'
+  ekreative_redmine_login.client_provider:
+    alias: Ekreative\RedmineLoginBundle\Client\ClientProvider

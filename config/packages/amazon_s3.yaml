@@ -1,0 +1,11 @@
+services:
+
+  Aws\S3\S3Client:
+    arguments:
+      - version: 'latest'
+        region: '%env(AMAZON_AWS_REGION)%'
+        credentials:
+          key: '%env(AMAZON_AWS_KEY)%'
+          secret: '%env(AMAZON_AWS_SECRET_KEY)%'
+  ekreative.amazon_s3:
+    alias: Aws\S3\S3Client
