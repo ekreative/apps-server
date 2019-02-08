@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class Paginator
 {
-    const LIMIT_PAGINATION = 10;
+    const LIMIT_PAGINATION = 12;
 
     /**
      * @var ArrayCollection

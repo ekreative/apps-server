@@ -46,7 +46,6 @@ class AppDataManager
         if ($app->getCommit()) {
             if ($app->getJobName()) {
                 $this->save(self::COMMIT_FOLDER . $app->getCommit() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
-//                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getJobName() . '.json', $app->getLinkJson());
             } else {
                 $this->save(self::COMMIT_FOLDER . $app->getCommit() . '.json', $app->getLinkJson());
             }
@@ -63,16 +62,14 @@ class AppDataManager
     }
 
     /**
-     * @param array $data
+     * @param array $item
      * @throws \Exception
      */
-    public function saveJsonDataFromArray(array $data)
+    public function saveJsonDataFromArray(array $item)
     {
-        foreach ($data as $item) {
-            /** @var App $app */
-            $app = $this->serializer->denormalize($item, App::class, 'json', []);
-            $this->saveJsonData($app);
-        }
+        /** @var App $app */
+        $app = $this->serializer->denormalize($item, App::class, 'json', []);
+        $this->saveJsonData($app);
     }
 
     /**
