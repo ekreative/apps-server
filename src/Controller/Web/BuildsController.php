@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * @Route("/web/builds")
@@ -243,7 +244,7 @@ class BuildsController extends AbstractController
         $install = $this->generateUrl('build_install_platform', [
             'token' => $app->getToken(),
             'platform' => $app->getType(),
-        ], true);
+        ], UrlGenerator::ABSOLUTE_URL);
         $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($install) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
         return $this->render('Builds/install.html.twig', [
