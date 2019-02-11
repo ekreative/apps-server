@@ -43,9 +43,9 @@ class BuildsController extends AbstractController
      */
     public function builds(Request $request, $project, $type)
     {
-        $apps = $this->appDataManager->getAppsForProject($project, $type, $request->query->get('page', 1));
+        $paginator = $this->appDataManager->getAppsForProject($project, $type, $request->query->get('page', 1));
 
-        return $this->json($apps);
+        return $this->json($paginator->getData()->getValues());
     }
 
     /**
@@ -53,22 +53,17 @@ class BuildsController extends AbstractController
      */
     public function upload(Request $request, $project, $type)
     {
-        $apiForm = new ApiForm();
-        $form = $this->createForm(ApiFormType::class, $apiForm);
-        $form->handleRequest($request);
-        $apiForm->setJobName($request->request->get('job-name'));
-
         try {
             $app = $this->buildUploader->upload(
-                $apiForm->getApp(),
-                $apiForm->getComment(),
+                $request->files->get('app'),
+                $request->request->get('comment'),
                 $project,
                 $type,
-                $apiForm->getRef(),
-                $apiForm->getCommit(),
-                $apiForm->getJobName(),
-                $apiForm->isCi());
-
+                $request->request->get('ref'),
+                $request->request->get('commit'),
+                $request->request->get('job-name'),
+                $request->request->get('ci') == 'true'
+                );
             $this->appDataManager->saveJsonData($app);
         } catch (\Exception $e) {
             return $this->json(

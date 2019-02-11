@@ -54,10 +54,8 @@ class AppDataManager
         if ($app->getRef()) {
             if ($app->getJobName()) {
                 $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()) , $app->getLinkJson());
-                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
-            } else {
-                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
             }
+            $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
         }
     }
 
@@ -316,6 +314,14 @@ class AppDataManager
 
         if ($app->getCommit()) {
             $this->s3Service->delete(AppDataManager::COMMIT_FOLDER . $app->getToken() . '.json');
+        }
+
+        if ($app->getRef()) {
+            $this->s3Service->delete(AppDataManager::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()));
+
+            if ($app->getJobName()) {
+                $this->s3Service->delete(AppDataManager::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()));
+            }
         }
     }
 }

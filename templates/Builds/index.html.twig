@@ -78,7 +78,7 @@
                         <a href="{{ path('build_install_platform', {'token':item.token, 'platform':item.type}) }}"
                            target="_blank" class="card-link btn-link btn">Install</a>
                         {% if delete %}
-                            <form method="post" action="{{ path('build_delete', {'token': app.token, 'project': item.projectId, 'type': item.type}) }}" style="display: inline-block">
+                            <form method="post" action="{{ path('build_delete', {'token': item.token, 'project': item.projectId, 'type': item.type}) }}" style="display: inline-block">
                                 <button class="btn-link btn" type="submit" style="color: red">Delete</button>
                             </form>
                         {% endif %}
