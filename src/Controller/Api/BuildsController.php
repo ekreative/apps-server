@@ -2,8 +2,6 @@
 
 namespace App\Controller\Api;
 
-use App\Form\Model\ApiForm;
-use App\Form\Model\ApiFormType;
 use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * @Route("/builds")
+ * @Route("/api/builds")
  */
 class BuildsController extends AbstractController
 {

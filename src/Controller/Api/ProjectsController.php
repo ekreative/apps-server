@@ -23,7 +23,7 @@ class ProjectsController extends AbstractController
     }
 
     /**
-     * @Route("projects/{page}",defaults={"page" = "1"}, methods={"GET"})
+     * @Route("api/projects/{page}",defaults={"page" = "1"}, methods={"GET"})
      */
     public function index($page)
     {
