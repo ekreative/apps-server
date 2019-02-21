@@ -13,6 +13,7 @@ class AppDataManager
 {
     const INDEX_FOLDER = 'index/';
     const COMMIT_FOLDER = 'commit/';
+    const INFO_FOLDER = 'info/';
 
     /**
      * @var S3
@@ -42,6 +43,7 @@ class AppDataManager
     public function saveJsonData(App $app)
     {
         $this->save($app->getJsonUrl(), $this->serializer->serialize($app, 'json', []));
+        $this->save($app->getInfoAllJson(), $this->serializer->serialize($app, 'json', []));
         $this->save(self::INDEX_FOLDER . $app->getToken() . '.json', $app->getLinkJson());
         if ($app->getCommit()) {
             if ($app->getJobName()) {
@@ -166,7 +168,7 @@ class AppDataManager
         if ($jobName) {
             $param = [
                 'Delimiter' => '/',
-                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . $type . '/' . $ref . '/'. $jobName . '/',
+                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) . $ref . '/'. $jobName . '/',
                 'MaxKeys' => 1
             ];
             /** @var Result $object */
@@ -189,7 +191,7 @@ class AppDataManager
         } else {
             $param = [
                 'Delimiter' => '/',
-                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . $type . '/' . $ref . '/',
+                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) . $ref . '/',
                 'MaxKeys' => 1
             ];
             /** @var Result $object */
@@ -220,11 +222,11 @@ class AppDataManager
      * @param int $page
      * @return Paginator
      */
-    public function getAppsForProject($projectId, $type, $page = 1)
+    public function getAppsForProject($projectId, $type = null, $page = 1)
     {
         $param = [
             'Delimiter' => '/',
-            'Prefix' => $projectId . '/' . $type . '/',
+            'Prefix' => $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) ,
         ];
 
         return $this->getApps($param, $page);
@@ -250,66 +252,12 @@ class AppDataManager
     }
 
     /**
-     * @param $ipa
-     * @param $bundleIdentifier
-     * @param $version
-     * @param $title
-     *
-     * @return string
-     */
-    public function getPlistString($ipa, $bundleIdentifier, $version, $title)
-    {
-        $imp = new \DOMImplementation();
-        $dtd = $imp->createDocumentType('plist', '-//Apple//DTD PLIST 1.0//EN', 'http://www.apple.com/DTDs/PropertyList-1.0.dtd');
-        $dom = $imp->createDocument('', '', $dtd);
-
-        $dom->encoding = 'UTF-8';
-
-        $dom->formatOutput = true;
-        $dom->appendChild($element = $dom->createElement('plist'));
-        $element->setAttribute('version', '1.0');
-
-        $element->appendChild($dict = $dom->createElement('dict'));
-        $dict->appendChild($dom->createElement('key', 'items'));
-        $dict->appendChild($array = $dom->createElement('array'));
-
-        $array->appendChild($mainDict = $dom->createElement('dict'));
-
-        $mainDict->appendChild($dom->createElement('key', 'assets'));
-        $mainDict->appendChild($array = $dom->createElement('array'));
-
-        $array->appendChild($dict = $dom->createElement('dict'));
-        $dict->appendChild($dom->createElement('key', 'kind'));
-        $dict->appendChild($dom->createElement('string', 'software-package'));
-        $dict->appendChild($dom->createElement('key', 'url'));
-        $dict->appendChild($dom->createElement('string', $ipa));
-
-        $mainDict->appendChild($dom->createElement('key', 'metadata'));
-
-        $mainDict->appendChild($dict = $dom->createElement('dict'));
-        $dict->appendChild($dom->createElement('key', 'bundle-identifier'));
-        $dict->appendChild($dom->createElement('string', $bundleIdentifier));
-
-        $dict->appendChild($dom->createElement('key', 'bundle-version'));
-        $dict->appendChild($dom->createElement('string', $version));
-
-        $dict->appendChild($dom->createElement('key', 'kind'));
-        $dict->appendChild($dom->createElement('string', 'software'));
-
-        $dict->appendChild($dom->createElement('key', 'title'));
-        $dict->appendChild($titleElement = $dom->createElement('string'));
-
-        $titleElement->appendChild($dom->createTextNode($title . '-v.' . $version));
-
-        return $dom->saveXML();
-    }
-
-    /**
      * @param App $app
      */
     public function deleteJsonFiles(App $app)
     {
         $this->s3Service->delete($app->getJsonUrl());
+        $this->s3Service->delete($app->getInfoAllJson());
         $this->s3Service->delete(AppDataManager::INDEX_FOLDER . $app->getToken() . '.json');
 
         if ($app->getCommit()) {
@@ -323,5 +271,37 @@ class AppDataManager
                 $this->s3Service->delete(AppDataManager::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()));
             }
         }
+    }
+
+    /**
+     * @throws \Exception
+     * @return int
+     */
+    public function saveDataToInfoFolder()
+    {
+        $param = [
+            'Delimiter' => '/',
+            'Prefix' => self::INDEX_FOLDER,
+        ];
+
+        $paginator = $this->s3Service->getPaginator($param);
+
+        $i = 0;
+        /** @var Result $item */
+        foreach ($paginator->search('Contents[].Key') as $key) {
+
+            $content = $this->s3Service->getObjectByKey($key);
+
+            if ($content) {
+                $data = (array) json_decode($content);
+
+                $content = $this->s3Service->getObjectByKey($data['link']);
+
+                $this->save($data['projectId'] . '/' . self::INFO_FOLDER . basename($data['link']), $content);
+                $i++;
+            }
+        }
+
+        return $i;
     }
 }

@@ -5,6 +5,8 @@ namespace App\Controller\Web;
 use App\AWS\S3;
 use App\Entity\App;
 use App\Form\AppType;
+use App\Form\Model\BuildSearchForm;
+use App\Form\Model\BuildSearchFormType;
 use App\Roles\EkreativeUserRoles;
 use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
@@ -58,15 +60,14 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/show/{projectSlug}/{type}/{page}", name="project_builds", requirements={"type"="^ios|android$", "page": "\d+"}, defaults={"page": 1})
+     * @Route("/show/{projectSlug}/{type}", name="project_builds", defaults={"type": null})
      * @param Request $request
      * @param $projectSlug
      * @param $type
-     * @param int $page
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function index(Request $request, $projectSlug, $type, $page)
+    public function index(Request $request, $projectSlug, $type)
     {
         list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
@@ -83,12 +84,21 @@ class BuildsController extends AbstractController
 
             $form->handleRequest($request);
 
+            $search = new BuildSearchForm();
+            $search->setType($type);
+            $searchForm = $this->createForm(BuildSearchFormType::class, $search);
+            $searchForm->handleRequest($request);
+
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->buildUploader->upload($app->getBuild(), $app->getComment(), $app->getProjectId(), $app->getType());
+                $app = $this->buildUploader->upload($app->getBuild(), $app->getComment(), $app->getProjectId(), $app->getType());
 
-                $this->addFlash('success', 'Build was downloaded');
+                $this->addFlash('success', (strtoupper($app->getType()) .  ' Build was downloaded'));
 
-                return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug, 'type' => $app->getType()]);
+                return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug]);
+            }
+
+            if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+                return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug, 'type' => $search->getType()]);
             }
         }
 
@@ -96,8 +106,9 @@ class BuildsController extends AbstractController
             'slug' => $projectSlug,
             'delete' => $delete,
             'form' => isset($form) ? $form->createView() : null,
+            'searchForm' => isset($searchForm) ? $searchForm->createView() : null,
             'buildApp' => $app,
-            'paginator' => $this->appDataManager->getAppsForProject($projectId, $type, $page)
+            'paginator' => $this->appDataManager->getAppsForProject($projectId, $type, $request->query->get('page', 1))
         ]);
     }
 
@@ -209,7 +220,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/latest/{projectSlug}/{type}/{ref}/{jobName}", name="build_latest", requirements={"type"="^ios|android$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
+     * @Route("/latest/{projectSlug}/{type}/{ref}/{jobName}", name="build_latest", requirements={"type"="^ios|android|exe$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function latest($projectSlug, $type, $ref, $jobName = null)
     {
@@ -235,7 +246,7 @@ class BuildsController extends AbstractController
      */
     private function renderApp(App $app)
     {
-        if ($app->isType(App::TYPE_ANDROID)) {
+        if ($app->isType(App::TYPE_ANDROID) || $app->isType(App::TYPE_EXE)) {
             $url = $app->getBuildUrl();
         } elseif ($app->isType(App::TYPE_IOS)) {
             $url = 'itms-services:///?action=download-manifest&url=' . urlencode($app->getPlistUrl());
