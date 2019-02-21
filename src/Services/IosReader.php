@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\AWS\S3;
+use App\Entity\App;
+use App\Factory\ReaderInterface;
 use CFPropertyList\CFPropertyList;
 use CFPropertyList\IOException;
+use Psr\Log\LoggerInterface;
 
-class IpaReader
+class IosReader implements ReaderInterface
 {
     private $to = '/tmp/';
     private $tmpDir;
@@ -15,11 +19,153 @@ class IpaReader
     private $basePath;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var S3
+     */
+    private $s3;
+
+    /**
+     * IosReader constructor.
+     * @param LoggerInterface $logger
+     * @param S3 $s3
+     */
+    public function __construct(LoggerInterface $logger, S3 $s3)
+    {
+        $this->logger = $logger;
+        $this->s3 = $s3;
+    }
+
+    /**
+     * @param App $app
+     * @return App
+     * @throws \Exception
+     */
+    public function readData(App $app)
+    {
+        $build = $app->getBuild();
+
+        $this->read($build->getRealPath());
+        $app->setType(App::TYPE_IOS);
+        $app->setBundleName($this->getBundleName());
+        $app->setVersion($this->getBundleShortVersionString());
+        $app->setMinimumOSVersion($this->getMinimumOSVersion());
+        $app->setPlatformVersion($this->getPlatformVersion());
+        $app->setBundleDisplayName($this->getBundleDisplayName());
+        $app->setBuildNumber($this->getBundleVersion());
+        $app->setBundleSupportedPlatforms($this->getBundleShortVersionString());
+        $app->setSupportedInterfaceOrientations($this->getSupportedInterfaceOrientations());
+        $app->setBundleId($this->getBundleIdentifier());
+        $app->setAppServer($this->getAppServer());
+        $icon = $this->getIcon();
+        if ($icon) {
+            $unpackedIcon = $this->unpackImage($this->getIcon());
+            if (file_exists($unpackedIcon)) {
+                try {
+                    $iconUrl = $this->s3->upload($unpackedIcon, $app->getIconFileName(), BuildsUploader::ICON_HEADERS);
+                    $app->setIconUrl($iconUrl);
+                } catch (\Exception $e) {
+                    $this->logger->warning('Failed to upload icon from ipa', [
+                        'e' => $e
+                    ]);
+                }
+            }
+        }
+
+        $headers = [
+            'ContentType' => 'application/octet-stream',
+            'ContentDisposition' => 'attachment;filename="' . $app->getDownloadNameFilename() . '"'
+        ];
+
+        $app->setBuildUrl($this->s3->upload($build->getRealPath(), $app->getFilename(), $headers));
+        unlink($build->getRealPath());
+
+        $tempFile = tempnam('/tmp', 'plist');
+
+        $plist = $this
+            ->getPlistString(
+                $app->getBuildUrl(),
+                $app->getBundleId(),
+                $app->getVersion(),
+                $build->getFilename()
+            );
+
+        file_put_contents($tempFile, $plist);
+        $app->setPlistUrl($this->s3->upload($tempFile, $app->getPlistName(), $headers));
+        unlink($tempFile);
+
+        return $app;
+    }
+
+    public function getExtension()
+    {
+        return 'ipa';
+    }
+
+    /**
+     * @param $ipa
+     * @param $bundleIdentifier
+     * @param $version
+     * @param $title
+     *
+     * @return string
+     */
+    private function getPlistString($ipa, $bundleIdentifier, $version, $title)
+    {
+        $imp = new \DOMImplementation();
+        $dtd = $imp->createDocumentType('plist', '-//Apple//DTD PLIST 1.0//EN', 'http://www.apple.com/DTDs/PropertyList-1.0.dtd');
+        $dom = $imp->createDocument('', '', $dtd);
+
+        $dom->encoding = 'UTF-8';
+
+        $dom->formatOutput = true;
+        $dom->appendChild($element = $dom->createElement('plist'));
+        $element->setAttribute('version', '1.0');
+
+        $element->appendChild($dict = $dom->createElement('dict'));
+        $dict->appendChild($dom->createElement('key', 'items'));
+        $dict->appendChild($array = $dom->createElement('array'));
+
+        $array->appendChild($mainDict = $dom->createElement('dict'));
+
+        $mainDict->appendChild($dom->createElement('key', 'assets'));
+        $mainDict->appendChild($array = $dom->createElement('array'));
+
+        $array->appendChild($dict = $dom->createElement('dict'));
+        $dict->appendChild($dom->createElement('key', 'kind'));
+        $dict->appendChild($dom->createElement('string', 'software-package'));
+        $dict->appendChild($dom->createElement('key', 'url'));
+        $dict->appendChild($dom->createElement('string', $ipa));
+
+        $mainDict->appendChild($dom->createElement('key', 'metadata'));
+
+        $mainDict->appendChild($dict = $dom->createElement('dict'));
+        $dict->appendChild($dom->createElement('key', 'bundle-identifier'));
+        $dict->appendChild($dom->createElement('string', $bundleIdentifier));
+
+        $dict->appendChild($dom->createElement('key', 'bundle-version'));
+        $dict->appendChild($dom->createElement('string', $version));
+
+        $dict->appendChild($dom->createElement('key', 'kind'));
+        $dict->appendChild($dom->createElement('string', 'software'));
+
+        $dict->appendChild($dom->createElement('key', 'title'));
+        $dict->appendChild($titleElement = $dom->createElement('string'));
+
+        $titleElement->appendChild($dom->createTextNode($title . '-v.' . $version));
+
+        return $dom->saveXML();
+    }
+
+    /**
      * init function.
      * @param $path
      * @throws \Exception
      */
-    public function read($path)
+    private function read($path)
     {
         if (!file_exists($path)) {
             throw new \Exception('Ipa File not found');
@@ -28,57 +174,57 @@ class IpaReader
         $this->unZipFiles($path);
     }
 
-    public function getIcon()
+    private function getIcon()
     {
         return $this->icon;
     }
 
-    public function getBundleName()
+    private function getBundleName()
     {
         return $this->info['CFBundleName'];
     }
 
-    public function getBundleVersion()
+    private function getBundleVersion()
     {
         return $this->info['CFBundleVersion'];
     }
 
-    public function getMinimumOSVersion()
+    private function getMinimumOSVersion()
     {
         return $this->info['MinimumOSVersion'];
     }
 
-    public function getPlatformVersion()
+    private function getPlatformVersion()
     {
         return $this->info['DTPlatformVersion'];
     }
 
-    public function getBundleIdentifier()
+    private function getBundleIdentifier()
     {
         return $this->info['CFBundleIdentifier'];
     }
 
-    public function getBundleDisplayName()
+    private function getBundleDisplayName()
     {
         return $this->info['CFBundleDisplayName'];
     }
 
-    public function getBundleShortVersionString()
+    private function getBundleShortVersionString()
     {
         return $this->info['CFBundleShortVersionString'];
     }
 
-    public function getBundleSupportedPlatforms()
+    private function getBundleSupportedPlatforms()
     {
         return $this->info['CFBundleSupportedPlatforms'];
     }
 
-    public function getSupportedInterfaceOrientations()
+    private function getSupportedInterfaceOrientations()
     {
         return $this->info['UISupportedInterfaceOrientations'];
     }
 
-    public function getAppServer()
+    private function getAppServer()
     {
         return $this->info['APP_SERVER'];
     }
@@ -217,7 +363,7 @@ class IpaReader
         ];
     }
 
-    public function unpackImage($path)
+    private function unpackImage($path)
     {
         if (mime_content_type($path) == 'image/png') {
             //sometime images not compressed

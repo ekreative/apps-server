@@ -11,6 +11,7 @@ require('../images/logo.png');
 require('bootstrap');
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 const $ = require('jquery');
+global.$ = global.jQuery = $;
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()

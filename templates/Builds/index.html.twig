@@ -19,7 +19,7 @@
 {% block body %}
     <h1>{{ buildApp.name }} - {{ buildApp.type }}</h1>
     {% if form is not null %}
-        <div class="upload-form">
+        <div class="upload-form" style="display: inline-block; width: 75%">
             {{ form_start(form , {'attr':{'class':'form-horizontal'}}) }}
             <div class="row">
                 <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(form.build) }}</div>
@@ -29,16 +29,17 @@
                 </div>
 
                 <div class="col-sm-2 col-md-2 col-lg-2 text-right">
-                    {% if buildApp.type == 'ios' %}
-                        <a class="btn btn-primary"
-                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'android'}) }}">Android</a>
-                    {% else %}
-                        <a class="btn btn-primary"
-                           href="{{ path('project_builds',{'projectSlug':buildApp.projectId, 'type':'ios'}) }}">Ios</a>
-                    {% endif %}
                 </div>
             </div>
             {{ form_end(form) }}
+        </div>
+    {% endif %}
+
+    {% if searchForm is defined %}
+        <div class="search-form" style="display: inline-block; width: 23%">
+            {{ form_start(searchForm) }}
+            {{ form_widget(searchForm.type) }}
+            {{ form_end(searchForm) }}
         </div>
     {% endif %}
 
@@ -59,7 +60,7 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">
-                            <span>{{ item.version }} ({{ item.buildNumber }})</span>
+                            <span>{{ item.version }} {% if item.buildNumber %}({{ item.buildNumber }}){% endif %}</span>
                             <span class="float-right"><small>{{ item.getPublicAppSize() }}</small></span>
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
@@ -92,4 +93,14 @@
         {{ block('pages') }}
     {% endif %}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $('#search_type').change(function () {
+          $(this).parents('form').submit()
+        })
+    </script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Services\AppDataManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -11,7 +12,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class App implements \JsonSerializable
 {
     const TYPE_ANDROID = 'android';
+    const TYPE_EXE = 'exe';
     const TYPE_IOS = 'ios';
+
+    const TYPES = [
+        self::TYPE_IOS => self::TYPE_IOS,
+        self::TYPE_ANDROID => self::TYPE_ANDROID,
+        self::TYPE_EXE => self::TYPE_EXE,
+    ];
 
     /**
      * @var int
@@ -620,6 +628,8 @@ class App implements \JsonSerializable
             $name[] = '.apk';
         } elseif ($this->isType(self::TYPE_IOS)) {
             $name[] = '.ipa';
+        } elseif ($this->isType(self::TYPE_EXE)) {
+            $name[] = '.exe';
         }
 
         return implode('_', $name);
@@ -654,6 +664,14 @@ class App implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getInfoAllJson()
+    {
+        return $this->getBaseFolder() . AppDataManager::INFO_FOLDER . basename($this->getJsonUrl());
+    }
+
     public function getDownloadNameFilename()
     {
         $name = [$this->getVersion()];
@@ -662,6 +680,8 @@ class App implements \JsonSerializable
             $name[] = '.apk';
         } elseif ($this->isType(self::TYPE_IOS)) {
             $name[] = '.ipa';
+        } elseif ($this->isType(self::TYPE_EXE)) {
+            $name[] = '.exe';
         }
 
         return implode('_', array_filter($name));

@@ -39,7 +39,7 @@ class BuildsController extends AbstractController
     /**
      * @Route("/{project}/{type}", methods={"GET"}, name="jenkins_projects")
      */
-    public function builds(Request $request, $project, $type)
+    public function builds(Request $request, $project, $type = null)
     {
         $paginator = $this->appDataManager->getAppsForProject($project, $type, $request->query->get('page', 1));
 

@@ -39,8 +39,6 @@
                 <td>Project name</td>
                 <td>Date created</td>
                 <td>Date updated</td>
-                <td></td>
-                <td></td>
             </tr>
         </thead>
 
@@ -48,15 +46,12 @@
             {% for project in projects %}
                 <tr>
                     <td>{{ project.id }}</td>
-                    <td>{{ project.name }}</td>
+                    <td>
+                        <a href="{{ path('project_builds', {'projectSlug':project.identifier}) }}">{{ project.name }}</a>
+
+                    </td>
                     <td>{{ project.created_on|date("d/m/Y") }}</td>
                     <td>{{ project.updated_on|date("d/m/Y") }}</td>
-                    <td>
-                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'ios'}) }}">IOS</a>
-                    </td>
-                    <td>
-                        <a class="btn-sm btn-primary" href="{{ path('project_builds', {'projectSlug':project.identifier,'type':'android'}) }}">Android</a>
-                    </td>
                 </tr>
             {% endfor %}
         </tbody>
