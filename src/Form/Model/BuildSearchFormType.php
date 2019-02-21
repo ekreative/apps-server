@@ -31,5 +31,4 @@ class BuildSearchFormType extends AbstractType
     {
         return 'search';
     }
-
 }

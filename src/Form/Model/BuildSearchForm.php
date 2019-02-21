@@ -25,4 +25,3 @@ class BuildSearchForm
         $this->type = $type;
     }
 }
-
