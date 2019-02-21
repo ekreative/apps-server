@@ -57,6 +57,7 @@
                         <span style="display: block; margin-top: 5px"><small>{{ item.created|date("d/m/Y H:i") }}</small></span>
                         <span><small>{{ item.createdName }}</small></span>
                         <span class="float-right"><small>{% if item.ref %} Ref: {{ item.ref }}{% endif %}</small></span>
+                        <span style="color: blue;clear: both; display: inline-block; width: 100%"><small>{{ item.type }} build</small></span>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">
