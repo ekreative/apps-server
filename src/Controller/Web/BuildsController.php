@@ -69,7 +69,7 @@ class BuildsController extends AbstractController
      */
     public function index(Request $request, $projectSlug, $type)
     {
-        list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
+        list($projectId, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
         /** @var App $app */
         $app = new App();
@@ -79,34 +79,31 @@ class BuildsController extends AbstractController
             ->setName($projectName)
             ->setType($type);
 
-        if ($upload) {
-            $form = $this->createForm(AppType::class, $app);
+        $form = $this->createForm(AppType::class, $app);
 
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
-            $search = new BuildSearchForm();
-            $search->setType($type);
-            $searchForm = $this->createForm(BuildSearchFormType::class, $search);
-            $searchForm->handleRequest($request);
+        $search = new BuildSearchForm();
+        $search->setType($type);
+        $searchForm = $this->createForm(BuildSearchFormType::class, $search);
+        $searchForm->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $app = $this->buildUploader->upload($app->getBuild(), $app->getComment(), $app->getProjectId(), $app->getType());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $app = $this->buildUploader->upload($app->getBuild(), $app->getComment(), $app->getProjectId(), $app->getType());
 
-                $this->addFlash('success', (strtoupper($app->getType()) .  ' Build was downloaded'));
+            $this->addFlash('success', (strtoupper($app->getType()) .  ' Build was downloaded'));
 
-                return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug]);
-            }
+            return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug]);
+        }
 
-            if ($searchForm->isSubmitted() && $searchForm->isValid()) {
-                return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug, 'type' => $search->getType()]);
-            }
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug, 'type' => $search->getType()]);
         }
 
         return $this->render('Builds/index.html.twig', [
             'slug' => $projectSlug,
-            'delete' => $delete,
-            'form' => isset($form) ? $form->createView() : null,
-            'searchForm' => isset($searchForm) ? $searchForm->createView() : null,
+            'form' => $form->createView(),
+            'searchForm' => $searchForm->createView(),
             'buildApp' => $app,
             'paginator' => $this->appDataManager->getAppsForProject($projectId, $type, $request->query->get('page', 1))
         ]);
@@ -131,36 +128,19 @@ class BuildsController extends AbstractController
         ])->getBody();
         $members = json_decode($data, true);
 
-        $upload = false;
-        $delete = false;
-
         $projectName = null;
         $projectId = null;
 
         foreach (array_key_exists('memberships', $members) ? $members['memberships'] : [] as $member) {
             $projectName = $member['project']['name'];
             $projectId = $member['project']['id'];
-
-            $user = array_key_exists('user', $member) ? $member['user'] : ['id' => null];
-            if ($user['id'] == $currentUser->getId()) {
-                foreach ($member['roles'] as $role) {
-                    if ($role['name'] == EkreativeUserRoles::ROLE_MANAGER) {
-                        $delete = true;
-                        $upload = true;
-                    }
-                    if ($role['name'] == EkreativeUserRoles::ROLE_DEVELOPER) {
-                        $delete = true;
-                        $upload = true;
-                    }
-                }
-            }
         }
 
         if (!$projectId) {
             throw new NotFoundHttpException("Project with slug not found $projectSlug");
         }
 
-        return [$projectId, $upload, $delete, $projectName];
+        return [$projectId, $projectName];
     }
 
     /**
@@ -224,7 +204,7 @@ class BuildsController extends AbstractController
      */
     public function latest($projectSlug, $type, $ref, $jobName = null)
     {
-        list($projectId, $upload, $delete, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
+        list($projectId, $projectName) = $this->getProjectIdAndPermissions($projectSlug);
 
         try {
             /** @var App $app */

@@ -18,30 +18,26 @@
 
 {% block body %}
     <h1>{{ buildApp.name }} - {{ buildApp.type }}</h1>
-    {% if form is not null %}
-        <div class="upload-form" style="display: inline-block; width: 75%">
-            {{ form_start(form , {'attr':{'class':'form-horizontal'}}) }}
-            <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(form.build) }}</div>
-                <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(form.comment) }}</div>
-                <div class="col-sm-2 col-md-2 col-lg-2">
-                    <button type="submit" class="btn btn-success">Upload</button>
-                </div>
-
-                <div class="col-sm-2 col-md-2 col-lg-2 text-right">
-                </div>
+    <div class="upload-form" style="display: inline-block; width: 75%">
+        {{ form_start(form , {'attr':{'class':'form-horizontal'}}) }}
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-3">{{ form_widget(form.build) }}</div>
+            <div class="col-sm-4 col-md-4 col-lg-5">{{ form_widget(form.comment) }}</div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <button type="submit" class="btn btn-success">Upload</button>
             </div>
-            {{ form_end(form) }}
-        </div>
-    {% endif %}
 
-    {% if searchForm is defined %}
-        <div class="search-form" style="display: inline-block; width: 23%">
-            {{ form_start(searchForm) }}
-            {{ form_widget(searchForm.type) }}
-            {{ form_end(searchForm) }}
+            <div class="col-sm-2 col-md-2 col-lg-2 text-right">
+            </div>
         </div>
-    {% endif %}
+        {{ form_end(form) }}
+    </div>
+
+    <div class="search-form" style="display: inline-block; width: 23%">
+        {{ form_start(searchForm) }}
+        {{ form_widget(searchForm.type) }}
+        {{ form_end(searchForm) }}
+    </div>
 
     {% if paginator.numberOfPages > 1 %}
         {{ block('pages') }}
@@ -79,11 +75,9 @@
                     <div class="card-footer bg-transparent">
                         <a href="{{ path('build_install_platform', {'token':item.token, 'platform':item.type}) }}"
                            target="_blank" class="card-link btn-link btn">Install</a>
-                        {% if delete %}
-                            <form method="post" action="{{ path('build_delete', {'token': item.token, 'project': item.projectId, 'type': item.type}) }}" style="display: inline-block">
-                                <button class="btn-link btn" type="submit" style="color: red">Delete</button>
-                            </form>
-                        {% endif %}
+                        <form method="post" action="{{ path('build_delete', {'token': item.token, 'project': item.projectId, 'type': item.type}) }}" style="display: inline-block">
+                            <button class="btn-link btn" type="submit" style="color: red">Delete</button>
+                        </form>
                     </div>
                 </div>
             </div>
