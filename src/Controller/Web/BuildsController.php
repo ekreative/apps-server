@@ -260,6 +260,7 @@ class BuildsController extends AbstractController
 
         $qr = new QrCode($install);
         $qr->setSize(150);
+        $qr->setMargin(0);
         return new QrCodeResponse($qr);
     }
 
