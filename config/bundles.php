@@ -14,4 +14,5 @@ return [
     Mcfedr\JsonFormBundle\McfedrJsonFormBundle::class => ['all' => true],
     Ekreative\RedmineLoginBundle\EkreativeRedmineLoginBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
 ];

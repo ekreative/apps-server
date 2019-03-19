@@ -54,7 +54,7 @@ class ProjectsController extends AbstractController
 
         $pages = ceil($projectsData['total_count'] / $projectsData['limit']);
 
-        return $this->render('Projects/index.html.twig', [
+        return $this->render('projects/index.html.twig', [
             'searchForm' => $form->createView(),
             'pages' => $pages,
             'page' => $page,
@@ -89,7 +89,7 @@ class ProjectsController extends AbstractController
             $session->remove(Security::AUTHENTICATION_ERROR);
         }
 
-        return $this->render('Projects/login.html.twig', [
+        return $this->render('projects/login.html.twig', [
                     'last_username' => $session->get(Security::LAST_USERNAME),
                     'error' => $error,
                     'form' => $form->createView()

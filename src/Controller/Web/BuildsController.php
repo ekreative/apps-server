@@ -10,6 +10,7 @@ use App\Form\Model\BuildSearchFormType;
 use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
 use Ekreative\RedmineLoginBundle\Client\ClientProvider;
+use Endroid\QrCode\Response\QrCodeResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -17,10 +18,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Endroid\QrCode\QrCode;
 
-/**
- * @Route("/web/builds")
- */
 class BuildsController extends AbstractController
 {
     /**
@@ -60,7 +59,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/show/{projectSlug}/{type}", name="project_builds", defaults={"type": null})
+     * @Route("/web/builds/show/{projectSlug}/{type}", name="project_builds", defaults={"type": null})
      *
      * @param Request $request
      * @param $projectSlug
@@ -103,7 +102,7 @@ class BuildsController extends AbstractController
             return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug, 'type' => $search->getType()]);
         }
 
-        return $this->render('Builds/index.html.twig', [
+        return $this->render('builds/index.html.twig', [
             'slug' => $projectSlug,
             'form' => $form->createView(),
             'searchForm' => $searchForm->createView(),
@@ -148,7 +147,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/install/{token}", name="build_install")
+     * @Route("/web/builds/install/{token}", name="build_install")
      */
     public function install($token)
     {
@@ -166,7 +165,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/install/{platform}/{token}", name="build_install_platform")
+     * @Route("/web/builds/install/{platform}/{token}", name="build_install_platform")
      */
     public function installPlatform($token)
     {
@@ -184,7 +183,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/installByCommit/{commit}/{jobName}", name="build_commit", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
+     * @Route("/web/builds/installByCommit/{commit}/{jobName}", name="build_commit", requirements={"commit"="^[0-9a-f]{40}$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function commit($commit, $jobName = null)
     {
@@ -203,7 +202,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/latest/{projectSlug}/{type}/{ref}/{jobName}", name="build_latest", requirements={"type"="^ios|android|exe$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
+     * @Route("/web/builds/latest/{projectSlug}/{type}/{ref}/{jobName}", name="build_latest", requirements={"type"="^ios|android|exe$", "ref"="^[0-9a-z-]+$", "jobName"="^[0-9a-z-_]+$"}, defaults={"jobName"=null})
      */
     public function latest($projectSlug, $type, $ref, $jobName = null)
     {
@@ -240,19 +239,32 @@ class BuildsController extends AbstractController
             'token' => $app->getToken(),
             'platform' => $app->getType(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
-        $qrcode = 'https://chart.apis.google.com/chart?chl=' . urlencode($install) . '&chs=200x200&choe=UTF-8&cht=qr&chld=L%7C2';
 
-        return $this->render('Builds/install.html.twig', [
+        return $this->render('builds/install.html.twig', [
             'app' => $app,
             'url' => $url,
             'buildUrl' => $app->getBuildUrl(),
-            'qrcode' => $qrcode,
+            'qrcode' => $this->generateUrl('build_install_qr', ['token' => $app->getToken()]),
             'install' => $install,
         ]);
     }
 
     /**
-     * @Route("/release/{token}", name="build_inverse_release", methods={"GET"})
+     * @Route("/web/builds/qr/{token}", name="build_install_qr")
+     */
+    public function appQr($token)
+    {
+        $install = $this->generateUrl('build_install', [
+            'token' => $token,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $qr = new QrCode($install);
+        $qr->setSize(150);
+        return new QrCodeResponse($qr);
+    }
+
+    /**
+     * @Route("/web/builds/release/{token}", name="build_inverse_release", methods={"GET"})
      */
     public function release($token)
     {
@@ -275,7 +287,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{project}/{type}/{token}", name="build_delete", methods={"POST"})
+     * @Route("/web/builds/delete/{project}/{type}/{token}", name="build_delete", methods={"POST"})
      */
     public function delete($project, $type, $token)
     {
@@ -298,7 +310,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/upload/{project}/{type}", name="upload", methods={"POST"})
+     * @Route("/web/builds/upload/{project}/{type}", name="upload", methods={"POST"})
      *
      * @throws \Exception
      */

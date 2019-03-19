@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @Route("/api/builds")
- */
 class BuildsController extends AbstractController
 {
     /**
@@ -38,7 +35,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/{project}/{type}", methods={"GET"}, name="jenkins_projects")
+     * @Route("/api/builds/{project}/{type}", methods={"GET"}, name="jenkins_projects")
      */
     public function builds(Request $request, $project, $type = null)
     {
@@ -48,7 +45,7 @@ class BuildsController extends AbstractController
     }
 
     /**
-     * @Route("/upload/{project}/{type}", name="jenkins_url", methods={"POST"})
+     * @Route("/api/builds/upload/{project}/{type}", name="jenkins_url", methods={"POST"})
      */
     public function upload(Request $request, $project, $type)
     {

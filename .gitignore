@@ -24,3 +24,7 @@ yarn-error.log
 /phpunit.xml
 /.phpunit.result.cache
 ###< phpunit/phpunit ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
