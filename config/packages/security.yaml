@@ -14,7 +14,7 @@ security:
             security: false
 
         installUrl:
-            pattern: ^/web/builds/(install|installByCommit)/
+            pattern: ^/web/builds/(install|installByCommit|qr)/
             security: false
 
         secured_area:
