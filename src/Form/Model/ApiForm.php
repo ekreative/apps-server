@@ -129,7 +129,7 @@ class ApiForm
      */
     public function setCi($ci)
     {
-        $this->ci = ($ci == 'true');
+        $this->ci = ('true' == $ci);
     }
 
     public function isValid()

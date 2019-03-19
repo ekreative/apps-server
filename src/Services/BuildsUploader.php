@@ -31,9 +31,10 @@ class BuildsUploader
 
     /**
      * BuildsUploader constructor.
+     *
      * @param UrlGeneratorInterface $router
-     * @param AppDataManager $appDataManager
-     * @param AppFactory $appFactory
+     * @param AppDataManager        $appDataManager
+     * @param AppFactory            $appFactory
      */
     public function __construct(UrlGeneratorInterface $router, AppDataManager $appDataManager, AppFactory $appFactory)
     {
@@ -51,12 +52,13 @@ class BuildsUploader
      * @param null $commit
      * @param null $jobName
      * @param bool $ci
+     *
      * @return App
+     *
      * @throws \Exception
      */
     public function upload(UploadedFile $file, $comment, $project, $type, $ref = null, $commit = null, $jobName = null, $ci = false)
     {
-
         $app = $this->appFactory->create($file, $comment, $project, $type, $ref, $commit, $jobName, $ci);
 
         $app->setQrcodeUrl('https://chart.apis.google.com/chart?chl=' . urlencode($this->router->generate('build_install_platform',

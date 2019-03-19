@@ -15,6 +15,7 @@ class ProjectsController extends AbstractController
 
     /**
      * ProjectsController constructor.
+     *
      * @param ClientProvider $loginProvider
      */
     public function __construct(ClientProvider $loginProvider)

@@ -34,7 +34,7 @@ class AppNormalizer implements DenormalizerInterface, NormalizerInterface
                     $app->setPermssions($fieldValue);
                     break;
                 case 'debuggable':
-                    $app->setDebuggable(!!$fieldValue);
+                    $app->setDebuggable((bool) $fieldValue);
                     break;
                 case 'bundleName':
                     $app->setBundleName($fieldValue);
@@ -88,7 +88,7 @@ class AppNormalizer implements DenormalizerInterface, NormalizerInterface
                     $app->setIconUrl($fieldValue);
                     break;
                 case 'release':
-                    $app->setRelease(!!$fieldValue);
+                    $app->setRelease((bool) $fieldValue);
                     break;
                 case 'token':
                     $app->setToken($fieldValue);
@@ -103,7 +103,7 @@ class AppNormalizer implements DenormalizerInterface, NormalizerInterface
                     $app->setComment($fieldValue);
                     break;
                 case 'ci':
-                    $app->setCi(!!$fieldValue);
+                    $app->setCi((bool) $fieldValue);
                     break;
                 case 'ref':
                     $app->setRef($fieldValue);

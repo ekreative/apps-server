@@ -2,7 +2,7 @@
 
 namespace Ekreative\TestBuild\WebBundle\Tests\Controller;
 
-use Ekreative\TestBuild\ApiBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class BuildsControllerTest extends TestCase
 {

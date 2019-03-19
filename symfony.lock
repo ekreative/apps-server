@@ -2,8 +2,11 @@
     "aws/aws-sdk-php": {
         "version": "3.87.2"
     },
-    "behat/transliterator": {
-        "version": "v1.2.0"
+    "composer/semver": {
+        "version": "1.4.2"
+    },
+    "composer/xdebug-handler": {
+        "version": "1.3.2"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -50,15 +53,6 @@
             "ref": "fc52d86631a6dfd9fdf3381d0b7e3df2069e51b3"
         }
     },
-    "doctrine/doctrine-migrations-bundle": {
-        "version": "1.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.2",
-            "ref": "c1431086fec31f17fbcfe6d6d7e92059458facc1"
-        }
-    },
     "doctrine/event-manager": {
         "version": "v1.0.0"
     },
@@ -71,26 +65,26 @@
     "doctrine/lexer": {
         "version": "v1.0.1"
     },
-    "doctrine/migrations": {
-        "version": "v2.0.0"
-    },
-    "doctrine/orm": {
-        "version": "v2.6.3"
-    },
     "doctrine/persistence": {
         "version": "v1.1.0"
     },
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
-    "egulias/email-validator": {
-        "version": "2.1.7"
-    },
     "ekreative/redmine_login": {
         "version": "3.8.2"
     },
-    "gedmo/doctrine-extensions": {
-        "version": "v2.4.36"
+    "friendsofphp/php-cs-fixer": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.2",
+            "ref": "81dee417d2cc60cd1c9d6208dff2ec22a1103e93"
+        },
+        "files": [
+            ".php_cs.dist"
+        ]
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
@@ -113,14 +107,20 @@
     "mtdowling/jmespath.php": {
         "version": "2.4.0"
     },
+    "myclabs/deep-copy": {
+        "version": "1.8.1"
+    },
     "nikic/php-parser": {
         "version": "v4.2.0"
     },
-    "ocramius/package-versions": {
-        "version": "1.3.0"
+    "phar-io/manifest": {
+        "version": "1.0.3"
     },
-    "ocramius/proxy-manager": {
-        "version": "2.2.2"
+    "phar-io/version": {
+        "version": "2.0.1"
+    },
+    "php-cs-fixer/diff": {
+        "version": "v1.3.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -130,6 +130,39 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpspec/prophecy": {
+        "version": "1.8.0"
+    },
+    "phpunit/php-code-coverage": {
+        "version": "7.0.3"
+    },
+    "phpunit/php-file-iterator": {
+        "version": "2.0.2"
+    },
+    "phpunit/php-text-template": {
+        "version": "1.2.1"
+    },
+    "phpunit/php-timer": {
+        "version": "2.1.1"
+    },
+    "phpunit/php-token-stream": {
+        "version": "3.0.1"
+    },
+    "phpunit/phpunit": {
+        "version": "4.7",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.7",
+            "ref": "89239f0cf2759efccc76b9944083bfcc4d180f9d"
+        },
+        "files": [
+            ".env.test",
+            "phpunit.xml.dist",
+            "config/bootstrap.php",
+            "tests/.gitignore"
+        ]
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -152,6 +185,39 @@
     "rodneyrehm/plist": {
         "version": "v2.0.1"
     },
+    "sebastian/code-unit-reverse-lookup": {
+        "version": "1.0.1"
+    },
+    "sebastian/comparator": {
+        "version": "3.0.2"
+    },
+    "sebastian/diff": {
+        "version": "3.0.2"
+    },
+    "sebastian/environment": {
+        "version": "4.1.0"
+    },
+    "sebastian/exporter": {
+        "version": "3.1.0"
+    },
+    "sebastian/global-state": {
+        "version": "3.0.0"
+    },
+    "sebastian/object-enumerator": {
+        "version": "3.0.3"
+    },
+    "sebastian/object-reflector": {
+        "version": "1.1.1"
+    },
+    "sebastian/recursion-context": {
+        "version": "3.0.0"
+    },
+    "sebastian/resource-operations": {
+        "version": "2.0.1"
+    },
+    "sebastian/version": {
+        "version": "2.0.1"
+    },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
         "recipe": {
@@ -160,18 +226,6 @@
             "version": "5.2",
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         }
-    },
-    "stof/doctrine-extensions-bundle": {
-        "version": "1.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.2",
-            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
-        }
-    },
-    "swiftmailer/swiftmailer": {
-        "version": "v6.1.3"
     },
     "symfony/asset": {
         "version": "v4.2.2"
@@ -272,9 +326,6 @@
     "symfony/options-resolver": {
         "version": "v4.2.2"
     },
-    "symfony/orm-pack": {
-        "version": "v1.0.6"
-    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.10.0"
     },
@@ -283,6 +334,9 @@
     },
     "symfony/polyfill-php72": {
         "version": "v1.10.0"
+    },
+    "symfony/process": {
+        "version": "v4.2.4"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.4"
@@ -331,15 +385,6 @@
     },
     "symfony/stopwatch": {
         "version": "v4.2.2"
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.5",
-            "ref": "3db029c03e452b4a23f7fc45cec7c922c2247eb8"
-        }
     },
     "symfony/translation": {
         "version": "3.3",
@@ -398,6 +443,9 @@
     "symfony/yaml": {
         "version": "v4.2.2"
     },
+    "theseer/tokenizer": {
+        "version": "1.1.0"
+    },
     "tufanbarisyildirim/php-apk-parser": {
         "version": "dev-master"
     },
@@ -406,11 +454,5 @@
     },
     "webmozart/assert": {
         "version": "1.4.0"
-    },
-    "zendframework/zend-code": {
-        "version": "3.3.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }

@@ -27,7 +27,8 @@ class AppDataManager
 
     /**
      * AppDataManager constructor.
-     * @param S3 $s3Service
+     *
+     * @param S3                  $s3Service
      * @param SerializerInterface $serializer
      */
     public function __construct(S3 $s3Service, SerializerInterface $serializer)
@@ -38,6 +39,7 @@ class AppDataManager
 
     /**
      * @param App $app
+     *
      * @throws \Exception
      */
     public function saveJsonData(App $app)
@@ -55,7 +57,7 @@ class AppDataManager
 
         if ($app->getRef()) {
             if ($app->getJobName()) {
-                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()) , $app->getLinkJson());
+                $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . $app->getJobName() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
             }
             $this->save(self::INDEX_FOLDER . $app->getProjectId() . '/' . $app->getType() . '/' . $app->getRef() . '/' . basename($app->getJsonUrl()), $app->getLinkJson());
         }
@@ -63,6 +65,7 @@ class AppDataManager
 
     /**
      * @param array $item
+     *
      * @throws \Exception
      */
     public function saveJsonDataFromArray(array $item)
@@ -75,6 +78,7 @@ class AppDataManager
     /**
      * @param string $fileName
      * @param string $content
+     *
      * @throws \Exception
      */
     private function save(string $fileName, string $content)
@@ -100,7 +104,9 @@ class AppDataManager
 
     /**
      * @param string $token
+     *
      * @return object
+     *
      * @throws \Exception
      */
     public function getAppByToken($token)
@@ -125,9 +131,11 @@ class AppDataManager
     }
 
     /**
-     * @param string $commit
+     * @param string      $commit
      * @param string|null $jobName
+     *
      * @return object
+     *
      * @throws \Exception
      */
     public function getAppByCommit($commit, $jobName = null)
@@ -160,7 +168,9 @@ class AppDataManager
      * @param $type
      * @param $ref
      * @param $jobName
+     *
      * @return object
+     *
      * @throws \Exception
      */
     public function getAppForProject($projectId, $type, $ref, $jobName = null)
@@ -168,7 +178,7 @@ class AppDataManager
         if ($jobName) {
             $param = [
                 'Delimiter' => '/',
-                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) . $ref . '/'. $jobName . '/',
+                'Prefix' => self::INDEX_FOLDER . $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) . $ref . '/' . $jobName . '/',
                 'MaxKeys' => 1
             ];
             /** @var Result $object */
@@ -219,22 +229,24 @@ class AppDataManager
     /**
      * @param string $projectId
      * @param string $type
-     * @param int $page
+     * @param int    $page
+     *
      * @return Paginator
      */
     public function getAppsForProject($projectId, $type = null, $page = 1)
     {
         $param = [
             'Delimiter' => '/',
-            'Prefix' => $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER) ,
+            'Prefix' => $projectId . '/' . ($type ? ($type . '/') : self::INFO_FOLDER),
         ];
 
         return $this->getApps($param, $page);
     }
 
     /**
-     * @param  array $param
-     * @param int $page
+     * @param array $param
+     * @param int   $page
+     *
      * @return Paginator
      */
     private function getApps(array $param, int $page)
@@ -275,6 +287,7 @@ class AppDataManager
 
     /**
      * @throws \Exception
+     *
      * @return int
      */
     public function saveDataToInfoFolder()
@@ -287,9 +300,8 @@ class AppDataManager
         $paginator = $this->s3Service->getPaginator($param);
 
         $i = 0;
-        /** @var Result $item */
+        /* @var Result $item */
         foreach ($paginator->search('Contents[].Key') as $key) {
-
             $content = $this->s3Service->getObjectByKey($key);
 
             if ($content) {
@@ -298,7 +310,7 @@ class AppDataManager
                 $content = $this->s3Service->getObjectByKey($data['link']);
 
                 $this->save($data['projectId'] . '/' . self::INFO_FOLDER . basename($data['link']), $content);
-                $i++;
+                ++$i;
             }
         }
 

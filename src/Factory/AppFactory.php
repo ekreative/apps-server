@@ -17,13 +17,14 @@ class AppFactory
 
     /**
      * AppFactory constructor.
+     *
      * @param iterable<ReaderInterface> $readers
-     * @param Security $context
+     * @param Security                  $context
      */
     public function __construct(iterable $readers, Security $context)
     {
         $this->readers = $readers;
-        $this->user = $context->getToken() !== null ? $context->getToken()->getUser() : null;
+        $this->user = null !== $context->getToken() ? $context->getToken()->getUser() : null;
     }
 
     /**
@@ -35,7 +36,9 @@ class AppFactory
      * @param null $commit
      * @param null $jobName
      * @param bool $ci
+     *
      * @return App
+     *
      * @throws \Exception
      */
     public function create(UploadedFile $file, $comment, $project, $type, $ref = null, $commit = null, $jobName = null, $ci = false)

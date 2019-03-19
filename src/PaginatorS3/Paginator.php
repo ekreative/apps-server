@@ -46,8 +46,9 @@ class Paginator
 
     /**
      * S3Paginator constructor.
-     * @param S3 $s3
-     * @param int $currentPage
+     *
+     * @param S3    $s3
+     * @param int   $currentPage
      * @param array $param
      */
     public function __construct(S3 $s3, int $currentPage, array $param)
@@ -115,7 +116,7 @@ class Paginator
 
         foreach ($iterator as $item) {
             $key = $item['Key'];
-            $count++;
+            ++$count;
 
             if ($count <= ($this->currentPage * self::LIMIT_PAGINATION) && (($this->currentPage - 1) * self::LIMIT_PAGINATION) < $count) {
                 $this->data->add($this->s3->getObjectByKey($key));

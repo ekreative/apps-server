@@ -7,13 +7,14 @@ use Ekreative\TestBuild\CoreBundle\AWS\S3;
 use Ekreative\TestBuild\CoreBundle\Entity\App;
 use Ekreative\TestBuild\CoreBundle\Services\BuildsUploader;
 use Ekreative\TestBuild\CoreBundle\Services\IpaReader;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
-class BuildsUploaderTest extends \PHPUnit_Framework_TestCase
+class BuildsUploaderTest extends TestCase
 {
     public function testInvalidApk()
     {

@@ -30,8 +30,9 @@ class IosReader implements ReaderInterface
 
     /**
      * IosReader constructor.
+     *
      * @param LoggerInterface $logger
-     * @param S3 $s3
+     * @param S3              $s3
      */
     public function __construct(LoggerInterface $logger, S3 $s3)
     {
@@ -41,7 +42,9 @@ class IosReader implements ReaderInterface
 
     /**
      * @param App $app
+     *
      * @return App
+     *
      * @throws \Exception
      */
     public function readData(App $app)
@@ -162,7 +165,9 @@ class IosReader implements ReaderInterface
 
     /**
      * init function.
+     *
      * @param $path
+     *
      * @throws \Exception
      */
     private function read($path)
@@ -231,6 +236,7 @@ class IosReader implements ReaderInterface
 
     /**
      * @param $file
+     *
      * @throws \Exception
      */
     private function unZipFiles($file)
@@ -246,11 +252,11 @@ class IosReader implements ReaderInterface
         $unpackFiles = [];
         for ($i = 0; $i < $zip->numFiles; ++$i) {
             $filename = $zip->getNameIndex($i);
-            if ((strpos($filename, 'Info.plist') > 0) && substr_count($filename, '/') == 2) {
+            if ((strpos($filename, 'Info.plist') > 0) && 2 == substr_count($filename, '/')) {
                 $plist = $filename;
                 $unpackFiles[] = $filename;
             }
-            if ((strpos($filename, '.png') !== false) && substr_count($filename, '/') == 2) {
+            if ((false !== strpos($filename, '.png')) && 2 == substr_count($filename, '/')) {
                 $unpackFiles[] = $filename;
             }
         }
@@ -291,7 +297,7 @@ class IosReader implements ReaderInterface
 
             $iconGroups = [];
             foreach ($plist as $key => $value) {
-                if (strpos($key, 'CFBundleIcons') === 0) {
+                if (0 === strpos($key, 'CFBundleIcons')) {
                     $iconGroups[] = $value;
                 }
             }
@@ -365,7 +371,7 @@ class IosReader implements ReaderInterface
 
     private function unpackImage($path)
     {
-        if (mime_content_type($path) == 'image/png') {
+        if ('image/png' == mime_content_type($path)) {
             //sometime images not compressed
             return $path;
         }
@@ -405,7 +411,7 @@ class IosReader implements ReaderInterface
         if (!is_dir($dirPath)) {
             throw new \InvalidArgumentException("$dirPath must be a directory");
         }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        if ('/' != substr($dirPath, strlen($dirPath) - 1, 1)) {
             $dirPath .= '/';
         }
         $files = glob($dirPath . '*', GLOB_MARK);

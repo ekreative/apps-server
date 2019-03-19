@@ -39,6 +39,7 @@ services:
             - '%env(AMAZON_S3_BASE_URL)%'
             - '%env(AMAZON_S3_BUCKET_NAME)%'
             - '@logger'
+
     ekreative.file_uploader:
         alias: App\AWS\S3
 
@@ -47,11 +48,4 @@ services:
             - { name: serializer.normalizer }
     ekreative.app_normalizer:
         alias: App\Normalizer\AppNormalizer
-        public: true
-
-    App\Command\AddJsonInfoToS3:
-        tags:
-            - { name: console.command }
-    app.session_destroy:
-        alias: App\Command\AddJsonInfoToS3
         public: true

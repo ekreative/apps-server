@@ -7,7 +7,6 @@ use App\Entity\App;
 use App\Form\AppType;
 use App\Form\Model\BuildSearchForm;
 use App\Form\Model\BuildSearchFormType;
-use App\Roles\EkreativeUserRoles;
 use App\Services\AppDataManager;
 use App\Services\BuildsUploader;
 use Ekreative\RedmineLoginBundle\Client\ClientProvider;
@@ -46,8 +45,9 @@ class BuildsController extends AbstractController
 
     /**
      * BuildsController constructor.
+     *
      * @param $loginProvider
-     * @param S3 $s3Service
+     * @param S3             $s3Service
      * @param BuildsUploader $buildUploader
      * @param AppDataManager $appDataManager
      */
@@ -61,10 +61,13 @@ class BuildsController extends AbstractController
 
     /**
      * @Route("/show/{projectSlug}/{type}", name="project_builds", defaults={"type": null})
+     *
      * @param Request $request
      * @param $projectSlug
      * @param $type
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Exception
      */
     public function index(Request $request, $projectSlug, $type)
@@ -91,7 +94,7 @@ class BuildsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $app = $this->buildUploader->upload($app->getBuild(), $app->getComment(), $app->getProjectId(), $app->getType());
 
-            $this->addFlash('success', (strtoupper($app->getType()) .  ' Build was downloaded'));
+            $this->addFlash('success', (strtoupper($app->getType()) . ' Build was downloaded'));
 
             return $this->redirectToRoute('project_builds', ['projectSlug' => $projectSlug]);
         }
@@ -111,6 +114,7 @@ class BuildsController extends AbstractController
 
     /**
      * @param $projectSlug
+     *
      * @return array
      */
     private function getProjectIdAndPermissions($projectSlug)
@@ -195,7 +199,6 @@ class BuildsController extends AbstractController
             throw new NotFoundHttpException('No build with that commit');
         }
 
-
         return $this->renderApp($app);
     }
 
@@ -222,6 +225,7 @@ class BuildsController extends AbstractController
 
     /**
      * @param App $app
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     private function renderApp(App $app)
@@ -295,6 +299,7 @@ class BuildsController extends AbstractController
 
     /**
      * @Route("/upload/{project}/{type}", name="upload", methods={"POST"})
+     *
      * @throws \Exception
      */
     public function upload(Request $request, $project, $type)

@@ -14,8 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Class ProjectsController
- * @package App\Controller\Web
+ * Class ProjectsController.
  */
 class ProjectsController extends AbstractController
 {
@@ -26,6 +25,7 @@ class ProjectsController extends AbstractController
 
     /**
      * ProjectsController constructor.
+     *
      * @param ClientProvider $loginProvider
      */
     public function __construct(ClientProvider $loginProvider)
@@ -35,8 +35,10 @@ class ProjectsController extends AbstractController
 
     /**
      * @Route("{page}",name="projects", defaults={"page" = "1"}, requirements={"page": "\d+"})
+     *
      * @param Request $request
      * @param $page
+     *
      * @return Response
      */
     public function index(Request $request, $page)
@@ -52,7 +54,7 @@ class ProjectsController extends AbstractController
 
         $pages = ceil($projectsData['total_count'] / $projectsData['limit']);
 
-        return $this->render('Projects/index.html.twig' ,[
+        return $this->render('Projects/index.html.twig', [
             'searchForm' => $form->createView(),
             'pages' => $pages,
             'page' => $page,
@@ -65,6 +67,7 @@ class ProjectsController extends AbstractController
      * @Route("/login", name="login", methods={"GET", "POST"})
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function login(Request $request)

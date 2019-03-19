@@ -14,6 +14,7 @@ class S3
 
     /**
      * S3 constructor.
+     *
      * @param S3Client $s3
      * @param $baseUrl
      * @param $bucketName
@@ -30,8 +31,10 @@ class S3
     /**
      * @param string $path
      * @param string $filename
-     * @param array $headers
+     * @param array  $headers
+     *
      * @return mixed
+     *
      * @throws \Exception
      */
     public function upload($path, $filename, $headers = [])
@@ -70,6 +73,7 @@ class S3
 
     /**
      * @param array $parameters
+     *
      * @return \Aws\ResultPaginator
      */
     public function getPaginator(array $parameters)
@@ -79,6 +83,7 @@ class S3
 
     /**
      * @param array $parameters
+     *
      * @return \Iterator
      */
     public function getIterator(array $parameters)
@@ -88,6 +93,7 @@ class S3
 
     /**
      * @param array $parameters
+     *
      * @return \Aws\Result
      */
     public function getListObject(array $parameters)
@@ -97,11 +103,12 @@ class S3
 
     /**
      * @param string $key
+     *
      * @return string
      */
     public function getObjectByKey($key)
     {
-        $result =  $this->s3->getObject([
+        $result = $this->s3->getObject([
             'Bucket' => $this->bucketName,
             'Key' => $key,
         ]);

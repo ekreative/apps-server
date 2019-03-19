@@ -27,6 +27,7 @@ class BuildsController extends AbstractController
 
     /**
      * BuildsController constructor.
+     *
      * @param BuildsUploader $buildUploader
      * @param AppDataManager $appDataManager
      */
@@ -60,13 +61,12 @@ class BuildsController extends AbstractController
                 $request->request->get('ref'),
                 $request->request->get('commit'),
                 $request->request->get('job-name'),
-                $request->request->get('ci') == 'true'
+                'true' == $request->request->get('ci')
                 );
             $this->appDataManager->saveJsonData($app);
         } catch (\Exception $e) {
             return $this->json(
-                ['error' =>
-                    [
+                ['error' => [
                         'code' => $e->getCode(),
                         'message' => $e->getMessage()
                     ]

@@ -17,6 +17,7 @@ class AddJsonDataToInfoFolder extends Command
 
     /**
      * AddJsonInfoToS3 constructor.
+     *
      * @param AppDataManager $dataManager
      */
     public function __construct(AppDataManager $dataManager)

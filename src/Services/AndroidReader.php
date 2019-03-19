@@ -23,8 +23,9 @@ class AndroidReader implements ReaderInterface
 
     /**
      * IosReader constructor.
+     *
      * @param LoggerInterface $logger
-     * @param S3 $s3
+     * @param S3              $s3
      */
     public function __construct(LoggerInterface $logger, S3 $s3)
     {
@@ -32,10 +33,11 @@ class AndroidReader implements ReaderInterface
         $this->s3 = $s3;
     }
 
-
     /**
      * @param App $app
+     *
      * @return App
+     *
      * @throws \Exception
      */
     public function readData(App $app)
@@ -62,7 +64,7 @@ class AndroidReader implements ReaderInterface
     }
 
     /**
-     * @param App $app
+     * @param App          $app
      * @param UploadedFile $build
      */
     private function readAndroidData(App $app, UploadedFile $build)

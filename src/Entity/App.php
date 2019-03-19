@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * App.
- *
  */
 class App implements \JsonSerializable
 {
@@ -655,6 +654,7 @@ class App implements \JsonSerializable
 
     /**
      * @param string $jsonUrl
+     *
      * @return App
      */
     public function setJsonUrl($jsonUrl)
